@@ -1,27 +1,276 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Floorplan Extraction</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floorplan Extraction - Professional Room Detection</title>
     <style>
-      body { font-family: Arial, sans-serif; margin: 40px; }
-      label { display:block; margin-top:10px }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 50px 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input[type="file"] {
+            padding: 10px 12px;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-top: 2px;
+            accent-color: #667eea;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 30px;
+            font-size: 13px;
+            color: #1565c0;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #0d47a1;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <h1>Upload Floorplan PDF</h1>
-    <form action="/extract" method="post" enctype="multipart/form-data">
-      <label>PDF file: <input type="file" name="pdf" accept="application/pdf" required></label>
-      <label>Pixels per meter (scale): <input type="text" name="pixels_per_meter" value="100"></label>
-      <label>Roll width (m, e.g. 3.66): <input type="text" name="roll_width" value="3.66"></label>
-      <label style="display:block;margin-top:8px"><input type="checkbox" name="use_ml" value="1"> Use ML segmentation (provide model in project root as <strong>model.pth</strong>)</label>
-      <label style="font-size:90%">If you have a trained U-Net / segmentation model, place the weights at <strong>model.pth</strong> in the project root. The app will attempt to use it.</label>
-      <label>Waste percent for carpet (e.g. 10): <input type="text" name="waste_pct" value="10"></label>
-      <label>Tile width (m, optional): <input type="text" name="tile_w" value="0"></label>
-      <label>Tile height (m, optional): <input type="text" name="tile_h" value="0"></label>
-      <p><button type="submit">Extract Rooms</button></p>
-    </form>
-    <hr>
-    <p>Notes: Provide the scale (pixels per meter) for accurate area results. If unknown, try calibrating with a known dimension on the plan.</p>
-  </body>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📐</div>
+        <div class="header">
+            <h1>Floorplan Analysis</h1>
+            <p>Extract rooms and calculate material requirements from PDF floorplans</p>
+        </div>
+
+        <form action="/extract" method="post" enctype="multipart/form-data">
+            <!-- PDF Upload -->
+            <div class="form-group">
+                <label for="pdf-file">📄 Floorplan PDF</label>
+                <input type="file" id="pdf-file" name="pdf" accept="application/pdf" required>
+                <p class="help-text">Upload your floorplan as a PDF file (max 10 MB)</p>
+            </div>
+
+            <!-- Scale Calibration -->
+            <div class="section-title">Scale & Measurement</div>
+            <div class="form-group">
+                <label for="ppm">📏 Pixels per Meter (Scale)</label>
+                <input type="text" id="ppm" name="pixels_per_meter" value="100">
+                <p class="help-text">Measure a known distance on your plan (e.g., 5m door), then divide pixels by meters. Default: 100</p>
+            </div>
+
+            <!-- Carpet Options -->
+            <div class="section-title">Carpet & Material Options</div>
+            <div class="two-column">
+                <div class="form-group">
+                    <label for="roll-width">Roll Width (m)</label>
+                    <input type="text" id="roll-width" name="roll_width" value="3.66">
+                    <p class="help-text">Standard: 3.66m</p>
+                </div>
+                <div class="form-group">
+                    <label for="waste-pct">Waste %</label>
+                    <input type="text" id="waste-pct" name="waste_pct" value="10">
+                    <p class="help-text">Waste allowance</p>
+                </div>
+            </div>
+
+            <!-- Tiles (Optional) -->
+            <div class="section-title">Tile Calculation (Optional)</div>
+            <div class="two-column">
+                <div class="form-group">
+                    <label for="tile-w">Tile Width (m)</label>
+                    <input type="text" id="tile-w" name="tile_w" value="0">
+                    <p class="help-text">Leave as 0 to skip</p>
+                </div>
+                <div class="form-group">
+                    <label for="tile-h">Tile Height (m)</label>
+                    <input type="text" id="tile-h" name="tile_h" value="0">
+                    <p class="help-text">Leave as 0 to skip</p>
+                </div>
+            </div>
+
+            <!-- ML Option -->
+            <div class="form-group" style="margin-top: 30px;">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="use-ml" name="use_ml" value="1">
+                    <label for="use-ml">
+                        🤖 <strong>Use AI Segmentation</strong>
+                        <span class="help-text" style="display: block; margin-top: 4px;">Enable for better accuracy on complex plans (requires model.pth)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn">🚀 Analyze Floorplan</button>
+        </form>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <strong>💡 Tip:</strong> Don't know your scale? Use a ruler to measure a known object on your plan (like a door frame typically 0.9m), convert to pixels, then calculate pixels/meter.
+        </div>
+    </div>
+</body>
 </html>

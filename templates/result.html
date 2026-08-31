@@ -1,34 +1,666 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Extraction Results</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Floorplan Extraction</title>
     <style>
-      body{font-family:Arial,Helvetica,sans-serif;margin:24px}
-      table{border-collapse:collapse;margin-top:12px}
-      td,th{border:1px solid #ddd;padding:8px}
-      #image-wrap{position:relative;display:inline-block}
-      #overlay-svg{position:absolute;left:0;top:0;pointer-events:none}
-      .vertex{cursor:pointer;pointer-events:all}
-      .button-row{margin-top:8px}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+        }
+
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .two-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #image-wrap {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #floorImage {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            display: block;
+        }
+
+        #overlay-svg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .vertex {
+            cursor: pointer;
+            pointer-events: all;
+            transition: r 0.2s;
+        }
+
+        .vertex:hover {
+            r: 10;
+            stroke-width: 3;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .control-group input {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .control-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            border-color: #667eea;
+        }
+
+        .btn-save {
+            grid-column: 1 / -1;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .results-table thead {
+            background: #f8f9fa;
+        }
+
+        .results-table th {
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .results-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .results-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .results-table input {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: monospace;
+            width: 70px;
+        }
+
+        .results-table input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .metric {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            color: #666;
+            margin-left: 4px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 1200px) {
+            .two-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .results-table {
+                font-size: 12px;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 10px 8px;
+            }
+
+            .metric {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-message {
+            padding: 12px 16px;
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            border-radius: 6px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .status-message.info {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+            color: #1565c0;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Detected Rooms</h1>
-    <div id="image-wrap">
-      <img id="floorImage" src="/{{ image_path }}" alt="annotated" style="max-width:90%;height:auto;border:1px solid #ccc;margin-bottom:12px">
-      <svg id="overlay-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Analysis Results</h1>
+            <a href="/" class="back-btn">← Upload New File</a>
+        </div>
+
+        <div class="two-panel">
+            <!-- Image Panel -->
+            <div class="panel">
+                <h2>🖼️ Floorplan Overview</h2>
+                <div id="image-wrap">
+                    <img id="floorImage" src="/{{ image_path }}" alt="annotated">
+                    <svg id="overlay-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+                </div>
+                <p style="font-size: 12px; color: #888; line-height: 1.6;">
+                    💡 <strong>Tip:</strong> Drag the yellow vertices to adjust room boundaries. Changes update the calculations in real-time.
+                </p>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="panel">
+                <h2>⚙️ Calculation Settings</h2>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <label>📏 Pixels per Meter</label>
+                        <input type="text" id="ppmInput" value="{{ pixels_per_meter }}" placeholder="100">
+                    </div>
+                    <div class="control-group">
+                        <label>📦 Roll Width (m)</label>
+                        <input type="text" id="rollWidthInput" value="{{ roll_width }}" placeholder="3.66">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" id="calibrateBtn">📐 Calibrate Scale</button>
+                    <button class="btn btn-secondary" id="resetCalBtn">↺ Reset Values</button>
+                    <button class="btn btn-primary" id="optimizeBtn">⚡ Optimize Layout</button>
+                    <button class="btn btn-primary btn-save" id="saveBtn">💾 Save Results as CSV</button>
+                </div>
+
+                <div class="metric" id="summaryMetrics" style="display: none;">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Rooms</div>
+                        <div class="metric-value"><span id="totalRooms">0</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Area</div>
+                        <div class="metric-value"><span id="totalArea">0</span><span class="metric-unit">m²</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Carpet</div>
+                        <div class="metric-value"><span id="totalCarpet">0</span><span class="metric-unit">m</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Seams</div>
+                        <div class="metric-value"><span id="totalSeams">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="panel">
+            <h2>📋 Room Details</h2>
+            <div class="table-wrapper">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Area (m²)</th>
+                            <th>Length (m)</th>
+                            <th>Width (m)</th>
+                            <th>Strips</th>
+                            <th>Strip Len (m)</th>
+                            <th>Carpet (m)</th>
+                            <th>Waste (m²)</th>
+                            <th>Seams</th>
+                            <th>Roll (m)</th>
+                            <th>Tiles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                        <tr data-id="{{ r.id }}">
+                            <td><strong>Room {{ r.id }}</strong></td>
+                            <td class="area-m2">{{ r.area_m2 }}</td>
+                            <td class="length">{{ r.length_m }}</td>
+                            <td class="width">{{ r.width_m }}</td>
+                            <td class="strips">{{ r.strips }}</td>
+                            <td class="strip-length">{{ r.strip_length_m }}</td>
+                            <td class="carpet-length">{{ r.carpet_required_m }}</td>
+                            <td class="waste">{{ r.waste_m2 }}</td>
+                            <td class="seams">{{ r.seams }}</td>
+                            <td><input class="room-roll" data-id="{{ r.id }}" type="text" value="{{ roll_width }}"></td>
+                            <td class="tiles">{% if r.tiles_needed %}{{ r.tiles_needed }}{% else %}-{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="button-row">
-      <label style="display:inline-block;margin-left:12px">Roll width (m): <input id="rollWidthInput" type="text" value="{{ roll_width }}" style="width:80px"></label>
-      <button id="calibrateBtn">Calibrate scale</button>
-      <button id="resetCalBtn">Reset calibration</button>
-      <button id="optimizeBtn">Optimize orientations</button>
-      <button id="saveBtn">Save corrections</button>
-    </div>
+    <script>
+        const results = {{ results|tojson }};
+        let pixelsPerMeter = {{ pixels_per_meter|default('null') }};
+        const img = document.getElementById('floorImage');
+        const svg = document.getElementById('overlay-svg');
+        let rollWidth = {{ roll_width|default('3.66') }};
 
-    <table id="results-table">
+        function waitForImage(cb) {
+            if (img.complete && img.naturalWidth) { cb(); return; }
+            img.onload = cb;
+        }
+
+        function createSVG() {
+            svg.setAttribute('width', img.clientWidth);
+            svg.setAttribute('height', img.clientHeight);
+            svg.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
+            svg.style.pointerEvents = 'auto';
+        }
+
+        function drawPolygons() {
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+            results.forEach(r => {
+                const pts = r.polygon.map(p => p.join(',')).join(' ');
+                const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                poly.setAttribute('points', pts);
+                poly.setAttribute('fill', 'rgba(102, 126, 234, 0.08)');
+                poly.setAttribute('stroke', '#667eea');
+                poly.setAttribute('stroke-width', '2');
+                svg.appendChild(poly);
+                r.polygon.forEach((p, idx) => {
+                    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', '6');
+                    c.setAttribute('fill', '#ffc107'); c.setAttribute('stroke', '#667eea'); c.setAttribute('stroke-width', '2');
+                    c.classList.add('vertex');
+                    c.dataset.roomId = r.id; c.dataset.vIdx = idx;
+                    makeDraggable(c);
+                    svg.appendChild(c);
+                });
+            });
+        }
+
+        function makeDraggable(circle) {
+            let dragging = false;
+            circle.addEventListener('mousedown', (e) => { dragging = true; e.preventDefault(); });
+            window.addEventListener('mouseup', () => { dragging = false; });
+            window.addEventListener('mousemove', (e) => {
+                if (!dragging) return;
+                const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+                const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+                circle.setAttribute('cx', loc.x); circle.setAttribute('cy', loc.y);
+                const rid = parseInt(circle.dataset.roomId, 10);
+                const vidx = parseInt(circle.dataset.vIdx, 10);
+                const room = results.find(rr => rr.id === rid);
+                room.polygon[vidx] = [Math.round(loc.x), Math.round(loc.y)];
+                updatePolygonShape(rid);
+                recomputeAreaForRoom(rid);
+                updateSummary();
+            });
+        }
+
+        function updatePolygonShape(roomId) {
+            const polys = svg.querySelectorAll('polygon');
+            const r = results.find(rr => rr.id === roomId);
+            if (!r) return;
+            const pts = r.polygon.map(p => p.join(',')).join(' ');
+            const poly = Array.from(polys).find((p, idx) => {
+                return idx === results.findIndex(rr => rr.id === roomId);
+            });
+            if (poly) poly.setAttribute('points', pts);
+        }
+
+        function polygonArea(px) {
+            let area = 0;
+            for (let i = 0, j = px.length - 1; i < px.length; j = i++) {
+                area += (px[j][0] + px[i][0]) * (px[j][1] - px[i][1]);
+            }
+            return Math.abs(area / 2);
+        }
+
+        function pcaBBox(points) {
+            const n = points.length;
+            let meanX = 0, meanY = 0;
+            for (const p of points) { meanX += p[0]; meanY += p[1]; }
+            meanX /= n; meanY /= n;
+            let Sxx = 0, Syy = 0, Sxy = 0;
+            for (const p of points) {
+                const dx = p[0] - meanX, dy = p[1] - meanY;
+                Sxx += dx * dx; Syy += dy * dy; Sxy += dx * dy;
+            }
+            Sxx /= n; Syy /= n; Sxy /= n;
+            const trace = Sxx + Syy;
+            const det = Sxx * Syy - Sxy * Sxy;
+            const tmp = Math.sqrt(Math.max(0, trace * trace / 4 - det));
+            const lambda1 = trace / 2 + tmp;
+            let vx = Sxy, vy = lambda1 - Sxx;
+            if (Math.abs(vx) < 1e-9 && Math.abs(vy) < 1e-9) { vx = 1; vy = 0; }
+            const norm = Math.hypot(vx, vy); vx /= norm; vy /= norm;
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            for (const p of points) {
+                const dx = p[0] - meanX, dy = p[1] - meanY;
+                const rx = dx * vx + dy * vy;
+                const ry = -dx * vy + dy * vx;
+                if (rx < minX) minX = rx; if (rx > maxX) maxX = rx;
+                if (ry < minY) minY = ry; if (ry > maxY) maxY = ry;
+            }
+            const width = Math.abs(maxX - minX);
+            const height = Math.abs(maxY - minY);
+            return { width, height, angle: Math.atan2(vy, vx), center: [meanX, meanY] };
+        }
+
+        function recomputeAreaForRoom(roomId) {
+            const r = results.find(rr => rr.id === roomId);
+            const areaPx = polygonArea(r.polygon);
+            const row = document.querySelector(`tr[data-id='${roomId}']`);
+            if (pixelsPerMeter) {
+                const areaM2 = areaPx / (pixelsPerMeter * pixelsPerMeter);
+                const bb = pcaBBox(r.polygon);
+                const length_m = Math.max(bb.width, bb.height) / pixelsPerMeter;
+                const width_m = Math.min(bb.width, bb.height) / pixelsPerMeter;
+                const ROLL_WIDTH_M = rollWidth;
+                const strips_a = Math.ceil(width_m / ROLL_WIDTH_M);
+                const total_len_a = strips_a * length_m;
+                const strips_b = Math.ceil(length_m / ROLL_WIDTH_M);
+                const total_len_b = strips_b * width_m;
+                let chosen, strips, strip_len, total_len;
+                if (total_len_a < total_len_b || (total_len_a === total_len_b && strips_a <= strips_b)) {
+                    chosen = 'A'; strips = strips_a; strip_len = length_m; total_len = total_len_a;
+                } else { chosen = 'B'; strips = strips_b; strip_len = width_m; total_len = total_len_b; }
+                const waste = strips * strip_len * ROLL_WIDTH_M - areaM2;
+                row.querySelector('.area-m2').textContent = areaM2.toFixed(3);
+                row.querySelector('.length').textContent = length_m.toFixed(3);
+                row.querySelector('.width').textContent = width_m.toFixed(3);
+                row.querySelector('.strips').textContent = strips;
+                row.querySelector('.strip-length').textContent = strip_len.toFixed(3);
+                row.querySelector('.carpet-length').textContent = total_len.toFixed(3);
+                row.querySelector('.waste').textContent = waste.toFixed(3);
+                row.querySelector('.seams').textContent = Math.max(0, strips - 1);
+            }
+        }
+
+        function updateSummary() {
+            let totalArea = 0, totalCarpet = 0, totalSeams = 0;
+            document.querySelectorAll('tr[data-id]').forEach(row => {
+                totalArea += parseFloat(row.querySelector('.area-m2').textContent) || 0;
+                totalCarpet += parseFloat(row.querySelector('.carpet-length').textContent) || 0;
+                totalSeams += parseInt(row.querySelector('.seams').textContent) || 0;
+            });
+            document.getElementById('totalRooms').textContent = results.length;
+            document.getElementById('totalArea').textContent = totalArea.toFixed(2);
+            document.getElementById('totalCarpet').textContent = totalCarpet.toFixed(2);
+            document.getElementById('totalSeams').textContent = totalSeams;
+            document.getElementById('summaryMetrics').style.display = 'grid';
+        }
+
+        document.getElementById('calibrateBtn').addEventListener('click', () => {
+            alert('Click two points on the plan to set a known distance, then enter the real distance in meters.');
+        });
+
+        document.getElementById('resetCalBtn').addEventListener('click', () => {
+            pixelsPerMeter = {{ pixels_per_meter|default('null') }};
+            document.getElementById('ppmInput').value = pixelsPerMeter || '';
+            results.forEach(r => recomputeAreaForRoom(r.id));
+            updateSummary();
+        });
+
+        document.getElementById('optimizeBtn').addEventListener('click', () => {
+            const roomData = results.map(r => ({
+                id: r.id,
+                length_m: parseFloat(document.querySelector(`tr[data-id='${r.id}'] .length`).textContent),
+                width_m: parseFloat(document.querySelector(`tr[data-id='${r.id}'] .width`).textContent),
+                roll_width: rollWidth
+            }));
+            fetch('/optimize_orientations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rooms: roomData }) })
+                .then(r => r.json()).then(d => {
+                    if (d.error) { alert(d.error); return; }
+                    d.rooms.forEach(opt => {
+                        const row = document.querySelector(`tr[data-id='${opt.id}']`);
+                        row.querySelector('.strips').textContent = opt.strips;
+                        row.querySelector('.strip-length').textContent = opt.strip_len.toFixed(3);
+                        row.querySelector('.carpet-length').textContent = opt.total_len.toFixed(3);
+                        row.querySelector('.seams').textContent = opt.seams;
+                    });
+                    updateSummary();
+                    alert(`✅ Optimized! Total carpet: ${d.total_len.toFixed(2)}m, Seams: ${d.total_seams}`);
+                }).catch(e => alert('Error: ' + e));
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const corrData = {
+                results: results,
+                pixels_per_meter: pixelsPerMeter,
+                roll_width: rollWidth,
+                waste_pct: 10,
+                tile_w: 0,
+                tile_h: 0
+            };
+            fetch('/save_corrections', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corrData) })
+                .then(r => r.json()).then(d => {
+                    alert('✅ Results saved successfully!');
+                    if (d.csv) {
+                        window.open('/' + d.csv);
+                    }
+                }).catch(e => alert('Error: ' + e));
+        });
+
+        document.getElementById('rollWidthInput').addEventListener('change', () => {
+            rollWidth = parseFloat(document.getElementById('rollWidthInput').value) || 3.66;
+            results.forEach(r => recomputeAreaForRoom(r.id));
+            updateSummary();
+        });
+
+        waitForImage(() => {
+            createSVG();
+            drawPolygons();
+            results.forEach(r => recomputeAreaForRoom(r.id));
+            updateSummary();
+        });
+    </script>
+</body>
+</html>
       <thead>
         <tr>
           <th>Room</th>
