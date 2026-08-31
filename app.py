@@ -11,6 +11,19 @@ import os.path as osp
 from werkzeug.utils import secure_filename
 from config import Config
 
+# Try to import pymupdf for PDF conversion without Poppler
+try:
+    import pymupdf
+    FITZ_AVAILABLE = True
+except ImportError:
+    # Fallback to older fitz name
+    try:
+        import fitz as pymupdf
+        FITZ_AVAILABLE = True
+    except ImportError:
+        pymupdf = None
+        FITZ_AVAILABLE = False
+
 # Configure logging
 log_handlers = [logging.StreamHandler()]
 if Config.LOG_FILE:
@@ -54,7 +67,52 @@ logger.info(f'Output directory: {OUTPUT_DIR}')
 logger.info(f'Configuration: PDF_DPI={Config.PDF_DPI}, MIN_AREA_PX={Config.MIN_ROOM_AREA_PX}')
 
 
-def detect_rooms(pil_img: Image.Image, min_area_px: int = None) -> tuple:
+def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
+    """Convert PDF to images using PyMuPDF (pymupdf) or fallback to pdf2image.
+    
+    Args:
+        pdf_bytes: PDF file content as bytes
+        dpi: Resolution for conversion (default 200 DPI)
+        
+    Returns:
+        List of PIL Image objects (RGB mode)
+    """
+    # Try PyMuPDF first (no Poppler dependency)
+    if FITZ_AVAILABLE:
+        try:
+            doc = pymupdf.open(stream=pdf_bytes, filetype='pdf')
+            images = []
+            zoom = dpi / 72.0  # 72 DPI is pymupdf default
+            for page_num in range(len(doc)):
+                page = doc[page_num]
+                mat = pymupdf.Matrix(zoom, zoom)
+                pix = page.get_pixmap(matrix=mat, alpha=False)
+                img_data = pix.tobytes('ppm')
+                img = Image.open(io.BytesIO(img_data))
+                images.append(img.convert('RGB'))
+            doc.close()
+            logger.info(f'Converted {len(images)} pages using PyMuPDF')
+            return images
+        except Exception as e:
+            logger.warning(f'PyMuPDF conversion failed, trying pdf2image: {e}')
+    
+    # Fallback to pdf2image (requires Poppler)
+    try:
+        images = convert_from_bytes(pdf_bytes, dpi=dpi)
+        logger.info(f'Converted {len(images)} pages using pdf2image')
+        return images
+    except Exception as e:
+        error_msg = str(e).lower()
+        if 'poppler' in error_msg or 'pdftoimage' in error_msg:
+            raise RuntimeError(
+                'PDF conversion failed: Poppler not found. '
+                'PyMuPDF is installed but conversion failed. '
+                'Please reinstall: pip install --upgrade PyMuPDF'
+            )
+        raise
+
+
+
     """Detect rooms in a floorplan image using OpenCV contour detection.
     
     Args:
@@ -223,14 +281,14 @@ def extract():
         pdf_bytes = f.read()
         # Convert first page to image
         try:
-            images = convert_from_bytes(pdf_bytes, dpi=Config.PDF_DPI)
+            images = convert_pdf_to_images(pdf_bytes, dpi=Config.PDF_DPI)
         except Exception as e:
             error_msg = str(e).lower()
             if 'poppler' in error_msg or 'pdftoimage' in error_msg:
-                logger.error('Poppler not found: %s', e)
+                logger.error('PDF conversion failed: %s', e)
                 return jsonify({
-                    'error': 'Poppler not installed. PDF conversion requires Poppler. '
-                             'Run setup.bat or download from https://github.com/oschwartz10612/poppler-windows/releases/'
+                    'error': 'PDF conversion failed. PyMuPDF is installed but conversion could not complete. '
+                             'Try reinstalling: pip install --upgrade PyMuPDF'
                 }), 500
             elif 'pdf' in error_msg or 'corrupt' in error_msg:
                 logger.error('Invalid PDF file: %s', e)
