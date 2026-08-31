@@ -1,0 +1,15 @@
+# Core dependencies
+Flask>=2.0
+pdf2image>=1.16
+opencv-python>=4.5
+numpy>=1.19
+Pillow>=8.0
+Shapely>=1.7
+Werkzeug>=2.0
+
+# Optional ML dependencies (for segmentation models)
+# Install with: pip install -r requirements.txt -e .[ml]
+torch>=1.12
+torchvision>=0.13
+segmentation-models-pytorch>=0.3.0
+albumentations>=1.0.0

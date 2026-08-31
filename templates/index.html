@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Floorplan Extraction</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 40px; }
+      label { display:block; margin-top:10px }
+    </style>
+  </head>
+  <body>
+    <h1>Upload Floorplan PDF</h1>
+    <form action="/extract" method="post" enctype="multipart/form-data">
+      <label>PDF file: <input type="file" name="pdf" accept="application/pdf" required></label>
+      <label>Pixels per meter (scale): <input type="text" name="pixels_per_meter" value="100"></label>
+      <label>Roll width (m, e.g. 3.66): <input type="text" name="roll_width" value="3.66"></label>
+      <label style="display:block;margin-top:8px"><input type="checkbox" name="use_ml" value="1"> Use ML segmentation (provide model in project root as <strong>model.pth</strong>)</label>
+      <label style="font-size:90%">If you have a trained U-Net / segmentation model, place the weights at <strong>model.pth</strong> in the project root. The app will attempt to use it.</label>
+      <label>Waste percent for carpet (e.g. 10): <input type="text" name="waste_pct" value="10"></label>
+      <label>Tile width (m, optional): <input type="text" name="tile_w" value="0"></label>
+      <label>Tile height (m, optional): <input type="text" name="tile_h" value="0"></label>
+      <p><button type="submit">Extract Rooms</button></p>
+    </form>
+    <hr>
+    <p>Notes: Provide the scale (pixels per meter) for accurate area results. If unknown, try calibrating with a known dimension on the plan.</p>
+  </body>
+</html>

@@ -1,0 +1,362 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Extraction Results</title>
+    <style>
+      body{font-family:Arial,Helvetica,sans-serif;margin:24px}
+      table{border-collapse:collapse;margin-top:12px}
+      td,th{border:1px solid #ddd;padding:8px}
+      #image-wrap{position:relative;display:inline-block}
+      #overlay-svg{position:absolute;left:0;top:0;pointer-events:none}
+      .vertex{cursor:pointer;pointer-events:all}
+      .button-row{margin-top:8px}
+    </style>
+  </head>
+  <body>
+    <h1>Detected Rooms</h1>
+    <div id="image-wrap">
+      <img id="floorImage" src="/{{ image_path }}" alt="annotated" style="max-width:90%;height:auto;border:1px solid #ccc;margin-bottom:12px">
+      <svg id="overlay-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="button-row">
+      <label style="display:inline-block;margin-left:12px">Roll width (m): <input id="rollWidthInput" type="text" value="{{ roll_width }}" style="width:80px"></label>
+      <button id="calibrateBtn">Calibrate scale</button>
+      <button id="resetCalBtn">Reset calibration</button>
+      <button id="optimizeBtn">Optimize orientations</button>
+      <button id="saveBtn">Save corrections</button>
+    </div>
+
+    <table id="results-table">
+      <thead>
+        <tr>
+          <th>Room</th>
+          <th>Area (m²)</th>
+          <th>Length (m)</th>
+          <th>Width (m)</th>
+          <th>Strips</th>
+          <th>Strip length (m)</th>
+          <th>Carpet length required (m)</th>
+          <th>Waste (m²)</th>
+          <th>Seams</th>
+          <th>Roll width (m)</th>
+          <th>Tiles needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr data-id="{{ r.id }}">
+          <td>{{ r.id }}</td>
+          <td class="area-m2">{{ r.area_m2 }}</td>
+          <td class="length">{{ r.length_m }}</td>
+          <td class="width">{{ r.width_m }}</td>
+          <td class="strips">{{ r.strips }}</td>
+          <td class="strip-length">{{ r.strip_length_m }}</td>
+          <td class="carpet-length">{{ r.carpet_required_m }}</td>
+          <td class="waste">{{ r.waste_m2 }}</td>
+          <td class="seams">{{ r.seams }}</td>
+          <td><input class="room-roll" data-id="{{ r.id }}" type="text" value="{{ roll_width }}" style="width:70px"></td>
+          <td class="tiles">{% if r.tiles_needed %}{{ r.tiles_needed }}{% else %}-{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p><a href="/">Back</a></p>
+
+    <script>
+      const results = {{ results|tojson }};
+      let pixelsPerMeter = {{ pixels_per_meter|default('null') }};
+      const img = document.getElementById('floorImage');
+      const svg = document.getElementById('overlay-svg');
+      let scale = 1; // ratio between rendered size and natural size
+      let rollWidth = {{ roll_width|default('3.66') }};
+
+      function waitForImage(cb){
+        if(img.complete && img.naturalWidth){ cb(); return; }
+        img.onload = cb;
+      }
+
+      function createSVG(){
+        svg.setAttribute('width', img.clientWidth);
+        svg.setAttribute('height', img.clientHeight);
+        svg.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
+        svg.style.pointerEvents = 'auto';
+      }
+
+      function drawPolygons(){
+        // clear
+        while(svg.firstChild) svg.removeChild(svg.firstChild);
+        results.forEach(r => {
+          const pts = r.polygon.map(p=>p.join(',')).join(' ');
+          const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+          poly.setAttribute('points', pts);
+          poly.setAttribute('fill','rgba(255,0,0,0.05)');
+          poly.setAttribute('stroke','red');
+          poly.setAttribute('stroke-width','3');
+          svg.appendChild(poly);
+          // vertices
+          r.polygon.forEach((p, idx)=>{
+            const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+            c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', 8);
+            c.setAttribute('fill','yellow'); c.setAttribute('stroke','black'); c.classList.add('vertex');
+            c.dataset.roomId = r.id; c.dataset.vIdx = idx;
+            makeDraggable(c);
+            svg.appendChild(c);
+          });
+        });
+      }
+
+      function makeDraggable(circle){
+        let dragging = false;
+        circle.addEventListener('mousedown', (e)=>{ dragging=true; e.preventDefault(); });
+        window.addEventListener('mouseup', ()=>{ dragging=false; });
+        window.addEventListener('mousemove', (e)=>{
+          if(!dragging) return;
+          // map mouse to SVG coords
+          const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+          const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+          circle.setAttribute('cx', loc.x); circle.setAttribute('cy', loc.y);
+          const rid = parseInt(circle.dataset.roomId,10);
+          const vidx = parseInt(circle.dataset.vIdx,10);
+          const room = results.find(rr=>rr.id===rid);
+          room.polygon[vidx] = [Math.round(loc.x), Math.round(loc.y)];
+          updatePolygonShape(rid);
+          recomputeAreaForRoom(rid);
+        });
+      }
+
+      function updatePolygonShape(roomId){
+        // update polygon element points
+        const polys = svg.querySelectorAll('polygon');
+        const r = results.find(rr=>rr.id===roomId);
+        if(!r) return;
+        const pts = r.polygon.map(p=>p.join(',')).join(' ');
+        // polygons and circles appended in order; find polygon index
+        const poly = Array.from(polys).find((p,idx)=> {
+          return idx===results.findIndex(rr=>rr.id===roomId);
+        });
+        if(poly) poly.setAttribute('points', pts);
+      }
+
+      function polygonArea(px){
+        let area=0; for(let i=0,j=px.length-1;i<px.length;j=i++){
+          area += (px[j][0]+px[i][0])*(px[j][1]-px[i][1]);
+        }
+        return Math.abs(area/2);
+      }
+
+      function pcaBBox(points){
+        // points: array of [x,y]
+        const n = points.length;
+        let meanX=0, meanY=0;
+        for(const p of points){ meanX += p[0]; meanY += p[1]; }
+        meanX/=n; meanY/=n;
+        // covariance
+        let Sxx=0,Syy=0,Sxy=0;
+        for(const p of points){ const dx=p[0]-meanX, dy=p[1]-meanY; Sxx+=dx*dx; Syy+=dy*dy; Sxy+=dx*dy; }
+        Sxx/=n; Syy/=n; Sxy/=n;
+        // eigenvector of largest eigenvalue
+        const trace = Sxx+Syy; const det = Sxx*Syy - Sxy*Sxy; const tmp = Math.sqrt(Math.max(0, trace*trace/4 - det));
+        const lambda1 = trace/2 + tmp;
+        // eigenvector (Sxx - lambda, Sxy)
+        let vx = Sxy, vy = lambda1 - Sxx;
+        if(Math.abs(vx) < 1e-9 && Math.abs(vy) < 1e-9){ vx = 1; vy = 0; }
+        const norm = Math.hypot(vx, vy); vx/=norm; vy/=norm;
+        // rotate points into PCA frame
+        let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+        for(const p of points){ const dx=p[0]-meanX, dy=p[1]-meanY; const rx = dx*vx + dy*vy; const ry = -dx*vy + dy*vx; if(rx<minX)minX=rx; if(rx>maxX)maxX=rx; if(ry<minY)minY=ry; if(ry>maxY)maxY=ry; }
+        const width = Math.abs(maxX-minX); const height = Math.abs(maxY-minY);
+        return { width, height, angle: Math.atan2(vy,vx), center:[meanX,meanY] };
+      }
+
+      function recomputeAreaForRoom(roomId){
+        const r = results.find(rr=>rr.id===roomId);
+        const areaPx = polygonArea(r.polygon);
+        const row = document.querySelector(`tr[data-id='${roomId}']`);
+        if(pixelsPerMeter){
+          const areaM2 = areaPx / (pixelsPerMeter*pixelsPerMeter);
+          // compute PCA bbox for length/width
+          const bb = pcaBBox(r.polygon);
+          const length_m = Math.max(bb.width, bb.height) / pixelsPerMeter;
+          const width_m = Math.min(bb.width, bb.height) / pixelsPerMeter;
+          const ROLL_WIDTH_M = rollWidth;
+          const strips_a = Math.ceil(width_m / ROLL_WIDTH_M);
+          const total_len_a = strips_a * length_m;
+          const strips_b = Math.ceil(length_m / ROLL_WIDTH_M);
+          const total_len_b = strips_b * (width_m);
+          let chosen, strips, strip_len, total_len;
+          if(total_len_a < total_len_b || (total_len_a === total_len_b && strips_a <= strips_b)){
+            chosen='A'; strips=strips_a; strip_len=length_m; total_len=total_len_a;
+          } else { chosen='B'; strips=strips_b; strip_len=width_m; total_len=total_len_b; }
+          const waste = strips * strip_len * ROLL_WIDTH_M - areaM2;
+          row.querySelector('.area-m2').textContent = areaM2.toFixed(3);
+          row.querySelector('.length').textContent = length_m.toFixed(3);
+          row.querySelector('.width').textContent = width_m.toFixed(3);
+          row.querySelector('.strips').textContent = strips;
+          row.querySelector('.strip-length').textContent = strip_len.toFixed(3);
+          row.querySelector('.carpet-length').textContent = total_len.toFixed(3);
+          row.querySelector('.waste').textContent = waste.toFixed(3);
+          row.querySelector('.seams').textContent = Math.max(0, strips - 1);
+        }
+      }
+
+      function updateRollWidthGlobally(){
+        rollWidth = parseFloat(document.getElementById('rollWidthInput').value) || 3.66;
+        results.forEach(r=>recomputeAreaForRoom(r.id));
+      }
+
+      document.getElementById('calibrateBtn').addEventListener('click',()=>{
+        alert('Click two points on a known distance, then enter the actual distance in meters. This is not yet implemented. Please provide pixels_per_meter manually.');
+      });
+
+      document.getElementById('resetCalBtn').addEventListener('click',()=>{
+        pixelsPerMeter = {{ pixels_per_meter|default('null') }};
+        results.forEach(r=>recomputeAreaForRoom(r.id));
+      });
+
+      document.getElementById('optimizeBtn').addEventListener('click',()=>{
+        const roomData = results.map(r=>({
+          id:r.id,length_m:document.querySelector(`tr[data-id='${r.id}'] .length`).textContent,
+          width_m:document.querySelector(`tr[data-id='${r.id}'] .width`).textContent,
+          roll_width:rollWidth
+        }));
+        fetch('/optimize_orientations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rooms:roomData})})
+        .then(r=>r.json()).then(d=>{
+          if(d.error){alert(d.error);return;}
+          d.rooms.forEach(opt=>{
+            const row=document.querySelector(`tr[data-id='${opt.id}']`);
+            row.querySelector('.strips').textContent=opt.strips;
+            row.querySelector('.strip-length').textContent=opt.strip_len.toFixed(3);
+            row.querySelector('.carpet-length').textContent=opt.total_len.toFixed(3);
+            row.querySelector('.seams').textContent=opt.seams;
+          });
+          alert(`Optimized! Total length: ${d.total_len.toFixed(2)}m, Total seams: ${d.total_seams}`);
+        }).catch(e=>alert('Error: '+e));
+      });
+
+      document.getElementById('saveBtn').addEventListener('click',()=>{
+        const corrData={
+          results:results,pixels_per_meter:pixelsPerMeter,
+          roll_width:rollWidth,waste_pct:10,tile_w:0,tile_h:0
+        };
+        fetch('/save_corrections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corrData)})
+        .then(r=>r.json()).then(d=>{
+          if(d.csv){alert('Saved to '+d.csv);}
+          else{alert('Corrections saved.');}
+        }).catch(e=>alert('Error: '+e));
+      });
+
+      document.addEventListener('change',(e)=>{
+        if(e.target.matches('.room-roll')){updateRollWidthGlobally();}
+      });
+
+      waitForImage(()=>{createSVG();drawPolygons();});
+          row.querySelector('.seams').textContent = Math.max(0,strips-1);
+        } else {
+          row.querySelector('.area-m2').textContent = (areaPx.toFixed(0) + ' px²');
+        }
+      }
+
+      document.getElementById('calibrateBtn').addEventListener('click', ()=>{
+        alert('Click two points on the plan to set a known distance.');
+        let clicks = [];
+        const handler = (e)=>{
+          const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+          const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+          clicks.push([loc.x, loc.y]);
+          if(clicks.length===2){
+            svg.removeEventListener('click', handler);
+            const dx = clicks[0][0]-clicks[1][0]; const dy=clicks[0][1]-clicks[1][1];
+            const distPx = Math.hypot(dx,dy);
+            const meters = parseFloat(prompt('Enter the real-world distance (meters) between the two points you clicked:', '1'));
+            if(!meters || meters<=0){ alert('Invalid length'); return; }
+            pixelsPerMeter = distPx / meters;
+            // update table displays
+            results.forEach(r=>{ recomputeAreaForRoom(r.id); });
+            alert('Calibration set: ' + pixelsPerMeter.toFixed(2) + ' pixels/m');
+          }
+        };
+        svg.addEventListener('click', handler);
+      });
+
+      // roll width input change
+      const rollInput = document.getElementById('rollWidthInput');
+      rollInput.addEventListener('change', ()=>{
+        const v = parseFloat(rollInput.value);
+        if(!isNaN(v) && v>0){ rollWidth = v; results.forEach(r=>{ recomputeAreaForRoom(r.id); }); }
+      });
+
+      document.getElementById('resetCalBtn').addEventListener('click', ()=>{
+        pixelsPerMeter = null;
+        results.forEach(r=>{ recomputeAreaForRoom(r.id); });
+        alert('Calibration reset');
+      });
+
+      document.getElementById('saveBtn').addEventListener('click', async ()=>{
+        const waste_in = prompt('Waste percent for carpet (e.g. 10 for 10%):', '10');
+        const tile_w = prompt('Tile width (m, optional):','');
+        const tile_h = prompt('Tile height (m, optional):','');
+        let waste = parseFloat(waste_in);
+        if(isNaN(waste)) waste = 10;
+        const payload = { results: results, pixels_per_meter: pixelsPerMeter, waste_pct: waste, tile_w: tile_w, tile_h: tile_h, roll_width: parseFloat(rollInput.value || '{{ roll_width }}') };
+        const resp = await fetch('/save_corrections', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        if(!resp.ok){ alert('Save failed'); return; }
+        const data = await resp.json();
+        if(data.csv){
+          const link = document.createElement('a'); link.href = '/' + data.csv; link.textContent = 'Download CSV'; link.target = '_blank';
+          document.body.appendChild(document.createElement('br'));
+          document.body.appendChild(link);
+        }
+        // update table with authoritative values
+        if(data.results){
+          data.results.forEach(r=>{
+            const row = document.querySelector(`tr[data-id='${r.id}']`);
+            if(row){ row.querySelector('.area-m2').textContent = r.area_m2!==null ? r.area_m2 : row.querySelector('.area-m2').textContent;
+              row.querySelector('.carpet').textContent = r.carpet_m2_including_waste!==null ? r.carpet_m2_including_waste : row.querySelector('.carpet').textContent;
+              row.querySelector('.tiles').textContent = r.tiles_needed!==null ? r.tiles_needed : row.querySelector('.tiles').textContent;
+            }
+          });
+        }
+      });
+
+      document.getElementById('optimizeBtn').addEventListener('click', async ()=>{
+        // gather rooms
+        const payloadRooms = results.map(r=>{
+          const row = document.querySelector(`tr[data-id='${r.id}']`);
+          const length = parseFloat(row.querySelector('.length').textContent) || 0;
+          const width = parseFloat(row.querySelector('.width').textContent) || 0;
+          const rollInput = row.querySelector('.room-roll');
+          const roll = parseFloat(rollInput ? rollInput.value : rollWidth) || rollWidth;
+          return { id: r.id, length_m: length, width_m: width, roll_width: roll };
+        });
+        const resp = await fetch('/optimize_orientations', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({rooms: payloadRooms}) });
+        if(!resp.ok){ alert('Optimization failed'); return; }
+        const data = await resp.json();
+        if(data && data.rooms){
+          data.rooms.forEach(rr=>{
+            const row = document.querySelector(`tr[data-id='${rr.id}']`);
+            if(row){
+              row.querySelector('.strips').textContent = rr.strips;
+              row.querySelector('.strip-length').textContent = parseFloat(rr.strip_len || rr.strip_len || rr.strip_len) ? parseFloat(rr.strip_len).toFixed(3) : row.querySelector('.strip-length').textContent;
+              row.querySelector('.carpet-length').textContent = parseFloat(rr.total_len).toFixed(3);
+              row.querySelector('.seams').textContent = rr.seams;
+            }
+            // update local results too
+            const loc = results.find(x=>x.id===rr.id);
+            if(loc){ loc.strips = rr.strips; loc.strip_length_m = parseFloat(rr.strip_len || rr.strip_len || rr.strip_len) || loc.strip_length_m; loc.carpet_required_m = rr.total_len; loc.seams = rr.seams; }
+          });
+          alert('Optimization applied. Total length: ' + (data.total_len||0).toFixed(3) + ' m, seams: ' + (data.total_seams||0));
+        }
+      });
+
+      waitForImage(()=>{
+        createSVG();
+        drawPolygons();
+        // initial recompute (server may have provided area_m2 already)
+        results.forEach(r=>{ recomputeAreaForRoom(r.id); });
+      });
+    </script>
+  </body>
+</html>

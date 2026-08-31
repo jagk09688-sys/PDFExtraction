@@ -1,0 +1,82 @@
+╔════════════════════════════════════════════════════════════╗
+║         PDF Extraction & Room Detection Tool                ║
+║                  Quick Start Guide                          ║
+╚════════════════════════════════════════════════════════════╝
+
+🚀 GETTING STARTED (Windows)
+
+  1. Double-click: setup.bat
+     ↓ Installs everything automatically
+  
+  2. Double-click: run.bat
+     ↓ Starts the web server
+  
+  3. Open in browser: http://127.0.0.1:5000/
+     ↓ Ready to use!
+
+───────────────────────────────────────────────────────────────
+
+❓ WHAT DOES IT DO?
+
+  • Uploads floorplan PDFs
+  • Automatically detects rooms
+  • Calculates areas in square meters
+  • Estimates carpet and tile requirements
+  • Let's you interactively adjust results
+
+───────────────────────────────────────────────────────────────
+
+📚 DOCUMENTATION
+
+  SETUP.md         - Detailed setup for all platforms
+  README.md        - Features and usage guide
+  TRAINING.md      - Train your own ML models
+  DEVELOPMENT.md   - For programmers & developers
+  STATUS.md        - Project status & roadmap
+
+───────────────────────────────────────────────────────────────
+
+🔧 IF SOMETHING GOES WRONG
+
+  • Error during setup?
+    → Run setup.bat again
+
+  • "PDF conversion failed"?
+    → setup.bat handles this automatically
+    → Or manually download Poppler:
+       https://github.com/oschwartz10612/poppler-windows/releases/
+
+  • Port already in use?
+    → Edit .env and change FLASK_PORT=5001
+
+  • Need help?
+    → Check SETUP.md troubleshooting section
+    → Run: python test_smoke.py
+
+───────────────────────────────────────────────────────────────
+
+⚡ ADVANCED
+
+  Configuration:
+    Copy .env.example → .env
+    Edit settings as needed
+    Restart run.bat
+
+  ML Models:
+    Run train_segmentation.py
+    See TRAINING.md for details
+
+  Development:
+    See DEVELOPMENT.md for API & code structure
+
+───────────────────────────────────────────────────────────────
+
+✅ PROJECT STATUS: COMPLETE & READY TO USE
+
+All features working, fully documented, production-ready.
+
+For details, see STATUS.md
+
+───────────────────────────────────────────────────────────────
+
+Questions? Read the docs first - most answers are there!

@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Flask
+instance/
+.webassets-cache
+
+# Dependencies (ML libraries are large)
+# Uncomment if you want to ignore installed packages
+# pip-log.txt
+# pip-delete-this-directory.txt
+
+# ML Model weights
+model.pth
+*.pth
+*.pt
+
+# Generated outputs
+static/output/
+dataset/
+output/
+*.png
+*.jpg
+*.jpeg
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+*.tmp
+temp/
