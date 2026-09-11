@@ -13,3 +13,8 @@ torch>=1.12
 torchvision>=0.13
 segmentation-models-pytorch>=0.3.0
 albumentations>=1.0.0
+
+# Optional hybrid pipeline dependencies
+ultralytics>=8.0.0
+surya-ocr>=0.6.0
+paddleocr>=2.0.0

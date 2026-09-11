@@ -112,7 +112,7 @@ def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
         raise
 
 
-
+def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
     """Detect rooms in a floorplan image using OpenCV contour detection.
     
     Args:
@@ -138,15 +138,52 @@ def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
         closed = cv2.morphologyEx(th, cv2.MORPH_CLOSE, kernel, iterations=2)
         contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+        height, width = img.shape[:2]
+        border_margin = 5
+        min_component_width = max(10, int(0.002 * width))
+        min_component_height = max(10, int(0.002 * height))
+
+        binary = (th > 127).astype(np.uint8) * 255
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel, iterations=2)
+        binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=1)
+
+        num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(binary, connectivity=8)
+
         rooms = []
-        for cnt in contours:
+        for label in range(1, num_labels):
+            area = stats[label, cv2.CC_STAT_AREA]
+            if area < min_area_px:
+                continue
+
+            left = stats[label, cv2.CC_STAT_LEFT]
+            top = stats[label, cv2.CC_STAT_TOP]
+            component_width = stats[label, cv2.CC_STAT_WIDTH]
+            component_height = stats[label, cv2.CC_STAT_HEIGHT]
+
+            # Skip full-page or border-touching components, which usually correspond to the outer frame rather than real rooms.
+            if area > 0.8 * height * width:
+                continue
+            if left <= border_margin or top <= border_margin or left + component_width >= width - border_margin or top + component_height >= height - border_margin:
+                continue
+            if component_width < min_component_width or component_height < min_component_height:
+                continue
+            if component_width > 0.9 * width or component_height > 0.9 * height:
+                continue
+
+            component_mask = (labels == label).astype(np.uint8) * 255
+            contours, _ = cv2.findContours(component_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if not contours:
+                continue
+
+            cnt = max(contours, key=cv2.contourArea)
             area = cv2.contourArea(cnt)
             if area < min_area_px:
                 continue
+
             eps = Config.CONTOUR_EPSILON * cv2.arcLength(cnt, True)
             approx = cv2.approxPolyDP(cnt, eps, True)
             poly = [(int(p[0][0]), int(p[0][1])) for p in approx]
-            # Ensure polygon valid
             if len(poly) >= 3:
                 rooms.append({"polygon": poly, "area_px": area, "contour": cnt})
         

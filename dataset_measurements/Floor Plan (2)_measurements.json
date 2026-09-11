@@ -1,0 +1,2660 @@
+{
+  "pdf": "Floor Plan (2).pdf",
+  "page_count": 7,
+  "room_count": 53,
+  "total_area_m2": 142.238,
+  "carpet_area_room_count": 53,
+  "living_area_room_count": 0,
+  "pages": [
+    {
+      "page": 1,
+      "room_count": 2,
+      "total_area_m2": 0.521,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 3153,
+          "area_m2": 0.315,
+          "length_m": 3.13,
+          "width_m": 0.21,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3655,
+              2941
+            ],
+            [
+              3658,
+              2949
+            ],
+            [
+              3968,
+              2946
+            ],
+            [
+              3967,
+              2937
+            ],
+            [
+              3691,
+              2939
+            ],
+            [
+              3681,
+              2928
+            ]
+          ],
+          "carpet_3_66_m": 0.21,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.21,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 2,
+          "area_px": 2060,
+          "area_m2": 0.206,
+          "length_m": 0.81,
+          "width_m": 0.36,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              2470,
+              5576
+            ],
+            [
+              2471,
+              5583
+            ],
+            [
+              2486,
+              5585
+            ],
+            [
+              2488,
+              5592
+            ],
+            [
+              2471,
+              5595
+            ],
+            [
+              2469,
+              5651
+            ],
+            [
+              2472,
+              5655
+            ],
+            [
+              2495,
+              5655
+            ],
+            [
+              2499,
+              5605
+            ],
+            [
+              2495,
+              5589
+            ],
+            [
+              2505,
+              5587
+            ],
+            [
+              2505,
+              5583
+            ],
+            [
+              2489,
+              5580
+            ],
+            [
+              2483,
+              5574
+            ]
+          ],
+          "carpet_3_66_m": 0.36,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.36,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "room_count": 4,
+      "total_area_m2": 1.949,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 7414,
+          "area_m2": 0.741,
+          "length_m": 0.98,
+          "width_m": 0.94,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3186,
+              412
+            ],
+            [
+              3168,
+              418
+            ],
+            [
+              3157,
+              430
+            ],
+            [
+              3149,
+              451
+            ],
+            [
+              3149,
+              472
+            ],
+            [
+              3170,
+              505
+            ],
+            [
+              3201,
+              510
+            ],
+            [
+              3220,
+              504
+            ],
+            [
+              3235,
+              492
+            ],
+            [
+              3243,
+              469
+            ],
+            [
+              3243,
+              450
+            ],
+            [
+              3233,
+              428
+            ],
+            [
+              3220,
+              417
+            ]
+          ],
+          "carpet_3_66_m": 0.94,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.94,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 2,
+          "area_px": 7288,
+          "area_m2": 0.729,
+          "length_m": 0.98,
+          "width_m": 0.92,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              2990,
+              416
+            ],
+            [
+              2976,
+              421
+            ],
+            [
+              2961,
+              437
+            ],
+            [
+              2955,
+              449
+            ],
+            [
+              2957,
+              482
+            ],
+            [
+              2966,
+              499
+            ],
+            [
+              2981,
+              511
+            ],
+            [
+              3013,
+              513
+            ],
+            [
+              3040,
+              495
+            ],
+            [
+              3046,
+              452
+            ],
+            [
+              3030,
+              424
+            ],
+            [
+              3012,
+              416
+            ]
+          ],
+          "carpet_3_66_m": 0.92,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.92,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 3,
+          "area_px": 2455,
+          "area_m2": 0.245,
+          "length_m": 0.63,
+          "width_m": 0.45,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              2613,
+              480
+            ],
+            [
+              2605,
+              472
+            ],
+            [
+              2563,
+              475
+            ],
+            [
+              2551,
+              488
+            ],
+            [
+              2551,
+              503
+            ],
+            [
+              2563,
+              516
+            ],
+            [
+              2607,
+              516
+            ],
+            [
+              2612,
+              510
+            ]
+          ],
+          "carpet_3_66_m": 0.45,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.45,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 4,
+          "area_px": 2328,
+          "area_m2": 0.233,
+          "length_m": 0.63,
+          "width_m": 0.41,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              2845,
+              479
+            ],
+            [
+              2838,
+              474
+            ],
+            [
+              2802,
+              475
+            ],
+            [
+              2788,
+              482
+            ],
+            [
+              2783,
+              488
+            ],
+            [
+              2783,
+              504
+            ],
+            [
+              2794,
+              514
+            ],
+            [
+              2839,
+              515
+            ],
+            [
+              2846,
+              510
+            ]
+          ],
+          "carpet_3_66_m": 0.41,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.41,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "room_count": 19,
+      "total_area_m2": 55.536,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 10227,
+          "area_m2": 1.023,
+          "length_m": 1.924,
+          "width_m": 0.585,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3993,
+              1954
+            ],
+            [
+              3970,
+              1962
+            ],
+            [
+              3961,
+              1982
+            ],
+            [
+              3957,
+              2121
+            ],
+            [
+              3962,
+              2136
+            ],
+            [
+              3976,
+              2146
+            ],
+            [
+              4000,
+              2142
+            ],
+            [
+              4014,
+              2121
+            ],
+            [
+              4018,
+              1975
+            ],
+            [
+              4008,
+              1960
+            ]
+          ],
+          "carpet_3_66_m": 0.585,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.585,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 2,
+          "area_px": 10238,
+          "area_m2": 1.024,
+          "length_m": 1.923,
+          "width_m": 0.584,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4074,
+              2023
+            ],
+            [
+              4054,
+              2026
+            ],
+            [
+              4039,
+              2045
+            ],
+            [
+              4036,
+              2192
+            ],
+            [
+              4046,
+              2210
+            ],
+            [
+              4060,
+              2215
+            ],
+            [
+              4081,
+              2208
+            ],
+            [
+              4093,
+              2185
+            ],
+            [
+              4096,
+              2044
+            ]
+          ],
+          "carpet_3_66_m": 0.584,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.584,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 3,
+          "area_px": 2194,
+          "area_m2": 0.219,
+          "length_m": 2.28,
+          "width_m": 0.222,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              2687,
+              2230
+            ],
+            [
+              2682,
+              2445
+            ],
+            [
+              2695,
+              2458
+            ],
+            [
+              2688,
+              2414
+            ],
+            [
+              2698,
+              2412
+            ],
+            [
+              2692,
+              2383
+            ],
+            [
+              2704,
+              2379
+            ],
+            [
+              2688,
+              2366
+            ],
+            [
+              2702,
+              2365
+            ],
+            [
+              2705,
+              2376
+            ],
+            [
+              2689,
+              2339
+            ],
+            [
+              2698,
+              2334
+            ],
+            [
+              2699,
+              2306
+            ],
+            [
+              2690,
+              2290
+            ],
+            [
+              2698,
+              2289
+            ],
+            [
+              2691,
+              2275
+            ],
+            [
+              2706,
+              2270
+            ],
+            [
+              2694,
+              2248
+            ],
+            [
+              2699,
+              2238
+            ]
+          ],
+          "carpet_3_66_m": 0.222,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.222,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 4,
+          "area_px": 8118,
+          "area_m2": 0.812,
+          "length_m": 2.354,
+          "width_m": 2.325,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4415,
+              2282
+            ],
+            [
+              4610,
+              2291
+            ],
+            [
+              4605,
+              2497
+            ],
+            [
+              4631,
+              2482
+            ],
+            [
+              4638,
+              2502
+            ],
+            [
+              4645,
+              2278
+            ],
+            [
+              4622,
+              2270
+            ],
+            [
+              4627,
+              2356
+            ],
+            [
+              4631,
+              2329
+            ],
+            [
+              4644,
+              2348
+            ],
+            [
+              4633,
+              2420
+            ],
+            [
+              4619,
+              2278
+            ]
+          ],
+          "carpet_3_66_m": 2.325,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 2.325,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 5,
+          "area_px": 10227,
+          "area_m2": 1.023,
+          "length_m": 1.905,
+          "width_m": 0.584,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4715,
+              2589
+            ],
+            [
+              4695,
+              2592
+            ],
+            [
+              4682,
+              2608
+            ],
+            [
+              4678,
+              2761
+            ],
+            [
+              4694,
+              2779
+            ],
+            [
+              4721,
+              2775
+            ],
+            [
+              4735,
+              2753
+            ],
+            [
+              4738,
+              2607
+            ]
+          ],
+          "carpet_3_66_m": 0.584,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.584,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 6,
+          "area_px": 10028,
+          "area_m2": 1.003,
+          "length_m": 1.905,
+          "width_m": 0.577,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4922,
+              2681
+            ],
+            [
+              4903,
+              2685
+            ],
+            [
+              4889,
+              2702
+            ],
+            [
+              4887,
+              2860
+            ],
+            [
+              4904,
+              2871
+            ],
+            [
+              4926,
+              2867
+            ],
+            [
+              4941,
+              2841
+            ],
+            [
+              4945,
+              2704
+            ],
+            [
+              4940,
+              2692
+            ]
+          ],
+          "carpet_3_66_m": 0.577,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.577,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 7,
+          "area_px": 11571,
+          "area_m2": 1.157,
+          "length_m": 9.166,
+          "width_m": 2.238,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4768,
+              3076
+            ],
+            [
+              4595,
+              3073
+            ],
+            [
+              4631,
+              2925
+            ],
+            [
+              4596,
+              2867
+            ],
+            [
+              4576,
+              3078
+            ],
+            [
+              3858,
+              3079
+            ],
+            [
+              3852,
+              3111
+            ]
+          ],
+          "carpet_3_66_m": 6.713,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 6.713,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 8,
+          "area_px": 22041,
+          "area_m2": 2.204,
+          "length_m": 2.49,
+          "width_m": 1.27,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3339,
+              2953
+            ],
+            [
+              3415,
+              2953
+            ],
+            [
+              3431,
+              2985
+            ],
+            [
+              3417,
+              2995
+            ],
+            [
+              3415,
+              3054
+            ],
+            [
+              3376,
+              3057
+            ],
+            [
+              3372,
+              3069
+            ],
+            [
+              3584,
+              3067
+            ],
+            [
+              3587,
+              2992
+            ],
+            [
+              3530,
+              2989
+            ],
+            [
+              3585,
+              2984
+            ],
+            [
+              3579,
+              2943
+            ],
+            [
+              3353,
+              2942
+            ]
+          ],
+          "carpet_3_66_m": 1.27,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.27,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 9,
+          "area_px": 13616,
+          "area_m2": 1.362,
+          "length_m": 11.54,
+          "width_m": 0.559,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5003,
+              3075
+            ],
+            [
+              4962,
+              3079
+            ],
+            [
+              4993,
+              3091
+            ],
+            [
+              4864,
+              4200
+            ],
+            [
+              4827,
+              4216
+            ],
+            [
+              4875,
+              4209
+            ]
+          ],
+          "carpet_3_66_m": 2.234,
+          "carpet_3_66_strips": 4,
+          "carpet_3_66_seams": 3,
+          "carpet_4_0_m": 1.676,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 10,
+          "area_px": 10234,
+          "area_m2": 1.023,
+          "length_m": 1.43,
+          "width_m": 0.89,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3360,
+              3098
+            ],
+            [
+              3359,
+              3184
+            ],
+            [
+              3461,
+              3183
+            ],
+            [
+              3436,
+              3168
+            ],
+            [
+              3472,
+              3171
+            ],
+            [
+              3499,
+              3148
+            ],
+            [
+              3495,
+              3120
+            ],
+            [
+              3470,
+              3105
+            ],
+            [
+              3447,
+              3111
+            ],
+            [
+              3429,
+              3135
+            ],
+            [
+              3422,
+              3133
+            ],
+            [
+              3429,
+              3115
+            ],
+            [
+              3453,
+              3096
+            ]
+          ],
+          "carpet_3_66_m": 0.89,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.89,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 11,
+          "area_px": 7002,
+          "area_m2": 0.7,
+          "length_m": 1.18,
+          "width_m": 0.88,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3481,
+              3096
+            ],
+            [
+              3506,
+              3117
+            ],
+            [
+              3510,
+              3148
+            ],
+            [
+              3491,
+              3174
+            ],
+            [
+              3465,
+              3184
+            ],
+            [
+              3578,
+              3182
+            ],
+            [
+              3582,
+              3097
+            ]
+          ],
+          "carpet_3_66_m": 0.88,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.88,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 12,
+          "area_px": 3441,
+          "area_m2": 0.344,
+          "length_m": 0.866,
+          "width_m": 0.448,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3329,
+              3606
+            ],
+            [
+              3323,
+              3687
+            ],
+            [
+              3363,
+              3684
+            ],
+            [
+              3372,
+              3608
+            ],
+            [
+              3367,
+              3605
+            ]
+          ],
+          "carpet_3_66_m": 0.448,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.448,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 13,
+          "area_px": 115958,
+          "area_m2": 11.596,
+          "length_m": 6.883,
+          "width_m": 1.786,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              568,
+              7053
+            ],
+            [
+              619,
+              7721
+            ],
+            [
+              787,
+              7727
+            ],
+            [
+              742,
+              7063
+            ]
+          ],
+          "carpet_3_66_m": 3.571,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 3.571,
+          "carpet_4_0_strips": 2,
+          "carpet_4_0_seams": 1
+        },
+        {
+          "id": 14,
+          "area_px": 62862,
+          "area_m2": 6.286,
+          "length_m": 3.747,
+          "width_m": 1.772,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              753,
+              7058
+            ],
+            [
+              772,
+              7416
+            ],
+            [
+              944,
+              7423
+            ],
+            [
+              926,
+              7066
+            ]
+          ],
+          "carpet_3_66_m": 3.545,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 1.772,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 15,
+          "area_px": 63182,
+          "area_m2": 6.318,
+          "length_m": 3.723,
+          "width_m": 1.789,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              935,
+              7064
+            ],
+            [
+              955,
+              7423
+            ],
+            [
+              1127,
+              7428
+            ],
+            [
+              1112,
+              7071
+            ]
+          ],
+          "carpet_3_66_m": 3.577,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 1.789,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 16,
+          "area_px": 53368,
+          "area_m2": 5.337,
+          "length_m": 6.788,
+          "width_m": 0.849,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              1451,
+              7079
+            ],
+            [
+              1474,
+              7749
+            ],
+            [
+              1552,
+              7755
+            ],
+            [
+              1540,
+              7437
+            ],
+            [
+              1480,
+              7423
+            ],
+            [
+              1540,
+              7425
+            ],
+            [
+              1533,
+              7085
+            ]
+          ],
+          "carpet_3_66_m": 1.697,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 1.697,
+          "carpet_4_0_strips": 2,
+          "carpet_4_0_seams": 1
+        },
+        {
+          "id": 17,
+          "area_px": 36065,
+          "area_m2": 3.607,
+          "length_m": 2.57,
+          "width_m": 1.95,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              285,
+              7380
+            ],
+            [
+              301,
+              7453
+            ],
+            [
+              387,
+              7505
+            ],
+            [
+              455,
+              7505
+            ],
+            [
+              513,
+              7477
+            ],
+            [
+              409,
+              7427
+            ],
+            [
+              417,
+              7404
+            ],
+            [
+              526,
+              7455
+            ],
+            [
+              538,
+              7435
+            ],
+            [
+              519,
+              7367
+            ],
+            [
+              436,
+              7316
+            ],
+            [
+              341,
+              7324
+            ]
+          ],
+          "carpet_3_66_m": 1.95,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.95,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 18,
+          "area_px": 52211,
+          "area_m2": 5.221,
+          "length_m": 3.238,
+          "width_m": 1.737,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              775,
+              7424
+            ],
+            [
+              798,
+              7726
+            ],
+            [
+              966,
+              7735
+            ],
+            [
+              947,
+              7433
+            ]
+          ],
+          "carpet_3_66_m": 1.737,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.737,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 19,
+          "area_px": 52770,
+          "area_m2": 5.277,
+          "length_m": 3.21,
+          "width_m": 1.755,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              956,
+              7431
+            ],
+            [
+              977,
+              7733
+            ],
+            [
+              1146,
+              7741
+            ],
+            [
+              1127,
+              7436
+            ]
+          ],
+          "carpet_3_66_m": 1.755,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.755,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "room_count": 17,
+      "total_area_m2": 47.986,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 40082,
+          "area_m2": 4.008,
+          "length_m": 3.354,
+          "width_m": 1.327,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4687,
+              1508
+            ],
+            [
+              4630,
+              1516
+            ],
+            [
+              4595,
+              1557
+            ],
+            [
+              4564,
+              1796
+            ],
+            [
+              4607,
+              1835
+            ],
+            [
+              4663,
+              1822
+            ],
+            [
+              4696,
+              1780
+            ],
+            [
+              4727,
+              1552
+            ],
+            [
+              4716,
+              1526
+            ]
+          ],
+          "carpet_3_66_m": 1.327,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.327,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 2,
+          "area_px": 14787,
+          "area_m2": 1.479,
+          "length_m": 2.208,
+          "width_m": 0.744,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5824,
+              1787
+            ],
+            [
+              5794,
+              1786
+            ],
+            [
+              5768,
+              1814
+            ],
+            [
+              5745,
+              1987
+            ],
+            [
+              5762,
+              2000
+            ],
+            [
+              5793,
+              1998
+            ],
+            [
+              5817,
+              1969
+            ],
+            [
+              5841,
+              1815
+            ],
+            [
+              5836,
+              1795
+            ]
+          ],
+          "carpet_3_66_m": 0.744,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.744,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 3,
+          "area_px": 2380,
+          "area_m2": 0.238,
+          "length_m": 1.819,
+          "width_m": 0.717,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4082,
+              2116
+            ],
+            [
+              4093,
+              2116
+            ],
+            [
+              4097,
+              2088
+            ],
+            [
+              4105,
+              2080
+            ],
+            [
+              4255,
+              2078
+            ],
+            [
+              4258,
+              2070
+            ],
+            [
+              4106,
+              2071
+            ],
+            [
+              4099,
+              2042
+            ],
+            [
+              4088,
+              2056
+            ]
+          ],
+          "carpet_3_66_m": 0.717,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.717,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 4,
+          "area_px": 33155,
+          "area_m2": 3.316,
+          "length_m": 11.095,
+          "width_m": 9.261,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5648,
+              2102
+            ],
+            [
+              5564,
+              2214
+            ],
+            [
+              5594,
+              2339
+            ],
+            [
+              4970,
+              2345
+            ],
+            [
+              5033,
+              2216
+            ],
+            [
+              4946,
+              2346
+            ],
+            [
+              4680,
+              2332
+            ],
+            [
+              4661,
+              2503
+            ],
+            [
+              4735,
+              2481
+            ],
+            [
+              4695,
+              2358
+            ],
+            [
+              5597,
+              2353
+            ],
+            [
+              5514,
+              2472
+            ],
+            [
+              5576,
+              2493
+            ],
+            [
+              5460,
+              3145
+            ],
+            [
+              5245,
+              3163
+            ],
+            [
+              5473,
+              3160
+            ]
+          ],
+          "carpet_3_66_m": 33.286,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 27.783,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 5,
+          "area_px": 2235,
+          "area_m2": 0.224,
+          "length_m": 0.8,
+          "width_m": 0.46,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4235,
+              2195
+            ],
+            [
+              4230,
+              2187
+            ],
+            [
+              4223,
+              2187
+            ],
+            [
+              4199,
+              2207
+            ],
+            [
+              4194,
+              2207
+            ],
+            [
+              4170,
+              2188
+            ],
+            [
+              4157,
+              2204
+            ],
+            [
+              4158,
+              2226
+            ],
+            [
+              4168,
+              2232
+            ],
+            [
+              4197,
+              2212
+            ],
+            [
+              4218,
+              2233
+            ],
+            [
+              4223,
+              2233
+            ],
+            [
+              4235,
+              2215
+            ]
+          ],
+          "carpet_3_66_m": 0.46,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.46,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 6,
+          "area_px": 65893,
+          "area_m2": 6.589,
+          "length_m": 6.274,
+          "width_m": 1.247,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5605,
+              2231
+            ],
+            [
+              5458,
+              2218
+            ],
+            [
+              5535,
+              2207
+            ],
+            [
+              4996,
+              2237
+            ],
+            [
+              4979,
+              2335
+            ],
+            [
+              5586,
+              2331
+            ]
+          ],
+          "carpet_3_66_m": 2.494,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 2.494,
+          "carpet_4_0_strips": 2,
+          "carpet_4_0_seams": 1
+        },
+        {
+          "id": 7,
+          "area_px": 90732,
+          "area_m2": 9.073,
+          "length_m": 9.0,
+          "width_m": 1.116,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5585,
+              2361
+            ],
+            [
+              4700,
+              2368
+            ],
+            [
+              4686,
+              2461
+            ],
+            [
+              5566,
+              2459
+            ]
+          ],
+          "carpet_3_66_m": 3.349,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 3.349,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 8,
+          "area_px": 15188,
+          "area_m2": 1.519,
+          "length_m": 9.269,
+          "width_m": 2.479,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4639,
+              2701
+            ],
+            [
+              4556,
+              3133
+            ],
+            [
+              4524,
+              3145
+            ],
+            [
+              4551,
+              3164
+            ],
+            [
+              4482,
+              3588
+            ],
+            [
+              4451,
+              3609
+            ],
+            [
+              4494,
+              3602
+            ],
+            [
+              4567,
+              3156
+            ],
+            [
+              4777,
+              3152
+            ],
+            [
+              4568,
+              3138
+            ]
+          ],
+          "carpet_3_66_m": 7.437,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 7.437,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 9,
+          "area_px": 15585,
+          "area_m2": 1.558,
+          "length_m": 9.557,
+          "width_m": 1.74,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3409,
+              2807
+            ],
+            [
+              3239,
+              2787
+            ],
+            [
+              3140,
+              3733
+            ],
+            [
+              3248,
+              3734
+            ],
+            [
+              3151,
+              3723
+            ],
+            [
+              3206,
+              3135
+            ],
+            [
+              3348,
+              3131
+            ],
+            [
+              3209,
+              3117
+            ],
+            [
+              3248,
+              2821
+            ]
+          ],
+          "carpet_3_66_m": 5.219,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 5.219,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 10,
+          "area_px": 30533,
+          "area_m2": 3.053,
+          "length_m": 3.034,
+          "width_m": 1.074,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3262,
+              2825
+            ],
+            [
+              3219,
+              3111
+            ],
+            [
+              3323,
+              3115
+            ],
+            [
+              3363,
+              2827
+            ]
+          ],
+          "carpet_3_66_m": 1.074,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.074,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 11,
+          "area_px": 2057,
+          "area_m2": 0.206,
+          "length_m": 0.79,
+          "width_m": 0.43,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4389,
+              2956
+            ],
+            [
+              4389,
+              2971
+            ],
+            [
+              4394,
+              2980
+            ],
+            [
+              4429,
+              2960
+            ],
+            [
+              4448,
+              2980
+            ],
+            [
+              4454,
+              2981
+            ],
+            [
+              4466,
+              2965
+            ],
+            [
+              4468,
+              2945
+            ],
+            [
+              4464,
+              2938
+            ],
+            [
+              4456,
+              2938
+            ],
+            [
+              4426,
+              2957
+            ],
+            [
+              4411,
+              2941
+            ],
+            [
+              4401,
+              2938
+            ]
+          ],
+          "carpet_3_66_m": 0.43,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.43,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 12,
+          "area_px": 12857,
+          "area_m2": 1.286,
+          "length_m": 2.03,
+          "width_m": 0.702,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5004,
+              3218
+            ],
+            [
+              4974,
+              3225
+            ],
+            [
+              4958,
+              3249
+            ],
+            [
+              4935,
+              3378
+            ],
+            [
+              4938,
+              3406
+            ],
+            [
+              4958,
+              3416
+            ],
+            [
+              4995,
+              3404
+            ],
+            [
+              5007,
+              3370
+            ],
+            [
+              5028,
+              3238
+            ]
+          ],
+          "carpet_3_66_m": 0.702,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.702,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 13,
+          "area_px": 3599,
+          "area_m2": 0.36,
+          "length_m": 2.344,
+          "width_m": 1.034,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4100,
+              3589
+            ],
+            [
+              4027,
+              3589
+            ],
+            [
+              4017,
+              3683
+            ],
+            [
+              4030,
+              3754
+            ],
+            [
+              3931,
+              3762
+            ],
+            [
+              4045,
+              3764
+            ],
+            [
+              4030,
+              3674
+            ],
+            [
+              4035,
+              3603
+            ]
+          ],
+          "carpet_3_66_m": 1.034,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.034,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 14,
+          "area_px": 2747,
+          "area_m2": 0.275,
+          "length_m": 2.332,
+          "width_m": 0.139,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4199,
+              3618
+            ],
+            [
+              4201,
+              3630
+            ],
+            [
+              4251,
+              3632
+            ],
+            [
+              4273,
+              3623
+            ],
+            [
+              4290,
+              3633
+            ],
+            [
+              4425,
+              3637
+            ],
+            [
+              4432,
+              3627
+            ]
+          ],
+          "carpet_3_66_m": 0.139,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.139,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 15,
+          "area_px": 9312,
+          "area_m2": 0.931,
+          "length_m": 1.568,
+          "width_m": 0.666,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              4250,
+              3662
+            ],
+            [
+              4234,
+              3677
+            ],
+            [
+              4254,
+              3788
+            ],
+            [
+              4264,
+              3805
+            ],
+            [
+              4311,
+              3809
+            ],
+            [
+              4322,
+              3792
+            ],
+            [
+              4299,
+              3682
+            ],
+            [
+              4277,
+              3661
+            ]
+          ],
+          "carpet_3_66_m": 0.666,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.666,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 16,
+          "area_px": 106487,
+          "area_m2": 10.649,
+          "length_m": 6.512,
+          "width_m": 1.782,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              772,
+              6218
+            ],
+            [
+              809,
+              6837
+            ],
+            [
+              975,
+              6860
+            ],
+            [
+              947,
+              6241
+            ]
+          ],
+          "carpet_3_66_m": 3.563,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 3.563,
+          "carpet_4_0_strips": 2,
+          "carpet_4_0_seams": 1
+        },
+        {
+          "id": 17,
+          "area_px": 32227,
+          "area_m2": 3.223,
+          "length_m": 2.558,
+          "width_m": 1.758,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              492,
+              6473
+            ],
+            [
+              498,
+              6542
+            ],
+            [
+              574,
+              6601
+            ],
+            [
+              647,
+              6613
+            ],
+            [
+              709,
+              6593
+            ],
+            [
+              608,
+              6535
+            ],
+            [
+              616,
+              6516
+            ],
+            [
+              723,
+              6573
+            ],
+            [
+              734,
+              6561
+            ],
+            [
+              721,
+              6496
+            ],
+            [
+              649,
+              6443
+            ],
+            [
+              558,
+              6432
+            ]
+          ],
+          "carpet_3_66_m": 1.758,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.758,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "room_count": 9,
+      "total_area_m2": 35.797,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 20411,
+          "area_m2": 2.041,
+          "length_m": 1.51,
+          "width_m": 1.4,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              478,
+              357
+            ],
+            [
+              342,
+              362
+            ],
+            [
+              342,
+              507
+            ],
+            [
+              478,
+              503
+            ]
+          ],
+          "carpet_3_66_m": 1.4,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 1.4,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 2,
+          "area_px": 7913,
+          "area_m2": 0.791,
+          "length_m": 1.402,
+          "width_m": 0.589,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              478,
+              512
+            ],
+            [
+              343,
+              513
+            ],
+            [
+              341,
+              570
+            ],
+            [
+              476,
+              568
+            ]
+          ],
+          "carpet_3_66_m": 0.589,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.589,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 3,
+          "area_px": 47058,
+          "area_m2": 4.706,
+          "length_m": 8.099,
+          "width_m": 0.618,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              1987,
+              543
+            ],
+            [
+              1931,
+              549
+            ],
+            [
+              1903,
+              1350
+            ],
+            [
+              1957,
+              1347
+            ]
+          ],
+          "carpet_3_66_m": 1.855,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 1.855,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 4,
+          "area_px": 95741,
+          "area_m2": 9.574,
+          "length_m": 8.122,
+          "width_m": 1.221,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              1919,
+              545
+            ],
+            [
+              1799,
+              553
+            ],
+            [
+              1771,
+              1352
+            ],
+            [
+              1889,
+              1345
+            ]
+          ],
+          "carpet_3_66_m": 3.663,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 3.663,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 5,
+          "area_px": 82629,
+          "area_m2": 8.263,
+          "length_m": 8.108,
+          "width_m": 1.054,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              1724,
+              549
+            ],
+            [
+              1625,
+              555
+            ],
+            [
+              1603,
+              1356
+            ],
+            [
+              1701,
+              1351
+            ]
+          ],
+          "carpet_3_66_m": 3.162,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 3.162,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 6,
+          "area_px": 39188,
+          "area_m2": 3.919,
+          "length_m": 8.081,
+          "width_m": 0.519,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              1788,
+              548
+            ],
+            [
+              1740,
+              552
+            ],
+            [
+              1717,
+              1354
+            ],
+            [
+              1760,
+              1351
+            ]
+          ],
+          "carpet_3_66_m": 1.557,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 1.557,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 7,
+          "area_px": 58653,
+          "area_m2": 5.865,
+          "length_m": 8.077,
+          "width_m": 0.752,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              1613,
+              552
+            ],
+            [
+              1541,
+              558
+            ],
+            [
+              1519,
+              1357
+            ],
+            [
+              1589,
+              1355
+            ]
+          ],
+          "carpet_3_66_m": 2.255,
+          "carpet_3_66_strips": 3,
+          "carpet_3_66_seams": 2,
+          "carpet_4_0_m": 2.255,
+          "carpet_4_0_strips": 3,
+          "carpet_4_0_seams": 2
+        },
+        {
+          "id": 8,
+          "area_px": 2803,
+          "area_m2": 0.28,
+          "length_m": 0.6,
+          "width_m": 0.58,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3135,
+              3182
+            ],
+            [
+              3082,
+              3183
+            ],
+            [
+              3079,
+              3238
+            ],
+            [
+              3131,
+              3238
+            ],
+            [
+              3136,
+              3205
+            ],
+            [
+              3131,
+              3217
+            ],
+            [
+              3117,
+              3221
+            ],
+            [
+              3114,
+              3215
+            ],
+            [
+              3124,
+              3212
+            ],
+            [
+              3118,
+              3202
+            ],
+            [
+              3120,
+              3196
+            ],
+            [
+              3135,
+              3197
+            ]
+          ],
+          "carpet_3_66_m": 0.58,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.58,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        },
+        {
+          "id": 9,
+          "area_px": 3570,
+          "area_m2": 0.357,
+          "length_m": 4.11,
+          "width_m": 0.203,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              2490,
+              4069
+            ],
+            [
+              2490,
+              4181
+            ],
+            [
+              2520,
+              4327
+            ],
+            [
+              2529,
+              4470
+            ],
+            [
+              2540,
+              4477
+            ]
+          ],
+          "carpet_3_66_m": 0.405,
+          "carpet_3_66_strips": 2,
+          "carpet_3_66_seams": 1,
+          "carpet_4_0_m": 0.405,
+          "carpet_4_0_strips": 2,
+          "carpet_4_0_seams": 1
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "room_count": 1,
+      "total_area_m2": 0.206,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 2064,
+          "area_m2": 0.206,
+          "length_m": 1.861,
+          "width_m": 0.158,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              5155,
+              4089
+            ],
+            [
+              4969,
+              4096
+            ],
+            [
+              4984,
+              4098
+            ],
+            [
+              4991,
+              4106
+            ],
+            [
+              5001,
+              4097
+            ],
+            [
+              5019,
+              4106
+            ],
+            [
+              5150,
+              4102
+            ]
+          ],
+          "carpet_3_66_m": 0.158,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.158,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "room_count": 1,
+      "total_area_m2": 0.242,
+      "rooms": [
+        {
+          "id": 1,
+          "area_px": 2423,
+          "area_m2": 0.242,
+          "length_m": 2.182,
+          "width_m": 0.131,
+          "room_category": "carpet_area_room",
+          "is_living_area": false,
+          "polygon": [
+            [
+              3769,
+              2286
+            ],
+            [
+              3772,
+              2494
+            ],
+            [
+              3781,
+              2504
+            ],
+            [
+              3781,
+              2294
+            ]
+          ],
+          "carpet_3_66_m": 0.131,
+          "carpet_3_66_strips": 1,
+          "carpet_3_66_seams": 0,
+          "carpet_4_0_m": 0.131,
+          "carpet_4_0_strips": 1,
+          "carpet_4_0_seams": 0
+        }
+      ]
+    }
+  ]
+}
