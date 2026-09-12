@@ -38,16 +38,23 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Optional ML dependencies
+# Note: albumentations is not used by app.py itself, and importing it here can
+# stall startup because of its optional compiled dependencies. We only enable ML
+# features when the specific runtime pieces we need are actually importable.
 try:
     import torch
-    import segmentation_models_pytorch as smp
-    import albumentations as A
-    ML_AVAILABLE = True
-except ImportError:
+except Exception as e:
+    logger.warning('torch unavailable; ML segmentation will be disabled (%s)', e)
     torch = None
+
+try:
+    import segmentation_models_pytorch as smp
+except Exception as e:
+    logger.warning('segmentation_models_pytorch unavailable; ML segmentation will be disabled (%s)', e)
     smp = None
-    A = None
-    ML_AVAILABLE = False
+
+ML_AVAILABLE = torch is not None and smp is not None
+if not ML_AVAILABLE:
     logger.warning('ML libraries not available; ML segmentation will be disabled')
 
 app = Flask(__name__)
@@ -259,8 +266,8 @@ def draw_rooms(img_rgb: np.ndarray, rooms: list) -> np.ndarray:
             pts = np.array(r["polygon"], np.int32)
             cv2.polylines(out, [pts], True, (0, 0, 255), 3)
             # label
-            x, y = pts[0][0]
-            cv2.putText(out, str(i), (x + 5, y + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+            x, y = pts[0]
+            cv2.putText(out, str(i), (int(x) + 5, int(y) + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
         return out
     except Exception as e:
         logger.exception('Failed to draw rooms: %s', e)
