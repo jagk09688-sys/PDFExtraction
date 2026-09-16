@@ -25,6 +25,7 @@ import random
 from pathlib import Path
 
 import albumentations as A
+import cv2
 import numpy as np
 import segmentation_models_pytorch as smp
 import torch
@@ -43,21 +44,33 @@ def set_seed(seed: int):
     torch.backends.cudnn.benchmark = False
 
 
-def get_train_transforms(size=512):
-    """Return augmentation pipeline for training."""
-    return A.Compose(
-        [
-            A.Resize(height=size, width=size),
-            A.HorizontalFlip(p=0.5),
-            A.VerticalFlip(p=0.5),
-            A.RandomRotate90(p=0.5),
-            A.Rotate(limit=20, p=0.4),
+def get_train_transforms(size=512, domain='mixed'):
+    """Return augmentations for digital, handmade, or mixed floorplans."""
+    transforms = [
+        A.Resize(height=size, width=size),
+        A.HorizontalFlip(p=0.5),
+        A.VerticalFlip(p=0.5),
+        A.RandomRotate90(p=0.5),
+        A.Rotate(limit=20, p=0.4),
+    ]
+
+    if domain in {'handmade', 'mixed'}:
+        transforms.extend([
+            A.Perspective(scale=(0.03, 0.12), p=0.35),
+            A.Affine(shear=(-12, 12), p=0.25),
+            A.RandomBrightnessContrast(brightness_limit=0.25, contrast_limit=0.25, p=0.6),
+            A.GaussNoise(p=0.35),
+            A.GaussianBlur(blur_limit=(3, 5), p=0.2),
+            A.CLAHE(clip_limit=(1, 4), p=0.2),
+        ])
+    else:
+        transforms.extend([
             A.RandomBrightnessContrast(brightness_limit=0.15, contrast_limit=0.15, p=0.4),
-            A.GaussNoise(var_limit=(10.0, 50.0), p=0.2),
+            A.GaussNoise(p=0.2),
             A.GaussianBlur(blur_limit=(3, 5), p=0.15),
-        ],
-        is_check_shapes=False,
-    )
+        ])
+
+    return A.Compose(transforms, is_check_shapes=False)
 
 
 def get_val_transforms(size=512):
@@ -141,6 +154,26 @@ def get_dataset_filenames(images_dir: Path, masks_dir: Path):
     return valid_images
 
 
+def validate_mask_quality(image_files, masks_dir: Path, split_name: str):
+    """Reject datasets where annotation files exist but contain no room pixels."""
+    positive_files = []
+    blank_files = []
+    for image_file in image_files:
+        mask = cv2.imread(str(masks_dir / image_file.name), cv2.IMREAD_GRAYSCALE)
+        if mask is None or not np.any(mask > 0):
+            blank_files.append(image_file.name)
+        else:
+            positive_files.append(image_file.name)
+
+    if not positive_files:
+        raise RuntimeError(
+            f'{split_name} masks contain no room pixels. Add real LabelMe room annotations before training; '
+            'blank placeholder masks cannot teach the model digital or handmade floorplans.'
+        )
+    if blank_files:
+        print(f'Warning: {split_name} contains {len(blank_files)} blank mask(s); they remain available as negative examples.')
+
+
 def save_checkpoint(model, optimizer, scheduler, epoch, best_val_loss, checkpoint_path, extra=None):
     checkpoint_path = Path(checkpoint_path)
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
@@ -190,10 +223,13 @@ def train(args):
             f"No valid validation image/mask pairs found under {val_images_dir} and {val_masks_dir}"
         )
 
+    validate_mask_quality(train_image_files, train_masks_dir, 'Training')
+    validate_mask_quality(val_image_files, val_masks_dir, 'Validation')
+
     train_ds = FloorplanDataset(
         str(train_images_dir),
         str(train_masks_dir),
-        transform=get_train_transforms(args.size),
+        transform=get_train_transforms(args.size, args.domain),
         allowed_files=[f.name for f in train_image_files],
     )
     val_ds = FloorplanDataset(
@@ -370,6 +406,12 @@ def main():
         type=int,
         default=512,
         help='Image resize size for training and validation (default: 512)',
+    )
+    parser.add_argument(
+        '--domain',
+        choices=['digital', 'handmade', 'mixed'],
+        default='mixed',
+        help='Training domain augmentation profile (default: mixed)',
     )
     parser.add_argument(
         '--encoder',

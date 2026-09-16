@@ -3,15 +3,16 @@
     3.66,
     4.0
   ],
-  "total_room_count": 449,
-  "total_area_m2": 3922.784,
-  "total_carpet_area_room_count": 332,
-  "total_living_area_room_count": 117,
+  "total_room_count": 426,
+  "total_area_m2": 2581.735,
+  "total_carpet_area_room_count": 331,
+  "total_living_area_room_count": 95,
   "files": [
     {
       "pdf": "Floor Plan (2).pdf",
       "page_count": 7,
       "room_count": 53,
+      "rejected_room_count": 0,
       "total_area_m2": 142.238,
       "carpet_area_room_count": 53,
       "living_area_room_count": 0,
@@ -19,6 +20,7 @@
         {
           "page": 1,
           "room_count": 2,
+          "rejected_room_count": 0,
           "total_area_m2": 0.521,
           "rooms": [
             {
@@ -135,11 +137,13 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         },
         {
           "page": 2,
           "room_count": 4,
+          "rejected_room_count": 0,
           "total_area_m2": 1.949,
           "rooms": [
             {
@@ -378,11 +382,13 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         },
         {
           "page": 3,
           "room_count": 19,
+          "rejected_room_count": 0,
           "total_area_m2": 55.536,
           "rooms": [
             {
@@ -1336,11 +1342,13 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         },
         {
           "page": 4,
           "room_count": 17,
+          "rejected_room_count": 0,
           "total_area_m2": 47.986,
           "rooms": [
             {
@@ -2232,11 +2240,13 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         },
         {
           "page": 5,
           "room_count": 9,
+          "rejected_room_count": 0,
           "total_area_m2": 35.797,
           "rooms": [
             {
@@ -2572,11 +2582,13 @@
               "carpet_4_0_strips": 2,
               "carpet_4_0_seams": 1
             }
-          ]
+          ],
+          "rejected_rooms": []
         },
         {
           "page": 6,
           "room_count": 1,
+          "rejected_room_count": 0,
           "total_area_m2": 0.206,
           "rooms": [
             {
@@ -2624,11 +2636,13 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         },
         {
           "page": 7,
           "room_count": 1,
+          "rejected_room_count": 0,
           "total_area_m2": 0.242,
           "rooms": [
             {
@@ -2664,56 +2678,26 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         }
       ]
     },
     {
       "pdf": "FP1.pdf",
       "page_count": 1,
-      "room_count": 164,
-      "total_area_m2": 1157.066,
-      "carpet_area_room_count": 142,
-      "living_area_room_count": 22,
+      "room_count": 151,
+      "rejected_room_count": 13,
+      "total_area_m2": 432.653,
+      "carpet_area_room_count": 141,
+      "living_area_room_count": 10,
       "pages": [
         {
           "page": 1,
-          "room_count": 164,
-          "total_area_m2": 1157.066,
+          "room_count": 151,
+          "rejected_room_count": 13,
+          "total_area_m2": 432.653,
           "rooms": [
-            {
-              "id": 1,
-              "area_px": 1496620,
-              "area_m2": 149.662,
-              "length_m": 19.574,
-              "width_m": 7.91,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  304,
-                  242
-                ],
-                [
-                  271,
-                  1012
-                ],
-                [
-                  2200,
-                  1156
-                ],
-                [
-                  2174,
-                  367
-                ]
-              ],
-              "carpet_3_66_m": 47.462,
-              "carpet_3_66_strips": 6,
-              "carpet_3_66_seams": 5,
-              "carpet_4_0_m": 39.148,
-              "carpet_4_0_strips": 2,
-              "carpet_4_0_seams": 1
-            },
             {
               "id": 2,
               "area_px": 213066,
@@ -3371,39 +3355,6 @@
               "carpet_4_0_m": 6.176,
               "carpet_4_0_strips": 3,
               "carpet_4_0_seams": 2
-            },
-            {
-              "id": 16,
-              "area_px": 1682520,
-              "area_m2": 168.252,
-              "length_m": 22.36,
-              "width_m": 7.806,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  528,
-                  1196
-                ],
-                [
-                  503,
-                  1972
-                ],
-                [
-                  2698,
-                  2134
-                ],
-                [
-                  2656,
-                  1356
-                ]
-              ],
-              "carpet_3_66_m": 54.639,
-              "carpet_3_66_strips": 7,
-              "carpet_3_66_seams": 6,
-              "carpet_4_0_m": 44.719,
-              "carpet_4_0_strips": 2,
-              "carpet_4_0_seams": 1
             },
             {
               "id": 17,
@@ -5314,87 +5265,6 @@
               "carpet_4_0_m": 0.527,
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
-            },
-            {
-              "id": 47,
-              "area_px": 1007698,
-              "area_m2": 100.77,
-              "length_m": 14.652,
-              "width_m": 10.979,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  3763,
-                  3181
-                ],
-                [
-                  3816,
-                  4083
-                ],
-                [
-                  3894,
-                  3510
-                ],
-                [
-                  3937,
-                  4093
-                ],
-                [
-                  4376,
-                  4135
-                ],
-                [
-                  4420,
-                  4527
-                ],
-                [
-                  4928,
-                  4441
-                ],
-                [
-                  4652,
-                  4097
-                ],
-                [
-                  4478,
-                  4151
-                ],
-                [
-                  4486,
-                  3619
-                ],
-                [
-                  4892,
-                  3764
-                ],
-                [
-                  4707,
-                  3418
-                ],
-                [
-                  4827,
-                  3164
-                ],
-                [
-                  4372,
-                  3138
-                ],
-                [
-                  4398,
-                  3396
-                ],
-                [
-                  4360,
-                  3137
-                ]
-              ],
-              "carpet_3_66_m": 43.956,
-              "carpet_3_66_strips": 3,
-              "carpet_3_66_seams": 2,
-              "carpet_4_0_m": 43.917,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
             },
             {
               "id": 48,
@@ -7453,172 +7323,6 @@
               "carpet_4_0_seams": 0
             },
             {
-              "id": 80,
-              "area_px": 92473,
-              "area_m2": 9.247,
-              "length_m": 13.115,
-              "width_m": 2.338,
-              "room_category": "carpet_area_room",
-              "is_living_area": false,
-              "polygon": [
-                [
-                  4367,
-                  4532
-                ],
-                [
-                  4369,
-                  4617
-                ],
-                [
-                  4251,
-                  4663
-                ],
-                [
-                  4218,
-                  4754
-                ],
-                [
-                  4402,
-                  4778
-                ],
-                [
-                  4505,
-                  5446
-                ],
-                [
-                  4321,
-                  5457
-                ],
-                [
-                  4404,
-                  5602
-                ],
-                [
-                  4524,
-                  5652
-                ],
-                [
-                  4575,
-                  5827
-                ],
-                [
-                  4507,
-                  5114
-                ]
-              ],
-              "carpet_3_66_m": 9.35,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 9.35,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
-            },
-            {
-              "id": 81,
-              "area_px": 244637,
-              "area_m2": 24.464,
-              "length_m": 13.603,
-              "width_m": 3.6,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  4420,
-                  4534
-                ],
-                [
-                  4479,
-                  4887
-                ],
-                [
-                  4625,
-                  4916
-                ],
-                [
-                  4488,
-                  4930
-                ],
-                [
-                  4525,
-                  5130
-                ],
-                [
-                  4626,
-                  5130
-                ],
-                [
-                  4523,
-                  5149
-                ],
-                [
-                  4644,
-                  5201
-                ],
-                [
-                  4529,
-                  5162
-                ],
-                [
-                  4586,
-                  5819
-                ],
-                [
-                  4724,
-                  5863
-                ],
-                [
-                  4696,
-                  5283
-                ],
-                [
-                  4819,
-                  5231
-                ],
-                [
-                  4850,
-                  5115
-                ],
-                [
-                  4665,
-                  5085
-                ],
-                [
-                  4625,
-                  4886
-                ],
-                [
-                  4807,
-                  4901
-                ],
-                [
-                  4718,
-                  4804
-                ],
-                [
-                  4781,
-                  4807
-                ],
-                [
-                  4757,
-                  4729
-                ],
-                [
-                  4584,
-                  4712
-                ],
-                [
-                  4570,
-                  4543
-                ]
-              ],
-              "carpet_3_66_m": 13.603,
-              "carpet_3_66_strips": 1,
-              "carpet_3_66_seams": 0,
-              "carpet_4_0_m": 13.603,
-              "carpet_4_0_strips": 1,
-              "carpet_4_0_seams": 0
-            },
-            {
               "id": 82,
               "area_px": 19012,
               "area_m2": 1.901,
@@ -9379,51 +9083,6 @@
               "carpet_4_0_seams": 0
             },
             {
-              "id": 110,
-              "area_px": 219311,
-              "area_m2": 21.931,
-              "length_m": 14.348,
-              "width_m": 1.812,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  3732,
-                  4902
-                ],
-                [
-                  3819,
-                  6311
-                ],
-                [
-                  3981,
-                  6324
-                ],
-                [
-                  3958,
-                  5635
-                ],
-                [
-                  3880,
-                  5617
-                ],
-                [
-                  3956,
-                  5612
-                ],
-                [
-                  3890,
-                  4942
-                ]
-              ],
-              "carpet_3_66_m": 7.25,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 7.25,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
-            },
-            {
               "id": 111,
               "area_px": 36334,
               "area_m2": 3.633,
@@ -9799,55 +9458,6 @@
               "carpet_4_0_m": 0.55,
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
-            },
-            {
-              "id": 116,
-              "area_px": 208020,
-              "area_m2": 20.802,
-              "length_m": 12.946,
-              "width_m": 2.037,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  5320,
-                  4987
-                ],
-                [
-                  5460,
-                  5740
-                ],
-                [
-                  5466,
-                  6239
-                ],
-                [
-                  5639,
-                  6253
-                ],
-                [
-                  5613,
-                  5766
-                ],
-                [
-                  5467,
-                  5708
-                ],
-                [
-                  5610,
-                  5738
-                ],
-                [
-                  5485,
-                  5000
-                ]
-              ],
-              "carpet_3_66_m": 8.146,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 8.146,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
             },
             {
               "id": 117,
@@ -10238,103 +9848,6 @@
               "carpet_4_0_seams": 0
             },
             {
-              "id": 125,
-              "area_px": 518992,
-              "area_m2": 51.899,
-              "length_m": 13.731,
-              "width_m": 5.346,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  4176,
-                  5230
-                ],
-                [
-                  4209,
-                  5644
-                ],
-                [
-                  3970,
-                  5640
-                ],
-                [
-                  3983,
-                  5821
-                ],
-                [
-                  4084,
-                  5790
-                ],
-                [
-                  3984,
-                  5835
-                ],
-                [
-                  3989,
-                  6092
-                ],
-                [
-                  4224,
-                  6096
-                ],
-                [
-                  4048,
-                  6247
-                ],
-                [
-                  4006,
-                  6136
-                ],
-                [
-                  4085,
-                  6289
-                ],
-                [
-                  3999,
-                  6296
-                ],
-                [
-                  4001,
-                  6556
-                ],
-                [
-                  4244,
-                  6577
-                ],
-                [
-                  4256,
-                  6381
-                ],
-                [
-                  4194,
-                  6509
-                ],
-                [
-                  4527,
-                  6592
-                ],
-                [
-                  4498,
-                  5666
-                ],
-                [
-                  4309,
-                  5441
-                ],
-                [
-                  4475,
-                  5434
-                ]
-              ],
-              "carpet_3_66_m": 21.385,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 21.385,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
-            },
-            {
               "id": 126,
               "area_px": 22956,
               "area_m2": 2.296,
@@ -10422,63 +9935,6 @@
               "carpet_4_0_m": 1.691,
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
-            },
-            {
-              "id": 127,
-              "area_px": 539369,
-              "area_m2": 53.937,
-              "length_m": 13.997,
-              "width_m": 5.303,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  5790,
-                  5296
-                ],
-                [
-                  5849,
-                  5775
-                ],
-                [
-                  5627,
-                  5769
-                ],
-                [
-                  5662,
-                  6646
-                ],
-                [
-                  6180,
-                  6681
-                ],
-                [
-                  6139,
-                  5756
-                ],
-                [
-                  5943,
-                  5534
-                ],
-                [
-                  6107,
-                  5522
-                ],
-                [
-                  6000,
-                  5515
-                ],
-                [
-                  5922,
-                  5365
-                ]
-              ],
-              "carpet_3_66_m": 21.21,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 21.21,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
             },
             {
               "id": 128,
@@ -12340,15 +11796,504 @@
               "carpet_4_0_m": 0.549,
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
+            }
+          ],
+          "rejected_rooms": [
+            {
+              "id": 1,
+              "area_m2": 149.662,
+              "length_m": 19.574,
+              "width_m": 7.91,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  304,
+                  242
+                ],
+                [
+                  271,
+                  1012
+                ],
+                [
+                  2200,
+                  1156
+                ],
+                [
+                  2174,
+                  367
+                ]
+              ]
+            },
+            {
+              "id": 16,
+              "area_m2": 168.252,
+              "length_m": 22.36,
+              "width_m": 7.806,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  528,
+                  1196
+                ],
+                [
+                  503,
+                  1972
+                ],
+                [
+                  2698,
+                  2134
+                ],
+                [
+                  2656,
+                  1356
+                ]
+              ]
+            },
+            {
+              "id": 47,
+              "area_m2": 100.77,
+              "length_m": 14.652,
+              "width_m": 10.979,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  3763,
+                  3181
+                ],
+                [
+                  3816,
+                  4083
+                ],
+                [
+                  3894,
+                  3510
+                ],
+                [
+                  3937,
+                  4093
+                ],
+                [
+                  4376,
+                  4135
+                ],
+                [
+                  4420,
+                  4527
+                ],
+                [
+                  4928,
+                  4441
+                ],
+                [
+                  4652,
+                  4097
+                ],
+                [
+                  4478,
+                  4151
+                ],
+                [
+                  4486,
+                  3619
+                ],
+                [
+                  4892,
+                  3764
+                ],
+                [
+                  4707,
+                  3418
+                ],
+                [
+                  4827,
+                  3164
+                ],
+                [
+                  4372,
+                  3138
+                ],
+                [
+                  4398,
+                  3396
+                ],
+                [
+                  4360,
+                  3137
+                ]
+              ]
+            },
+            {
+              "id": 80,
+              "area_m2": 9.247,
+              "length_m": 13.115,
+              "width_m": 2.338,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  4367,
+                  4532
+                ],
+                [
+                  4369,
+                  4617
+                ],
+                [
+                  4251,
+                  4663
+                ],
+                [
+                  4218,
+                  4754
+                ],
+                [
+                  4402,
+                  4778
+                ],
+                [
+                  4505,
+                  5446
+                ],
+                [
+                  4321,
+                  5457
+                ],
+                [
+                  4404,
+                  5602
+                ],
+                [
+                  4524,
+                  5652
+                ],
+                [
+                  4575,
+                  5827
+                ],
+                [
+                  4507,
+                  5114
+                ]
+              ]
+            },
+            {
+              "id": 81,
+              "area_m2": 24.464,
+              "length_m": 13.603,
+              "width_m": 3.6,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  4420,
+                  4534
+                ],
+                [
+                  4479,
+                  4887
+                ],
+                [
+                  4625,
+                  4916
+                ],
+                [
+                  4488,
+                  4930
+                ],
+                [
+                  4525,
+                  5130
+                ],
+                [
+                  4626,
+                  5130
+                ],
+                [
+                  4523,
+                  5149
+                ],
+                [
+                  4644,
+                  5201
+                ],
+                [
+                  4529,
+                  5162
+                ],
+                [
+                  4586,
+                  5819
+                ],
+                [
+                  4724,
+                  5863
+                ],
+                [
+                  4696,
+                  5283
+                ],
+                [
+                  4819,
+                  5231
+                ],
+                [
+                  4850,
+                  5115
+                ],
+                [
+                  4665,
+                  5085
+                ],
+                [
+                  4625,
+                  4886
+                ],
+                [
+                  4807,
+                  4901
+                ],
+                [
+                  4718,
+                  4804
+                ],
+                [
+                  4781,
+                  4807
+                ],
+                [
+                  4757,
+                  4729
+                ],
+                [
+                  4584,
+                  4712
+                ],
+                [
+                  4570,
+                  4543
+                ]
+              ]
+            },
+            {
+              "id": 110,
+              "area_m2": 21.931,
+              "length_m": 14.348,
+              "width_m": 1.812,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  3732,
+                  4902
+                ],
+                [
+                  3819,
+                  6311
+                ],
+                [
+                  3981,
+                  6324
+                ],
+                [
+                  3958,
+                  5635
+                ],
+                [
+                  3880,
+                  5617
+                ],
+                [
+                  3956,
+                  5612
+                ],
+                [
+                  3890,
+                  4942
+                ]
+              ]
+            },
+            {
+              "id": 116,
+              "area_m2": 20.802,
+              "length_m": 12.946,
+              "width_m": 2.037,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  5320,
+                  4987
+                ],
+                [
+                  5460,
+                  5740
+                ],
+                [
+                  5466,
+                  6239
+                ],
+                [
+                  5639,
+                  6253
+                ],
+                [
+                  5613,
+                  5766
+                ],
+                [
+                  5467,
+                  5708
+                ],
+                [
+                  5610,
+                  5738
+                ],
+                [
+                  5485,
+                  5000
+                ]
+              ]
+            },
+            {
+              "id": 125,
+              "area_m2": 51.899,
+              "length_m": 13.731,
+              "width_m": 5.346,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  4176,
+                  5230
+                ],
+                [
+                  4209,
+                  5644
+                ],
+                [
+                  3970,
+                  5640
+                ],
+                [
+                  3983,
+                  5821
+                ],
+                [
+                  4084,
+                  5790
+                ],
+                [
+                  3984,
+                  5835
+                ],
+                [
+                  3989,
+                  6092
+                ],
+                [
+                  4224,
+                  6096
+                ],
+                [
+                  4048,
+                  6247
+                ],
+                [
+                  4006,
+                  6136
+                ],
+                [
+                  4085,
+                  6289
+                ],
+                [
+                  3999,
+                  6296
+                ],
+                [
+                  4001,
+                  6556
+                ],
+                [
+                  4244,
+                  6577
+                ],
+                [
+                  4256,
+                  6381
+                ],
+                [
+                  4194,
+                  6509
+                ],
+                [
+                  4527,
+                  6592
+                ],
+                [
+                  4498,
+                  5666
+                ],
+                [
+                  4309,
+                  5441
+                ],
+                [
+                  4475,
+                  5434
+                ]
+              ]
+            },
+            {
+              "id": 127,
+              "area_m2": 53.937,
+              "length_m": 13.997,
+              "width_m": 5.303,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  5790,
+                  5296
+                ],
+                [
+                  5849,
+                  5775
+                ],
+                [
+                  5627,
+                  5769
+                ],
+                [
+                  5662,
+                  6646
+                ],
+                [
+                  6180,
+                  6681
+                ],
+                [
+                  6139,
+                  5756
+                ],
+                [
+                  5943,
+                  5534
+                ],
+                [
+                  6107,
+                  5522
+                ],
+                [
+                  6000,
+                  5515
+                ],
+                [
+                  5922,
+                  5365
+                ]
+              ]
             },
             {
               "id": 161,
-              "area_px": 300396,
               "area_m2": 30.04,
               "length_m": 16.007,
               "width_m": 1.981,
-              "room_category": "living_area",
-              "is_living_area": true,
+              "reason": "oversized_or_merged_contour",
               "polygon": [
                 [
                   322,
@@ -12366,22 +12311,14 @@
                   1900,
                   7807
                 ]
-              ],
-              "carpet_3_66_m": 9.903,
-              "carpet_3_66_strips": 5,
-              "carpet_3_66_seams": 4,
-              "carpet_4_0_m": 9.903,
-              "carpet_4_0_strips": 5,
-              "carpet_4_0_seams": 4
+              ]
             },
             {
               "id": 162,
-              "area_px": 293656,
               "area_m2": 29.366,
               "length_m": 15.965,
               "width_m": 2.007,
-              "room_category": "living_area",
-              "is_living_area": true,
+              "reason": "oversized_or_merged_contour",
               "polygon": [
                 [
                   334,
@@ -12399,22 +12336,14 @@
                   1905,
                   8074
                 ]
-              ],
-              "carpet_3_66_m": 10.035,
-              "carpet_3_66_strips": 5,
-              "carpet_3_66_seams": 4,
-              "carpet_4_0_m": 8.028,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
+              ]
             },
             {
               "id": 163,
-              "area_px": 270404,
               "area_m2": 27.04,
               "length_m": 15.928,
               "width_m": 1.845,
-              "room_category": "living_area",
-              "is_living_area": true,
+              "reason": "oversized_or_merged_contour",
               "polygon": [
                 [
                   345,
@@ -12432,22 +12361,14 @@
                   1912,
                   8363
                 ]
-              ],
-              "carpet_3_66_m": 9.223,
-              "carpet_3_66_strips": 5,
-              "carpet_3_66_seams": 4,
-              "carpet_4_0_m": 7.378,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
+              ]
             },
             {
               "id": 164,
-              "area_px": 370029,
               "area_m2": 37.003,
               "length_m": 15.971,
               "width_m": 2.51,
-              "room_category": "living_area",
-              "is_living_area": true,
+              "reason": "oversized_or_merged_contour",
               "polygon": [
                 [
                   353,
@@ -12465,13 +12386,7 @@
                   1918,
                   8616
                 ]
-              ],
-              "carpet_3_66_m": 12.55,
-              "carpet_3_66_strips": 5,
-              "carpet_3_66_seams": 4,
-              "carpet_4_0_m": 10.04,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
+              ]
             }
           ]
         }
@@ -12480,15 +12395,17 @@
     {
       "pdf": "FP2.pdf",
       "page_count": 1,
-      "room_count": 142,
-      "total_area_m2": 2307.707,
+      "room_count": 132,
+      "rejected_room_count": 10,
+      "total_area_m2": 1691.071,
       "carpet_area_room_count": 54,
-      "living_area_room_count": 88,
+      "living_area_room_count": 78,
       "pages": [
         {
           "page": 1,
-          "room_count": 142,
-          "total_area_m2": 2307.707,
+          "room_count": 132,
+          "rejected_room_count": 10,
+          "total_area_m2": 1691.071,
           "rooms": [
             {
               "id": 1,
@@ -12664,63 +12581,6 @@
               "carpet_4_0_m": 1.12,
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
-            },
-            {
-              "id": 4,
-              "area_px": 527329,
-              "area_m2": 52.733,
-              "length_m": 12.944,
-              "width_m": 4.253,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  910,
-                  617
-                ],
-                [
-                  931,
-                  1879
-                ],
-                [
-                  1351,
-                  1904
-                ],
-                [
-                  1336,
-                  1493
-                ],
-                [
-                  941,
-                  1467
-                ],
-                [
-                  1347,
-                  1486
-                ],
-                [
-                  1341,
-                  1075
-                ],
-                [
-                  929,
-                  1043
-                ],
-                [
-                  1338,
-                  1065
-                ],
-                [
-                  1334,
-                  653
-                ]
-              ],
-              "carpet_3_66_m": 17.013,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 17.013,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
             },
             {
               "id": 5,
@@ -17628,212 +17488,6 @@
               "carpet_4_0_seams": 0
             },
             {
-              "id": 102,
-              "area_px": 956438,
-              "area_m2": 95.644,
-              "length_m": 12.715,
-              "width_m": 7.905,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  961,
-                  4003
-                ],
-                [
-                  982,
-                  4373
-                ],
-                [
-                  1100,
-                  4380
-                ],
-                [
-                  983,
-                  4388
-                ],
-                [
-                  971,
-                  4785
-                ],
-                [
-                  1390,
-                  4783
-                ],
-                [
-                  1398,
-                  4283
-                ],
-                [
-                  1399,
-                  4785
-                ],
-                [
-                  1678,
-                  4785
-                ],
-                [
-                  1677,
-                  4364
-                ],
-                [
-                  1718,
-                  4785
-                ],
-                [
-                  1818,
-                  4286
-                ],
-                [
-                  1728,
-                  4784
-                ],
-                [
-                  1826,
-                  4411
-                ],
-                [
-                  1825,
-                  4787
-                ],
-                [
-                  2226,
-                  4785
-                ],
-                [
-                  2220,
-                  4009
-                ],
-                [
-                  1821,
-                  4016
-                ],
-                [
-                  1816,
-                  4221
-                ],
-                [
-                  1809,
-                  4017
-                ],
-                [
-                  1396,
-                  3998
-                ],
-                [
-                  1397,
-                  4280
-                ],
-                [
-                  1385,
-                  3999
-                ]
-              ],
-              "carpet_3_66_m": 31.618,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 25.429,
-              "carpet_4_0_strips": 2,
-              "carpet_4_0_seams": 1
-            },
-            {
-              "id": 103,
-              "area_px": 739940,
-              "area_m2": 73.994,
-              "length_m": 12.056,
-              "width_m": 7.837,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  2238,
-                  4008
-                ],
-                [
-                  2239,
-                  4788
-                ],
-                [
-                  2337,
-                  4411
-                ],
-                [
-                  2339,
-                  4788
-                ],
-                [
-                  2637,
-                  4786
-                ],
-                [
-                  2638,
-                  4420
-                ],
-                [
-                  2661,
-                  4789
-                ],
-                [
-                  3035,
-                  4789
-                ],
-                [
-                  3033,
-                  4422
-                ],
-                [
-                  3046,
-                  4789
-                ],
-                [
-                  3430,
-                  4787
-                ],
-                [
-                  3419,
-                  4418
-                ],
-                [
-                  2751,
-                  4416
-                ],
-                [
-                  3032,
-                  4400
-                ],
-                [
-                  3024,
-                  4011
-                ],
-                [
-                  2641,
-                  4008
-                ],
-                [
-                  2936,
-                  4108
-                ],
-                [
-                  2643,
-                  4110
-                ],
-                [
-                  2636,
-                  4370
-                ],
-                [
-                  2632,
-                  4009
-                ]
-              ],
-              "carpet_3_66_m": 31.347,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 24.112,
-              "carpet_4_0_strips": 2,
-              "carpet_4_0_seams": 1
-            },
-            {
               "id": 104,
               "area_px": 148393,
               "area_m2": 14.839,
@@ -18206,180 +17860,6 @@
               "carpet_4_0_seams": 0
             },
             {
-              "id": 112,
-              "area_px": 594113,
-              "area_m2": 59.411,
-              "length_m": 16.42,
-              "width_m": 3.885,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  3439,
-                  4797
-                ],
-                [
-                  3438,
-                  5360
-                ],
-                [
-                  3727,
-                  5390
-                ],
-                [
-                  3437,
-                  5376
-                ],
-                [
-                  3439,
-                  6435
-                ],
-                [
-                  3725,
-                  6419
-                ],
-                [
-                  3756,
-                  5342
-                ],
-                [
-                  3825,
-                  6404
-                ],
-                [
-                  3814,
-                  4800
-                ],
-                [
-                  3721,
-                  5375
-                ],
-                [
-                  3727,
-                  4801
-                ],
-                [
-                  3613,
-                  5312
-                ],
-                [
-                  3625,
-                  4800
-                ]
-              ],
-              "carpet_3_66_m": 19.426,
-              "carpet_3_66_strips": 5,
-              "carpet_3_66_seams": 4,
-              "carpet_4_0_m": 16.42,
-              "carpet_4_0_strips": 1,
-              "carpet_4_0_seams": 0
-            },
-            {
-              "id": 113,
-              "area_px": 924167,
-              "area_m2": 92.417,
-              "length_m": 24.548,
-              "width_m": 3.93,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  3825,
-                  4797
-                ],
-                [
-                  3825,
-                  5185
-                ],
-                [
-                  4053,
-                  5191
-                ],
-                [
-                  3824,
-                  5196
-                ],
-                [
-                  3827,
-                  5582
-                ],
-                [
-                  4074,
-                  5488
-                ],
-                [
-                  4084,
-                  5713
-                ],
-                [
-                  3828,
-                  5597
-                ],
-                [
-                  3831,
-                  5992
-                ],
-                [
-                  3945,
-                  5996
-                ],
-                [
-                  3831,
-                  6002
-                ],
-                [
-                  3835,
-                  6402
-                ],
-                [
-                  4154,
-                  6492
-                ],
-                [
-                  3834,
-                  6414
-                ],
-                [
-                  3841,
-                  7233
-                ],
-                [
-                  4230,
-                  7247
-                ],
-                [
-                  4206,
-                  5233
-                ],
-                [
-                  4050,
-                  5157
-                ],
-                [
-                  4199,
-                  5191
-                ],
-                [
-                  4072,
-                  5137
-                ],
-                [
-                  4204,
-                  5155
-                ],
-                [
-                  4200,
-                  4803
-                ]
-              ],
-              "carpet_3_66_m": 27.513,
-              "carpet_3_66_strips": 7,
-              "carpet_3_66_seams": 6,
-              "carpet_4_0_m": 24.548,
-              "carpet_4_0_strips": 1,
-              "carpet_4_0_seams": 0
-            },
-            {
               "id": 114,
               "area_px": 150184,
               "area_m2": 15.018,
@@ -18435,210 +17915,6 @@
               "carpet_4_0_m": 4.01,
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
-            },
-            {
-              "id": 115,
-              "area_px": 559261,
-              "area_m2": 55.926,
-              "length_m": 20.722,
-              "width_m": 2.758,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  4720,
-                  4837
-                ],
-                [
-                  4742,
-                  6103
-                ],
-                [
-                  5005,
-                  6116
-                ],
-                [
-                  4743,
-                  6116
-                ],
-                [
-                  4758,
-                  6893
-                ],
-                [
-                  5031,
-                  6903
-                ],
-                [
-                  4989,
-                  4847
-                ]
-              ],
-              "carpet_3_66_m": 16.545,
-              "carpet_3_66_strips": 6,
-              "carpet_3_66_seams": 5,
-              "carpet_4_0_m": 16.545,
-              "carpet_4_0_strips": 6,
-              "carpet_4_0_seams": 5
-            },
-            {
-              "id": 116,
-              "area_px": 557465,
-              "area_m2": 55.747,
-              "length_m": 25.569,
-              "width_m": 4.513,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  4997,
-                  4840
-                ],
-                [
-                  5039,
-                  6901
-                ],
-                [
-                  5110,
-                  6911
-                ],
-                [
-                  4758,
-                  6903
-                ],
-                [
-                  4766,
-                  7364
-                ],
-                [
-                  5216,
-                  7393
-                ],
-                [
-                  5207,
-                  6917
-                ],
-                [
-                  5112,
-                  6911
-                ],
-                [
-                  5207,
-                  6907
-                ],
-                [
-                  5159,
-                  4845
-                ]
-              ],
-              "carpet_3_66_m": 31.589,
-              "carpet_3_66_strips": 7,
-              "carpet_3_66_seams": 6,
-              "carpet_4_0_m": 31.589,
-              "carpet_4_0_strips": 7,
-              "carpet_4_0_seams": 6
-            },
-            {
-              "id": 117,
-              "area_px": 285759,
-              "area_m2": 28.576,
-              "length_m": 20.757,
-              "width_m": 1.43,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  5169,
-                  4842
-                ],
-                [
-                  5176,
-                  5278
-                ],
-                [
-                  5256,
-                  5313
-                ],
-                [
-                  5177,
-                  5296
-                ],
-                [
-                  5195,
-                  6114
-                ],
-                [
-                  5326,
-                  6126
-                ],
-                [
-                  5196,
-                  6132
-                ],
-                [
-                  5213,
-                  6905
-                ],
-                [
-                  5353,
-                  6914
-                ],
-                [
-                  5348,
-                  6610
-                ],
-                [
-                  5230,
-                  6564
-                ],
-                [
-                  5348,
-                  6592
-                ],
-                [
-                  5305,
-                  4848
-                ]
-              ],
-              "carpet_3_66_m": 8.578,
-              "carpet_3_66_strips": 6,
-              "carpet_3_66_seams": 5,
-              "carpet_4_0_m": 8.578,
-              "carpet_4_0_strips": 6,
-              "carpet_4_0_seams": 5
-            },
-            {
-              "id": 118,
-              "area_px": 173317,
-              "area_m2": 17.332,
-              "length_m": 12.886,
-              "width_m": 1.375,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  5313,
-                  4844
-                ],
-                [
-                  5343,
-                  6121
-                ],
-                [
-                  5476,
-                  6129
-                ],
-                [
-                  5445,
-                  4849
-                ]
-              ],
-              "carpet_3_66_m": 5.499,
-              "carpet_3_66_strips": 4,
-              "carpet_3_66_seams": 3,
-              "carpet_4_0_m": 5.499,
-              "carpet_4_0_strips": 4,
-              "carpet_4_0_seams": 3
             },
             {
               "id": 119,
@@ -19486,87 +18762,6 @@
               "carpet_4_0_seams": 0
             },
             {
-              "id": 136,
-              "area_px": 848561,
-              "area_m2": 84.856,
-              "length_m": 10.932,
-              "width_m": 9.899,
-              "room_category": "living_area",
-              "is_living_area": true,
-              "polygon": [
-                [
-                  5438,
-                  7548
-                ],
-                [
-                  5252,
-                  7637
-                ],
-                [
-                  5133,
-                  7780
-                ],
-                [
-                  5075,
-                  7963
-                ],
-                [
-                  5089,
-                  8176
-                ],
-                [
-                  5176,
-                  8366
-                ],
-                [
-                  5327,
-                  8518
-                ],
-                [
-                  5516,
-                  8601
-                ],
-                [
-                  5725,
-                  8600
-                ],
-                [
-                  5884,
-                  8526
-                ],
-                [
-                  6014,
-                  8379
-                ],
-                [
-                  6077,
-                  8181
-                ],
-                [
-                  6061,
-                  7962
-                ],
-                [
-                  5962,
-                  7758
-                ],
-                [
-                  5808,
-                  7616
-                ],
-                [
-                  5638,
-                  7547
-                ]
-              ],
-              "carpet_3_66_m": 29.698,
-              "carpet_3_66_strips": 3,
-              "carpet_3_66_seams": 2,
-              "carpet_4_0_m": 29.698,
-              "carpet_4_0_strips": 3,
-              "carpet_4_0_seams": 2
-            },
-            {
               "id": 137,
               "area_px": 382238,
               "area_m2": 38.224,
@@ -20032,6 +19227,650 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
+          ],
+          "rejected_rooms": [
+            {
+              "id": 4,
+              "area_m2": 52.733,
+              "length_m": 12.944,
+              "width_m": 4.253,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  910,
+                  617
+                ],
+                [
+                  931,
+                  1879
+                ],
+                [
+                  1351,
+                  1904
+                ],
+                [
+                  1336,
+                  1493
+                ],
+                [
+                  941,
+                  1467
+                ],
+                [
+                  1347,
+                  1486
+                ],
+                [
+                  1341,
+                  1075
+                ],
+                [
+                  929,
+                  1043
+                ],
+                [
+                  1338,
+                  1065
+                ],
+                [
+                  1334,
+                  653
+                ]
+              ]
+            },
+            {
+              "id": 102,
+              "area_m2": 95.644,
+              "length_m": 12.715,
+              "width_m": 7.905,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  961,
+                  4003
+                ],
+                [
+                  982,
+                  4373
+                ],
+                [
+                  1100,
+                  4380
+                ],
+                [
+                  983,
+                  4388
+                ],
+                [
+                  971,
+                  4785
+                ],
+                [
+                  1390,
+                  4783
+                ],
+                [
+                  1398,
+                  4283
+                ],
+                [
+                  1399,
+                  4785
+                ],
+                [
+                  1678,
+                  4785
+                ],
+                [
+                  1677,
+                  4364
+                ],
+                [
+                  1718,
+                  4785
+                ],
+                [
+                  1818,
+                  4286
+                ],
+                [
+                  1728,
+                  4784
+                ],
+                [
+                  1826,
+                  4411
+                ],
+                [
+                  1825,
+                  4787
+                ],
+                [
+                  2226,
+                  4785
+                ],
+                [
+                  2220,
+                  4009
+                ],
+                [
+                  1821,
+                  4016
+                ],
+                [
+                  1816,
+                  4221
+                ],
+                [
+                  1809,
+                  4017
+                ],
+                [
+                  1396,
+                  3998
+                ],
+                [
+                  1397,
+                  4280
+                ],
+                [
+                  1385,
+                  3999
+                ]
+              ]
+            },
+            {
+              "id": 103,
+              "area_m2": 73.994,
+              "length_m": 12.056,
+              "width_m": 7.837,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  2238,
+                  4008
+                ],
+                [
+                  2239,
+                  4788
+                ],
+                [
+                  2337,
+                  4411
+                ],
+                [
+                  2339,
+                  4788
+                ],
+                [
+                  2637,
+                  4786
+                ],
+                [
+                  2638,
+                  4420
+                ],
+                [
+                  2661,
+                  4789
+                ],
+                [
+                  3035,
+                  4789
+                ],
+                [
+                  3033,
+                  4422
+                ],
+                [
+                  3046,
+                  4789
+                ],
+                [
+                  3430,
+                  4787
+                ],
+                [
+                  3419,
+                  4418
+                ],
+                [
+                  2751,
+                  4416
+                ],
+                [
+                  3032,
+                  4400
+                ],
+                [
+                  3024,
+                  4011
+                ],
+                [
+                  2641,
+                  4008
+                ],
+                [
+                  2936,
+                  4108
+                ],
+                [
+                  2643,
+                  4110
+                ],
+                [
+                  2636,
+                  4370
+                ],
+                [
+                  2632,
+                  4009
+                ]
+              ]
+            },
+            {
+              "id": 112,
+              "area_m2": 59.411,
+              "length_m": 16.42,
+              "width_m": 3.885,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  3439,
+                  4797
+                ],
+                [
+                  3438,
+                  5360
+                ],
+                [
+                  3727,
+                  5390
+                ],
+                [
+                  3437,
+                  5376
+                ],
+                [
+                  3439,
+                  6435
+                ],
+                [
+                  3725,
+                  6419
+                ],
+                [
+                  3756,
+                  5342
+                ],
+                [
+                  3825,
+                  6404
+                ],
+                [
+                  3814,
+                  4800
+                ],
+                [
+                  3721,
+                  5375
+                ],
+                [
+                  3727,
+                  4801
+                ],
+                [
+                  3613,
+                  5312
+                ],
+                [
+                  3625,
+                  4800
+                ]
+              ]
+            },
+            {
+              "id": 113,
+              "area_m2": 92.417,
+              "length_m": 24.548,
+              "width_m": 3.93,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  3825,
+                  4797
+                ],
+                [
+                  3825,
+                  5185
+                ],
+                [
+                  4053,
+                  5191
+                ],
+                [
+                  3824,
+                  5196
+                ],
+                [
+                  3827,
+                  5582
+                ],
+                [
+                  4074,
+                  5488
+                ],
+                [
+                  4084,
+                  5713
+                ],
+                [
+                  3828,
+                  5597
+                ],
+                [
+                  3831,
+                  5992
+                ],
+                [
+                  3945,
+                  5996
+                ],
+                [
+                  3831,
+                  6002
+                ],
+                [
+                  3835,
+                  6402
+                ],
+                [
+                  4154,
+                  6492
+                ],
+                [
+                  3834,
+                  6414
+                ],
+                [
+                  3841,
+                  7233
+                ],
+                [
+                  4230,
+                  7247
+                ],
+                [
+                  4206,
+                  5233
+                ],
+                [
+                  4050,
+                  5157
+                ],
+                [
+                  4199,
+                  5191
+                ],
+                [
+                  4072,
+                  5137
+                ],
+                [
+                  4204,
+                  5155
+                ],
+                [
+                  4200,
+                  4803
+                ]
+              ]
+            },
+            {
+              "id": 115,
+              "area_m2": 55.926,
+              "length_m": 20.722,
+              "width_m": 2.758,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  4720,
+                  4837
+                ],
+                [
+                  4742,
+                  6103
+                ],
+                [
+                  5005,
+                  6116
+                ],
+                [
+                  4743,
+                  6116
+                ],
+                [
+                  4758,
+                  6893
+                ],
+                [
+                  5031,
+                  6903
+                ],
+                [
+                  4989,
+                  4847
+                ]
+              ]
+            },
+            {
+              "id": 116,
+              "area_m2": 55.747,
+              "length_m": 25.569,
+              "width_m": 4.513,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  4997,
+                  4840
+                ],
+                [
+                  5039,
+                  6901
+                ],
+                [
+                  5110,
+                  6911
+                ],
+                [
+                  4758,
+                  6903
+                ],
+                [
+                  4766,
+                  7364
+                ],
+                [
+                  5216,
+                  7393
+                ],
+                [
+                  5207,
+                  6917
+                ],
+                [
+                  5112,
+                  6911
+                ],
+                [
+                  5207,
+                  6907
+                ],
+                [
+                  5159,
+                  4845
+                ]
+              ]
+            },
+            {
+              "id": 117,
+              "area_m2": 28.576,
+              "length_m": 20.757,
+              "width_m": 1.43,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  5169,
+                  4842
+                ],
+                [
+                  5176,
+                  5278
+                ],
+                [
+                  5256,
+                  5313
+                ],
+                [
+                  5177,
+                  5296
+                ],
+                [
+                  5195,
+                  6114
+                ],
+                [
+                  5326,
+                  6126
+                ],
+                [
+                  5196,
+                  6132
+                ],
+                [
+                  5213,
+                  6905
+                ],
+                [
+                  5353,
+                  6914
+                ],
+                [
+                  5348,
+                  6610
+                ],
+                [
+                  5230,
+                  6564
+                ],
+                [
+                  5348,
+                  6592
+                ],
+                [
+                  5305,
+                  4848
+                ]
+              ]
+            },
+            {
+              "id": 118,
+              "area_m2": 17.332,
+              "length_m": 12.886,
+              "width_m": 1.375,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  5313,
+                  4844
+                ],
+                [
+                  5343,
+                  6121
+                ],
+                [
+                  5476,
+                  6129
+                ],
+                [
+                  5445,
+                  4849
+                ]
+              ]
+            },
+            {
+              "id": 136,
+              "area_m2": 84.856,
+              "length_m": 10.932,
+              "width_m": 9.899,
+              "reason": "oversized_or_merged_contour",
+              "polygon": [
+                [
+                  5438,
+                  7548
+                ],
+                [
+                  5252,
+                  7637
+                ],
+                [
+                  5133,
+                  7780
+                ],
+                [
+                  5075,
+                  7963
+                ],
+                [
+                  5089,
+                  8176
+                ],
+                [
+                  5176,
+                  8366
+                ],
+                [
+                  5327,
+                  8518
+                ],
+                [
+                  5516,
+                  8601
+                ],
+                [
+                  5725,
+                  8600
+                ],
+                [
+                  5884,
+                  8526
+                ],
+                [
+                  6014,
+                  8379
+                ],
+                [
+                  6077,
+                  8181
+                ],
+                [
+                  6061,
+                  7962
+                ],
+                [
+                  5962,
+                  7758
+                ],
+                [
+                  5808,
+                  7616
+                ],
+                [
+                  5638,
+                  7547
+                ]
+              ]
+            }
           ]
         }
       ]
@@ -20040,6 +19879,7 @@
       "pdf": "FP3.pdf",
       "page_count": 1,
       "room_count": 90,
+      "rejected_room_count": 0,
       "total_area_m2": 315.773,
       "carpet_area_room_count": 83,
       "living_area_room_count": 7,
@@ -20047,6 +19887,7 @@
         {
           "page": 1,
           "room_count": 90,
+          "rejected_room_count": 0,
           "total_area_m2": 315.773,
           "rooms": [
             {
@@ -25423,7 +25264,8 @@
               "carpet_4_0_strips": 1,
               "carpet_4_0_seams": 0
             }
-          ]
+          ],
+          "rejected_rooms": []
         }
       ]
     }

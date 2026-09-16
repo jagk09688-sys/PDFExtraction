@@ -2,6 +2,7 @@
   "pdf": "FP3.pdf",
   "page_count": 1,
   "room_count": 90,
+  "rejected_room_count": 0,
   "total_area_m2": 315.773,
   "carpet_area_room_count": 83,
   "living_area_room_count": 7,
@@ -9,6 +10,7 @@
     {
       "page": 1,
       "room_count": 90,
+      "rejected_room_count": 0,
       "total_area_m2": 315.773,
       "rooms": [
         {
@@ -5385,7 +5387,8 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     }
   ]
 }

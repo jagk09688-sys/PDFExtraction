@@ -33,6 +33,7 @@ class Config:
 
     # Room Detection
     MIN_ROOM_AREA_PX = int(os.getenv("MIN_ROOM_AREA_PX", 2000))
+    MAX_HEURISTIC_ROOMS = int(os.getenv("MAX_HEURISTIC_ROOMS", 25))
     MORPHOLOGY_KERNEL_SIZE = int(os.getenv("MORPHOLOGY_KERNEL_SIZE", 5))
     CONTOUR_EPSILON = float(os.getenv("CONTOUR_APPROXIMATION_EPSILON", 0.01))
 

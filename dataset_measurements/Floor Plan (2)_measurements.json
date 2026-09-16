@@ -2,6 +2,7 @@
   "pdf": "Floor Plan (2).pdf",
   "page_count": 7,
   "room_count": 53,
+  "rejected_room_count": 0,
   "total_area_m2": 142.238,
   "carpet_area_room_count": 53,
   "living_area_room_count": 0,
@@ -9,6 +10,7 @@
     {
       "page": 1,
       "room_count": 2,
+      "rejected_room_count": 0,
       "total_area_m2": 0.521,
       "rooms": [
         {
@@ -125,11 +127,13 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     },
     {
       "page": 2,
       "room_count": 4,
+      "rejected_room_count": 0,
       "total_area_m2": 1.949,
       "rooms": [
         {
@@ -368,11 +372,13 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     },
     {
       "page": 3,
       "room_count": 19,
+      "rejected_room_count": 0,
       "total_area_m2": 55.536,
       "rooms": [
         {
@@ -1326,11 +1332,13 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     },
     {
       "page": 4,
       "room_count": 17,
+      "rejected_room_count": 0,
       "total_area_m2": 47.986,
       "rooms": [
         {
@@ -2222,11 +2230,13 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     },
     {
       "page": 5,
       "room_count": 9,
+      "rejected_room_count": 0,
       "total_area_m2": 35.797,
       "rooms": [
         {
@@ -2562,11 +2572,13 @@
           "carpet_4_0_strips": 2,
           "carpet_4_0_seams": 1
         }
-      ]
+      ],
+      "rejected_rooms": []
     },
     {
       "page": 6,
       "room_count": 1,
+      "rejected_room_count": 0,
       "total_area_m2": 0.206,
       "rooms": [
         {
@@ -2614,11 +2626,13 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     },
     {
       "page": 7,
       "room_count": 1,
+      "rejected_room_count": 0,
       "total_area_m2": 0.242,
       "rooms": [
         {
@@ -2654,7 +2668,8 @@
           "carpet_4_0_strips": 1,
           "carpet_4_0_seams": 0
         }
-      ]
+      ],
+      "rejected_rooms": []
     }
   ]
 }

@@ -98,10 +98,12 @@ for pdf in sorted(DATASET_DIR.glob('*.pdf')):
     pages = []
     total_rooms = 0
     total_room_area_m2 = 0.0
+    total_rejected_rooms = 0
 
     for page_num, pil_img in enumerate(images, start=1):
         _, rooms = detect_rooms(pil_img, min_area_px=Config.MIN_ROOM_AREA_PX)
         page_rooms = []
+        rejected_rooms = []
         page_total_area_m2 = 0.0
 
         for room_idx, room in enumerate(rooms, start=1):
@@ -111,6 +113,21 @@ for pdf in sorted(DATASET_DIR.glob('*.pdf')):
             area_m2 = area_px / (ppm ** 2)
             length_m = length_px / ppm
             width_m = width_px / ppm
+
+            # Large connected components are usually title blocks, dimension chains,
+            # or several spaces joined through door openings, not one room.
+            if area_m2 > 60.0 or length_m > 12.0 or width_m > 12.0:
+                rejected_rooms.append({
+                    'id': room_idx,
+                    'area_m2': round(area_m2, 3),
+                    'length_m': round(length_m, 3),
+                    'width_m': round(width_m, 3),
+                    'reason': 'oversized_or_merged_contour',
+                    'polygon': [[int(p[0]), int(p[1])] for p in room['polygon']],
+                })
+                total_rejected_rooms += 1
+                continue
+
             room_category = derive_room_category(length_m, width_m, area_m2)
 
             if room_category not in {'living_area', 'carpet_area_room'}:
@@ -141,8 +158,10 @@ for pdf in sorted(DATASET_DIR.glob('*.pdf')):
         page_summary = {
             'page': page_num,
             'room_count': len(page_rooms),
+            'rejected_room_count': len(rejected_rooms),
             'total_area_m2': round(page_total_area_m2, 3),
             'rooms': page_rooms,
+            'rejected_rooms': rejected_rooms,
         }
         pages.append(page_summary)
 
@@ -153,6 +172,7 @@ for pdf in sorted(DATASET_DIR.glob('*.pdf')):
         'pdf': pdf.name,
         'page_count': len(pages),
         'room_count': total_rooms,
+        'rejected_room_count': total_rejected_rooms,
         'total_area_m2': round(total_room_area_m2, 3),
         'carpet_area_room_count': carpet_area_room_count,
         'living_area_room_count': living_area_room_count,

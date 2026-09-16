@@ -1,0 +1,74 @@
+{
+  "images": [
+    {
+      "image": "Floor Plan (2)_page1.png",
+      "detected_candidates": 13,
+      "positive_pixels": 73887,
+      "reliable_for_training": true,
+      "reason": "ok"
+    },
+    {
+      "image": "Floor Plan (2)_page2.png",
+      "detected_candidates": 12,
+      "positive_pixels": 66701,
+      "reliable_for_training": true,
+      "reason": "ok"
+    },
+    {
+      "image": "Floor Plan (2)_page3.png",
+      "detected_candidates": 34,
+      "positive_pixels": 0,
+      "reliable_for_training": false,
+      "reason": "detected 34 candidates; expected at most 25; mask was not written"
+    },
+    {
+      "image": "Floor Plan (2)_page4.png",
+      "detected_candidates": 34,
+      "positive_pixels": 0,
+      "reliable_for_training": false,
+      "reason": "detected 34 candidates; expected at most 25; mask was not written"
+    },
+    {
+      "image": "Floor Plan (2)_page5.png",
+      "detected_candidates": 30,
+      "positive_pixels": 0,
+      "reliable_for_training": false,
+      "reason": "detected 30 candidates; expected at most 25; mask was not written"
+    },
+    {
+      "image": "Floor Plan (2)_page6.png",
+      "detected_candidates": 4,
+      "positive_pixels": 20786,
+      "reliable_for_training": true,
+      "reason": "ok"
+    },
+    {
+      "image": "Floor Plan (2)_page7.png",
+      "detected_candidates": 4,
+      "positive_pixels": 14704,
+      "reliable_for_training": true,
+      "reason": "ok"
+    },
+    {
+      "image": "FP1_page1.png",
+      "detected_candidates": 274,
+      "positive_pixels": 0,
+      "reliable_for_training": false,
+      "reason": "detected 274 candidates; expected at most 25; mask was not written"
+    },
+    {
+      "image": "FP2_page1.png",
+      "detected_candidates": 280,
+      "positive_pixels": 0,
+      "reliable_for_training": false,
+      "reason": "detected 280 candidates; expected at most 25; mask was not written"
+    },
+    {
+      "image": "FP3_page1.png",
+      "detected_candidates": 128,
+      "positive_pixels": 0,
+      "reliable_for_training": false,
+      "reason": "detected 128 candidates; expected at most 25; mask was not written"
+    }
+  ]
+}

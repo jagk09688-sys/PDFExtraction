@@ -104,8 +104,13 @@ python labelme_to_masks.py --images dataset/images --annotations labelme_json --
 ### Room Detection (in `app.py`)
 
 - `min_area_px`: Minimum contour area to consider as room (default: 2000 pixels)
+- Automatic results with more than 25 heuristic candidates are rejected as unreliable instead of being used for material totals
 - Morphological operations for gap closing
 - Polygon approximation tolerance
+
+### Scale Calibration
+
+The web app requires `pixels_per_meter` for every upload. It no longer silently assumes `100` pixels per meter, because that can inflate carpet lengths several times when a plan has a different scan resolution. Plans with graph paper, handwriting, or connected openings should be annotated with LabelMe polygons before calculating materials.
 
 ## Features Details
 

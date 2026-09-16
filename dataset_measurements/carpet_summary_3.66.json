@@ -1,8 +1,8 @@
 {
   "roll_width_m": 3.66,
-  "room_count": 449,
-  "total_selected_area_m2": 3922.787,
-  "total_carpet_required_m": 1748.917,
+  "room_count": 426,
+  "total_selected_area_m2": 2581.738,
+  "total_carpet_required_m": 1261.379,
   "rooms": [
     {
       "pdf": "Floor Plan (2).pdf",
@@ -590,17 +590,6 @@
     {
       "pdf": "FP1.pdf",
       "page": 1,
-      "room_id": 1,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 149.662,
-      "length_m": 19.574,
-      "width_m": 7.91,
-      "carpet_required_m": 47.462
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
       "room_id": 2,
       "room_category": "living_area",
       "is_living_area": true,
@@ -751,17 +740,6 @@
       "length_m": 10.707,
       "width_m": 2.059,
       "carpet_required_m": 6.176
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 16,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 168.252,
-      "length_m": 22.36,
-      "width_m": 7.806,
-      "carpet_required_m": 54.639
     },
     {
       "pdf": "FP1.pdf",
@@ -1092,17 +1070,6 @@
       "length_m": 0.766,
       "width_m": 0.527,
       "carpet_required_m": 0.527
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 47,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 100.77,
-      "length_m": 14.652,
-      "width_m": 10.979,
-      "carpet_required_m": 43.956
     },
     {
       "pdf": "FP1.pdf",
@@ -1459,28 +1426,6 @@
     {
       "pdf": "FP1.pdf",
       "page": 1,
-      "room_id": 80,
-      "room_category": "carpet_area_room",
-      "is_living_area": false,
-      "area_m2": 9.247,
-      "length_m": 13.115,
-      "width_m": 2.338,
-      "carpet_required_m": 9.35
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 81,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 24.464,
-      "length_m": 13.603,
-      "width_m": 3.6,
-      "carpet_required_m": 13.603
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
       "room_id": 82,
       "room_category": "carpet_area_room",
       "is_living_area": false,
@@ -1789,17 +1734,6 @@
     {
       "pdf": "FP1.pdf",
       "page": 1,
-      "room_id": 110,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 21.931,
-      "length_m": 14.348,
-      "width_m": 1.812,
-      "carpet_required_m": 7.25
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
       "room_id": 111,
       "room_category": "carpet_area_room",
       "is_living_area": false,
@@ -1851,17 +1785,6 @@
       "length_m": 0.71,
       "width_m": 0.55,
       "carpet_required_m": 0.55
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 116,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 20.802,
-      "length_m": 12.946,
-      "width_m": 2.037,
-      "carpet_required_m": 8.146
     },
     {
       "pdf": "FP1.pdf",
@@ -1954,17 +1877,6 @@
     {
       "pdf": "FP1.pdf",
       "page": 1,
-      "room_id": 125,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 51.899,
-      "length_m": 13.731,
-      "width_m": 5.346,
-      "carpet_required_m": 21.385
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
       "room_id": 126,
       "room_category": "carpet_area_room",
       "is_living_area": false,
@@ -1972,17 +1884,6 @@
       "length_m": 2.235,
       "width_m": 1.691,
       "carpet_required_m": 1.691
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 127,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 53.937,
-      "length_m": 13.997,
-      "width_m": 5.303,
-      "carpet_required_m": 21.21
     },
     {
       "pdf": "FP1.pdf",
@@ -2348,50 +2249,6 @@
       "carpet_required_m": 0.549
     },
     {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 161,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 30.04,
-      "length_m": 16.007,
-      "width_m": 1.981,
-      "carpet_required_m": 9.903
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 162,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 29.366,
-      "length_m": 15.965,
-      "width_m": 2.007,
-      "carpet_required_m": 10.035
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 163,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 27.04,
-      "length_m": 15.928,
-      "width_m": 1.845,
-      "carpet_required_m": 9.223
-    },
-    {
-      "pdf": "FP1.pdf",
-      "page": 1,
-      "room_id": 164,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 37.003,
-      "length_m": 15.971,
-      "width_m": 2.51,
-      "carpet_required_m": 12.55
-    },
-    {
       "pdf": "FP2.pdf",
       "page": 1,
       "room_id": 1,
@@ -2423,17 +2280,6 @@
       "length_m": 2.12,
       "width_m": 1.12,
       "carpet_required_m": 1.12
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 4,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 52.733,
-      "length_m": 12.944,
-      "width_m": 4.253,
-      "carpet_required_m": 17.013
     },
     {
       "pdf": "FP2.pdf",
@@ -3505,28 +3351,6 @@
     {
       "pdf": "FP2.pdf",
       "page": 1,
-      "room_id": 102,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 95.644,
-      "length_m": 12.715,
-      "width_m": 7.905,
-      "carpet_required_m": 31.618
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 103,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 73.994,
-      "length_m": 12.056,
-      "width_m": 7.837,
-      "carpet_required_m": 31.347
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
       "room_id": 104,
       "room_category": "living_area",
       "is_living_area": true,
@@ -3615,28 +3439,6 @@
     {
       "pdf": "FP2.pdf",
       "page": 1,
-      "room_id": 112,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 59.411,
-      "length_m": 16.42,
-      "width_m": 3.885,
-      "carpet_required_m": 19.426
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 113,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 92.417,
-      "length_m": 24.548,
-      "width_m": 3.93,
-      "carpet_required_m": 27.513
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
       "room_id": 114,
       "room_category": "living_area",
       "is_living_area": true,
@@ -3644,50 +3446,6 @@
       "length_m": 4.01,
       "width_m": 3.88,
       "carpet_required_m": 7.76
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 115,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 55.926,
-      "length_m": 20.722,
-      "width_m": 2.758,
-      "carpet_required_m": 16.545
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 116,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 55.747,
-      "length_m": 25.569,
-      "width_m": 4.513,
-      "carpet_required_m": 31.589
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 117,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 28.576,
-      "length_m": 20.757,
-      "width_m": 1.43,
-      "carpet_required_m": 8.578
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 118,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 17.332,
-      "length_m": 12.886,
-      "width_m": 1.375,
-      "carpet_required_m": 5.499
     },
     {
       "pdf": "FP2.pdf",
@@ -3875,17 +3633,6 @@
       "length_m": 4.941,
       "width_m": 2.867,
       "carpet_required_m": 4.941
-    },
-    {
-      "pdf": "FP2.pdf",
-      "page": 1,
-      "room_id": 136,
-      "room_category": "living_area",
-      "is_living_area": true,
-      "area_m2": 84.856,
-      "length_m": 10.932,
-      "width_m": 9.899,
-      "carpet_required_m": 29.698
     },
     {
       "pdf": "FP2.pdf",

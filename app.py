@@ -295,11 +295,16 @@ def extract():
         
         # Read optional inputs with validation
         try:
-            pixels_per_meter = float(request.form.get("pixels_per_meter", str(Config.DEFAULT_PPM)))
+            pixels_per_meter_value = request.form.get("pixels_per_meter", "").strip()
+            if not pixels_per_meter_value:
+                return jsonify({
+                    'error': 'Pixels per meter is required. Calibrate the uploaded plan before measuring rooms.'
+                }), 400
+            pixels_per_meter = float(pixels_per_meter_value)
             if pixels_per_meter <= 0:
-                pixels_per_meter = Config.DEFAULT_PPM
+                return jsonify({'error': 'Pixels per meter must be greater than zero.'}), 400
         except (ValueError, TypeError):
-            pixels_per_meter = Config.DEFAULT_PPM
+            return jsonify({'error': 'Pixels per meter must be a valid number.'}), 400
         
         try:
             roll_width = float(request.form.get("roll_width", str(Config.DEFAULT_ROLL_WIDTH)))
@@ -377,6 +382,22 @@ def extract():
         if rooms is None:
             logger.info('Using heuristic room detection')
             img_rgb, rooms = detect_rooms(pil_img)
+            if len(rooms) > Config.MAX_HEURISTIC_ROOMS:
+                logger.warning(
+                    'Rejected heuristic result: detected %d candidates, maximum is %d',
+                    len(rooms),
+                    Config.MAX_HEURISTIC_ROOMS,
+                )
+                return jsonify({
+                    'error': (
+                        f'Automatic detection found {len(rooms)} fragments instead of reliable room areas. '
+                        'This plan contains graph paper or handwritten annotations. '
+                        'Use LabelMe room polygons or the manual correction workflow before calculating materials.'
+                    ),
+                    'detected_candidates': len(rooms),
+                    'max_allowed_candidates': Config.MAX_HEURISTIC_ROOMS,
+                    'hint': 'Do not use the default 100 pixels/meter. Calibrate the uploaded plan first.',
+                }), 422
         else:
             img_rgb = np.array(pil_img.convert('RGB'))
 

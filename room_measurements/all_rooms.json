@@ -1,0 +1,11 @@
+{
+  "room_count": 0,
+  "summary": {
+    "total_room_count": 0,
+    "total_carpet_area_m2": 0,
+    "total_hardflooring_area_m2": 0,
+    "total_carpet_required_3_66_m": 0,
+    "total_carpet_required_4_0_m": 0
+  },
+  "rooms": []
+}
