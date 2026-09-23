@@ -8,5 +8,6 @@
   "rooms": [],
   "dimensions": [],
   "structural_elements": [],
-  "table_rows": []
+  "table_rows": [],
+  "text_labels": []
 }

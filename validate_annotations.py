@@ -10,8 +10,9 @@ from pathlib import Path
 from PIL import Image
 
 
-STRUCTURE_LABELS = {"door", "window", "wall", "stairs", "arrow", "note"}
+STRUCTURE_LABELS = {"door", "window", "wall", "stairs", "arrow", "note", "DP", "AJ", "FR"}
 DIMENSION_TYPES = {"length", "width", "unknown"}
+TEXT_LABEL_TYPES = {"room_name", "symbol", "note"}
 
 
 def error(errors: list[str], path: str, message: str) -> None:
@@ -25,7 +26,7 @@ def validate_page(annotation_path: Path) -> list[str]:
     except Exception as exc:
         return [f"{annotation_path}: invalid JSON ({exc})"]
 
-    required = ["page_number", "image_width", "image_height", "source_pdf", "annotator", "timestamp", "rooms", "dimensions", "structural_elements", "table_rows"]
+    required = ["page_number", "image_width", "image_height", "source_pdf", "annotator", "timestamp", "rooms", "dimensions", "text_labels", "structural_elements", "table_rows"]
     for field in required:
         if field not in data:
             error(errors, field, "missing required field")
@@ -57,6 +58,10 @@ def validate_page(annotation_path: Path) -> list[str]:
     for index, dimension in enumerate(data["dimensions"]):
         if dimension.get("type") not in DIMENSION_TYPES or len(dimension.get("bbox", [])) != 4:
             error(errors, f"dimensions[{index}]", "needs valid type and bbox")
+
+    for index, text_label in enumerate(data["text_labels"]):
+        if text_label.get("type") not in TEXT_LABEL_TYPES or not text_label.get("label") or len(text_label.get("bbox", [])) != 4:
+            error(errors, f"text_labels[{index}]", "needs valid type, label, and bbox")
 
     for index, item in enumerate(data["structural_elements"]):
         if item.get("label") not in STRUCTURE_LABELS or len(item.get("bbox", [])) != 4:

@@ -1,0 +1,147 @@
+{
+  "page_number": 7,
+  "image_width": 9135,
+  "image_height": 12453,
+  "source_pdf": "Floor Plan (2).pdf",
+  "annotator": "AUTO_DRAFT_REQUIRES_REVIEW",
+  "timestamp": "2026-09-22T00:02:54.660200+00:00",
+  "rooms": [
+    {
+      "id": "P07-R01",
+      "polygon": [
+        [
+          5656,
+          3428
+        ],
+        [
+          5659,
+          3750
+        ],
+        [
+          5674,
+          3756
+        ],
+        [
+          5672,
+          3440
+        ]
+      ],
+      "label": "UNREVIEWED_ROOM",
+      "confidence": null
+    },
+    {
+      "id": "P07-R02",
+      "polygon": [
+        [
+          5720,
+          5604
+        ],
+        [
+          5710,
+          5604
+        ],
+        [
+          5708,
+          5613
+        ],
+        [
+          5701,
+          5605
+        ],
+        [
+          5648,
+          5608
+        ],
+        [
+          5642,
+          5614
+        ],
+        [
+          5641,
+          5686
+        ],
+        [
+          5716,
+          5678
+        ]
+      ],
+      "label": "UNREVIEWED_ROOM",
+      "confidence": null
+    },
+    {
+      "id": "P07-R03",
+      "polygon": [
+        [
+          1496,
+          6544
+        ],
+        [
+          1483,
+          6535
+        ],
+        [
+          1457,
+          6535
+        ],
+        [
+          1447,
+          6540
+        ],
+        [
+          1439,
+          6548
+        ],
+        [
+          1437,
+          6553
+        ],
+        [
+          1439,
+          6568
+        ],
+        [
+          1453,
+          6576
+        ],
+        [
+          1473,
+          6576
+        ],
+        [
+          1495,
+          6562
+        ]
+      ],
+      "label": "UNREVIEWED_ROOM",
+      "confidence": null
+    },
+    {
+      "id": "P07-R04",
+      "polygon": [
+        [
+          6762,
+          7558
+        ],
+        [
+          6768,
+          7858
+        ],
+        [
+          6737,
+          7872
+        ],
+        [
+          6775,
+          7864
+        ]
+      ],
+      "label": "UNREVIEWED_ROOM",
+      "confidence": null
+    }
+  ],
+  "dimensions": [],
+  "structural_elements": [],
+  "table_rows": [],
+  "draft_status": "review_required",
+  "detector_candidate_count": 4
+}

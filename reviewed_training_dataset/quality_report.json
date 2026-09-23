@@ -1,0 +1,498 @@
+{
+  "projects": 79,
+  "eligible_projects": 0,
+  "eligible_pages": 0,
+  "skipped": [
+    {
+      "project": "FP-FLOORPLAN2",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms",
+        "page_003.json: no reviewed rooms",
+        "page_004.json: no reviewed rooms",
+        "page_005.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "FP1",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "FP2",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "FP3",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "FP5",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "FP7",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-44627-11-JUL-2026-09-55-52",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45098-1-01-SEP-2026-20-19-39",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45209-12-JUL-2026-12-26-06-1",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45307-12-JUL-2026-12-43-26",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45534-12-JUL-2026-13-07-56",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45542-08-SEP-2026-15-46-57",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45561-1-12-JUL-2026-13-17-46",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45561-12-JUL-2026-13-14-52",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45572-12-JUL-2026-12-39-48",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45575-08-JUN-2026-12-10-59",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45575-1-20-JUN-2026-13-41-10",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45635-12-JUL-2026-12-19-46",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45696-12-JUL-2026-12-23-05",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45795-30-MAY-2026-10-22-59",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45808-03-JUN-2026-14-39-51",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45815-01-JUN-2026-16-29-32",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45817-03-JUN-2026-14-29-13",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45830-1-16-JUN-2026-06-14-55",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45830-14-JUN-2026-05-45-41",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45832-18-JUN-2026-10-47-54",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45834-12-JUN-2026-14-15-07",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45837-07-JUL-2026-14-58-13",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45838-12-JUN-2026-12-37-18",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45847-16-JUN-2026-16-59-27",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45851-25-JUN-2026-06-41-02",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45857-20-JUN-2026-13-43-39",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45858-08-JUL-2026-16-56-34",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45863-25-JUN-2026-06-48-34",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45864-22-JUN-2026-17-00-35",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45868-25-JUN-2026-16-39-19",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45876-25-JUN-2026-16-18-57",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45878-25-JUN-2026-16-36-37",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45880-25-JUN-2026-16-42-36",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45882-25-JUN-2026-06-45-06",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45891-27-JUN-2026-12-01-36",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45903-04-JUL-2026-12-30-42",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45910-09-JUL-2026-15-19-37",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45922-11-JUL-2026-09-47-37",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45924-08-JUL-2026-14-22-09",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45924-1-08-JUL-2026-16-19-04",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45929-10-JUL-2026-14-51-57",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45930-11-JUL-2026-15-16-28",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45932-12-JUL-2026-08-58-55",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45939-15-JUL-2026-15-26-40",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-45941-16-JUL-2026-06-39-00",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46039-19-AUG-2026-16-34-05",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46043-20-AUG-2026-15-27-06",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46050-21-AUG-2026-17-32-39-1",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46059-06-SEP-2026-11-41-12",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46065-23-AUG-2026-11-07-59",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46071-06-SEP-2026-11-28-59",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46075-06-SEP-2026-12-17-26",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46075-1-06-SEP-2026-12-34-56",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46076-06-SEP-2026-13-00-22",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46077-29-AUG-2026-12-28-22",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46084-29-AUG-2026-07-19-29",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46091-31-AUG-2026-15-00-21-1",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46102-13-SEP-2026-12-26-05",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46111-03-SEP-2026-09-00-38",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46114-06-SEP-2026-10-39-34",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46116-04-SEP-2026-16-55-30",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46116-1-06-SEP-2026-13-11-32",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46117-06-SEP-2026-12-49-27",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46118-09-SEP-2026-17-20-00",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46124-10-SEP-2026-16-44-41",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46127-11-SEP-2026-05-28-01",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46128-09-SEP-2026-16-16-18",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46129-11-SEP-2026-08-34-53",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46148-1-13-SEP-2026-11-44-21",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46149-13-SEP-2026-12-24-33",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46150-20-SEP-2026-13-33-55",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46160-20-SEP-2026-18-11-08",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "PLAN-46166-21-SEP-2026-16-00-47",
+      "reasons": [
+        "page_001.json: no reviewed rooms"
+      ]
+    }
+  ],
+  "train_projects": 0,
+  "val_projects": 0,
+  "train_pages": 0,
+  "val_pages": 0
+}

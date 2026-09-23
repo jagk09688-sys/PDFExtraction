@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Commercial Carpet Floor Plan Page Annotation",
   "type": "object",
-  "required": ["page_number", "image_width", "image_height", "source_pdf", "annotator", "timestamp", "rooms", "dimensions", "structural_elements", "table_rows"],
+  "required": ["page_number", "image_width", "image_height", "source_pdf", "annotator", "timestamp", "rooms", "dimensions", "text_labels", "structural_elements", "table_rows"],
   "properties": {
     "page_number": {"type": "integer", "minimum": 1},
     "image_width": {"type": "integer", "minimum": 1},
@@ -12,6 +12,7 @@
     "timestamp": {"type": "string", "format": "date-time"},
     "rooms": {"type": "array", "items": {"$ref": "#/$defs/room"}},
     "dimensions": {"type": "array", "items": {"$ref": "#/$defs/dimension"}},
+    "text_labels": {"type": "array", "items": {"$ref": "#/$defs/textLabel"}},
     "structural_elements": {"type": "array", "items": {"$ref": "#/$defs/structure"}},
     "table_rows": {"type": "array", "items": {"$ref": "#/$defs/tableRow"}}
   },
@@ -41,12 +42,23 @@
       },
       "additionalProperties": false
     },
+    "textLabel": {
+      "type": "object",
+      "required": ["text", "bbox", "label", "type"],
+      "properties": {
+        "text": {"type": "string"},
+        "bbox": {"$ref": "#/$defs/bbox"},
+        "label": {"type": "string", "minLength": 1},
+        "type": {"enum": ["room_name", "symbol", "note"]}
+      },
+      "additionalProperties": false
+    },
     "structure": {
       "type": "object",
       "required": ["bbox", "label"],
       "properties": {
         "bbox": {"$ref": "#/$defs/bbox"},
-        "label": {"enum": ["door", "window", "wall", "stairs", "arrow", "note"]},
+        "label": {"enum": ["door", "window", "wall", "stairs", "arrow", "note", "DP", "AJ", "FR"]},
         "polygon": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}}
       },
       "additionalProperties": false

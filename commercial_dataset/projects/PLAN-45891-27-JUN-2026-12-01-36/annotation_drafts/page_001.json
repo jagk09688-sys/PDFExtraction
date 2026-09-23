@@ -1,0 +1,61 @@
+{
+  "page_number": 1,
+  "image_width": 2465,
+  "image_height": 3300,
+  "source_pdf": "45891 27-Jun-2026 12-01-36.pdf",
+  "annotator": "AUTO_DRAFT_REQUIRES_REVIEW",
+  "timestamp": "2026-09-23T00:00:38.852253+00:00",
+  "rooms": [
+    {
+      "id": "P01-R01",
+      "polygon": [
+        [
+          43,
+          45
+        ],
+        [
+          37,
+          288
+        ],
+        [
+          285,
+          296
+        ],
+        [
+          290,
+          55
+        ]
+      ],
+      "label": "UNREVIEWED_ROOM",
+      "confidence": null
+    },
+    {
+      "id": "P01-R02",
+      "polygon": [
+        [
+          38,
+          298
+        ],
+        [
+          31,
+          541
+        ],
+        [
+          281,
+          550
+        ],
+        [
+          286,
+          305
+        ]
+      ],
+      "label": "UNREVIEWED_ROOM",
+      "confidence": null
+    }
+  ],
+  "dimensions": [],
+  "structural_elements": [],
+  "table_rows": [],
+  "draft_status": "review_required",
+  "detector_candidate_count": 2
+}

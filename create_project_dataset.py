@@ -69,6 +69,7 @@ def write_annotation_templates(
                 "timestamp": timestamp,
                 "rooms": [],
                 "dimensions": [],
+                "text_labels": [],
                 "structural_elements": [],
                 "table_rows": [],
             }
