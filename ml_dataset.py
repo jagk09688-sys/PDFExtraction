@@ -1,4 +1,5 @@
 import os
+import torch
 from torch.utils.data import Dataset
 import cv2
 import numpy as np
@@ -61,8 +62,17 @@ class FloorplanDataset(Dataset):
             img = augmented['image']
             mask = augmented['mask']
 
-        # normalize image to 0-1 and transpose to CHW
-        img = img.astype('float32') / 255.0
-        img = np.transpose(img, (2, 0, 1))
-        mask = (mask.astype('float32') / 255.0)[None, ...]
+        # Normalize outputs from either NumPy or ToTensorV2 transforms.
+        if torch.is_tensor(img):
+            img = img.float() / 255.0
+        else:
+            img = img.astype('float32') / 255.0
+            img = np.transpose(img, (2, 0, 1))
+
+        if torch.is_tensor(mask):
+            mask = mask.float() / 255.0
+            if mask.ndim == 2:
+                mask = mask.unsqueeze(0)
+        else:
+            mask = (mask.astype('float32') / 255.0)[None, ...]
         return img, mask

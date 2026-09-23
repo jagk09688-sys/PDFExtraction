@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, send_from_directory, jsonify, send_file
+from werkzeug.exceptions import RequestEntityTooLarge
 from pdf2image import convert_from_bytes
 import os
 import io
@@ -8,6 +9,7 @@ from shapely.geometry import Polygon
 from PIL import Image
 import logging
 import os.path as osp
+import threading
 from werkzeug.utils import secure_filename
 from config import Config
 
@@ -61,7 +63,13 @@ app = Flask(__name__)
 
 # Security: configuration
 MAX_PDF_SIZE = Config.MAX_PDF_SIZE
+app.config['MAX_CONTENT_LENGTH'] = MAX_PDF_SIZE
 ALLOWED_EXTENSIONS = {'.pdf'}
+
+
+@app.errorhandler(RequestEntityTooLarge)
+def handle_file_too_large(error):
+    return jsonify({'error': f'File too large (max {MAX_PDF_SIZE / 1024 / 1024:g}MB)'}), 413
 
 # Ensure directories exist
 BASE_DIR = os.path.dirname(__file__)
@@ -72,6 +80,34 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 
 logger.info(f'Output directory: {OUTPUT_DIR}')
 logger.info(f'Configuration: PDF_DPI={Config.PDF_DPI}, MIN_AREA_PX={Config.MIN_ROOM_AREA_PX}')
+
+_model_lock = threading.Lock()
+_model = None
+_model_path = None
+
+
+def _as_bool(value):
+    """Parse form booleans without treating the string 'false' as true."""
+    return str(value or '').strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
+def _get_ml_model(model_path):
+    global _model, _model_path
+    if _model is not None and _model_path == model_path:
+        return _model
+    with _model_lock:
+        if _model is not None and _model_path == model_path:
+            return _model
+        device = torch.device(Config.ML_DEVICE if Config.ML_DEVICE == 'cuda' and torch.cuda.is_available() else 'cpu')
+        model = smp.Unet(encoder_name=Config.ML_ENCODER, encoder_weights=None, in_channels=3, classes=1)
+        state = torch.load(model_path, map_location=device)
+        model.load_state_dict(state.get('state_dict', state))
+        model.to(device)
+        model.eval()
+        _model = model
+        _model_path = model_path
+        logger.info('ML model loaded: %s on %s', model_path, device)
+        return _model
 
 
 def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
@@ -201,7 +237,7 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
         raise
 
 
-def ml_segment(pil_img: Image.Image, model_path: str = 'model.pth', threshold: float = 0.5):
+def ml_segment(pil_img: Image.Image, model_path: str = None, threshold: float = 0.5):
     """Run a segmentation model (if available) and return binary mask (uint8 0/255) same size as image.
     
     Args:
@@ -215,38 +251,34 @@ def ml_segment(pil_img: Image.Image, model_path: str = 'model.pth', threshold: f
     if not ML_AVAILABLE:
         logger.warning('ML libs not available; falling back to heuristic')
         return None
+    if model_path is None:
+        model_path = os.path.join(BASE_DIR, Config.ML_MODEL_PATH)
     if not osp.exists(model_path):
         logger.warning('Model file not found: %s', model_path)
         return None
-    # load model
     try:
-        device = torch.device('cpu')
-        model = smp.Unet(encoder_name='resnet34', encoder_weights=None, in_channels=3, classes=1)
-        state = torch.load(model_path, map_location=device)
-        if 'state_dict' in state:
-            model.load_state_dict(state['state_dict'])
-        else:
-            model.load_state_dict(state)
-        model.to(device)
-        model.eval()
-        logger.info('ML model loaded successfully')
+        model = _get_ml_model(model_path)
     except Exception as e:
         logger.exception('Failed loading model: %s', e)
         return None
 
     img = np.array(pil_img.convert('RGB'))
-    # prepare: normalize to 0-1
-    inp = img.astype(np.float32) / 255.0
-    # resize to model expected size (keep same for simplicity)
-    # convert HWC->CHW
+    height, width = img.shape[:2]
+    scale = min(1.0, Config.ML_MAX_DIM / max(height, width))
+    if scale < 1.0:
+        resized = cv2.resize(img, (max(1, int(width * scale)), max(1, int(height * scale))), interpolation=cv2.INTER_AREA)
+    else:
+        resized = img
+    inp = resized.astype(np.float32) / 255.0
     inp = np.transpose(inp, (2, 0, 1))[None, ...]
+    device = next(model.parameters()).device
     tensor = torch.from_numpy(inp).to(device)
     with torch.no_grad():
         out = model(tensor)
         out = torch.sigmoid(out)
         out_np = out[0, 0].cpu().numpy()
     mask = (out_np >= threshold).astype(np.uint8) * 255
-    mask = cv2.resize(mask, (pil_img.width, pil_img.height), interpolation=cv2.INTER_NEAREST)
+    mask = cv2.resize(mask, (width, height), interpolation=cv2.INTER_NEAREST)
     return mask
 
 
@@ -276,7 +308,7 @@ def draw_rooms(img_rgb: np.ndarray, rooms: list) -> np.ndarray:
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", default_ppm=Config.DEFAULT_PPM)
 
 
 @app.route("/extract", methods=["POST"])
@@ -297,10 +329,10 @@ def extract():
         try:
             pixels_per_meter_value = request.form.get("pixels_per_meter", "").strip()
             if not pixels_per_meter_value:
-                return jsonify({
-                    'error': 'Pixels per meter is required. Calibrate the uploaded plan before measuring rooms.'
-                }), 400
-            pixels_per_meter = float(pixels_per_meter_value)
+                pixels_per_meter = Config.DEFAULT_PPM
+                logger.warning('Pixels per meter was omitted; using configured fallback %.3f', pixels_per_meter)
+            else:
+                pixels_per_meter = float(pixels_per_meter_value)
             if pixels_per_meter <= 0:
                 return jsonify({'error': 'Pixels per meter must be greater than zero.'}), 400
         except (ValueError, TypeError):
@@ -327,7 +359,11 @@ def extract():
         except (ValueError, TypeError):
             tile_area = None
 
-        pdf_bytes = f.read()
+        pdf_bytes = f.read(MAX_PDF_SIZE + 1)
+        if len(pdf_bytes) > MAX_PDF_SIZE:
+            return jsonify({'error': f'File too large (max {MAX_PDF_SIZE / 1024 / 1024:g}MB)'}), 413
+        if not pdf_bytes.startswith(b'%PDF-'):
+            return jsonify({'error': 'Uploaded file is not a valid PDF'}), 400
         # Convert first page to image
         try:
             images = convert_pdf_to_images(pdf_bytes, dpi=Config.PDF_DPI)
@@ -354,11 +390,11 @@ def extract():
         logger.info(f'Extracted image: {pil_img.size}')
 
         # Optionally use ML segmentation if requested and model available
-        use_ml = bool(request.form.get('use_ml'))
+        use_ml = _as_bool(request.form.get('use_ml'))
         rooms = None
         if use_ml:
             logger.info('Attempting ML segmentation')
-            mask = ml_segment(pil_img, model_path=os.path.join(BASE_DIR, 'model.pth'))
+            mask = ml_segment(pil_img, model_path=os.path.join(BASE_DIR, Config.ML_MODEL_PATH), threshold=Config.ML_THRESHOLD)
             if mask is not None:
                 # Extract contours from mask
                 try:
@@ -481,6 +517,8 @@ def extract():
 
         return render_template("result.html", results=results, image_path="static/output/annotated.png", pixels_per_meter=pixels_per_meter, roll_width=ROLL_WIDTH_M)
     
+    except RequestEntityTooLarge:
+        return jsonify({'error': f'File too large (max {MAX_PDF_SIZE / 1024 / 1024:g}MB)'}), 413
     except Exception as e:
         logger.exception(f'Extract failed: {e}')
         return jsonify({'error': 'Processing failed'}), 500

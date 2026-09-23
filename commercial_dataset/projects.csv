@@ -1,0 +1,7 @@
+project_id,source_pdf,status,page_count,room_count,has_room_annotations,has_estimator_outcome,has_installer_feedback,created_at
+FP-FLOORPLAN2,Floor Plan (2).pdf,collected,7,0,False,False,False,2026-09-22T00:02:54.660200+00:00
+FP1,FP1.pdf,collected,1,0,False,False,False,2026-09-22T00:03:17.028222+00:00
+FP2,FP2.pdf,collected,1,0,False,False,False,2026-09-22T00:03:33.710062+00:00
+FP3,FP3.pdf,collected,1,0,False,False,False,2026-09-22T00:03:44.053470+00:00
+FP5,FP5.pdf,collected,1,0,False,False,False,2026-09-22T00:04:14.754399+00:00
+FP7,FP7.pdf,collected,2,0,False,False,False,2026-09-22T00:04:52.401938+00:00

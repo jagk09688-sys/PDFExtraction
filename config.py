@@ -21,8 +21,8 @@ class Config:
     """Application configuration."""
 
     # Flask Settings
-    DEBUG = os.getenv("FLASK_DEBUG", "True").lower() in ("true", "1")
-    ENV = os.getenv("FLASK_ENV", "development")
+    DEBUG = os.getenv("FLASK_DEBUG", "False").lower() in ("true", "1", "yes", "on")
+    ENV = os.getenv("FLASK_ENV", "production")
     PORT = int(os.getenv("FLASK_PORT", 5000))
     HOST = os.getenv("FLASK_HOST", "127.0.0.1")
 
@@ -38,9 +38,11 @@ class Config:
     CONTOUR_EPSILON = float(os.getenv("CONTOUR_APPROXIMATION_EPSILON", 0.01))
 
     # ML Segmentation
-    ML_MODEL_PATH = os.getenv("ML_MODEL_PATH", "model.pth")
+    ML_MODEL_PATH = os.getenv("ML_MODEL_PATH", "model_best_efficientnet_b3.pth")
+    ML_ENCODER = os.getenv("ML_ENCODER", "efficientnet-b3")
     ML_DEVICE = os.getenv("ML_INFERENCE_DEVICE", "cpu")
     ML_THRESHOLD = float(os.getenv("ML_SEGMENTATION_THRESHOLD", 0.5))
+    ML_MAX_DIM = int(os.getenv("ML_MAX_INPUT_DIMENSION", 1024))
 
     # Default Calculations
     DEFAULT_PPM = float(os.getenv("DEFAULT_PIXELS_PER_METER", 100))

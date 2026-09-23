@@ -201,10 +201,11 @@ def train_advanced(args):
     model.to(device)
     
     # Loss function
-    loss_fn = (
-        smp.losses.DiceLoss(mode='binary') + 
-        torch.nn.BCEWithLogitsLoss()
-    )
+    dice_loss = smp.losses.DiceLoss(mode='binary')
+    bce_loss = torch.nn.BCEWithLogitsLoss()
+
+    def loss_fn(preds, masks):
+        return dice_loss(preds, masks) + bce_loss(preds, masks)
     
     # Optimizer with weight decay
     optimizer = torch.optim.AdamW(
@@ -218,8 +219,7 @@ def train_advanced(args):
         optimizer,
         mode='min',
         factor=0.5,
-        patience=5,
-        verbose=True
+        patience=5
     )
     
     # Dataset and dataloaders

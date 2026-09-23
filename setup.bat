@@ -99,8 +99,8 @@ echo ============================================
 echo  Setup Complete!
 echo ============================================
 echo.
-echo To start the Flask app, run:
-echo   python app.py
+echo To start the production server, run:
+echo   run.bat
 echo.
 echo Then open: http://127.0.0.1:5000/
 echo.

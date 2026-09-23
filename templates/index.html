@@ -218,8 +218,8 @@
             <div class="section-title">Scale & Measurement</div>
             <div class="form-group">
                 <label for="ppm">📏 Pixels per Meter (Scale)</label>
-                <input type="text" id="ppm" name="pixels_per_meter" value="" placeholder="Required, for example 450">
-                <p class="help-text">Required: measure a known distance on the plan, then divide pixels by meters. Do not use 100 unless it is verified for this PDF.</p>
+                <input type="number" id="ppm" name="pixels_per_meter" value="{{ default_ppm }}" placeholder="For example 450" min="0.0001" step="any" inputmode="decimal" required>
+                <p class="help-text">Default estimate: {{ default_ppm }}. Replace it with pixels divided by a known real distance for accurate measurements.</p>
             </div>
 
             <!-- Carpet Options -->

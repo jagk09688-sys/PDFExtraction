@@ -1,0 +1,120 @@
+{
+  "project_id": "CW-0000",
+  "customer": {
+    "site_name": "",
+    "address": "",
+    "contact": ""
+  },
+  "survey": {
+    "installer": "",
+    "installer_company": "",
+    "installer_contact": "",
+    "date_surveyed": "",
+    "date_installed": "",
+    "source_pdf": "",
+    "plan_revision": "",
+    "units": "metres",
+    "general_notes": ""
+  },
+  "plan_review": {
+    "page_count": null,
+    "installed_pages": [],
+    "scale_verified": false,
+    "pixels_per_meter": null,
+    "scale_reference": "",
+    "existing_floor_removed": null,
+    "subfloor_condition": "",
+    "site_access_notes": ""
+  },
+  "rooms": [
+    {
+      "room_id": "P01-R01",
+      "page_number": 1,
+      "label": "",
+      "material": "carpet",
+      "length_m": null,
+      "width_m": null,
+      "area_m2": null,
+      "carpet_required_lm": null,
+      "notes": ""
+    }
+  ],
+  "product": {
+    "name": "",
+    "manufacturer": "",
+    "colour": "",
+    "batch_or_dye_lot": "",
+    "carpet_width_m": null,
+    "roll_width_m": null,
+    "pattern_repeat": "",
+    "pattern_match_required": null,
+    "pile_direction_required": null,
+    "direction_notes": ""
+  },
+  "rolls": [
+    {
+      "roll_id": "R01",
+      "source_roll_or_batch": "",
+      "length_available_lm": null,
+      "length_allocated_lm": null,
+      "rooms_served": [],
+      "remaining_offcut_lm": null
+    }
+  ],
+  "joins": [
+    {
+      "join_id": "J01",
+      "room_id": "",
+      "page_number": null,
+      "description": "",
+      "planned_position": "",
+      "actual_position": "",
+      "reason_moved": "",
+      "accepted": null,
+      "attachment": ""
+    }
+  ],
+  "offcuts": [
+    {
+      "offcut_id": "O01",
+      "source_roll": "",
+      "size_or_length": "",
+      "usable": null,
+      "reused_for": "",
+      "decision": "used",
+      "reason_not_reused": ""
+    }
+  ],
+  "outcome": {
+    "total_measured_area_m2": null,
+    "total_ordered_lm": null,
+    "total_installed_lm": null,
+    "waste_lm": null,
+    "waste_percent": null,
+    "reusable_offcut_lm": null,
+    "shortage": null,
+    "extra_order_lm": null,
+    "notes": ""
+  },
+  "installer_feedback": {
+    "dimensions_usable": null,
+    "join_plan_practical": null,
+    "difficult_areas": "",
+    "waste_causes": "",
+    "missed_site_conditions": "",
+    "ai_lessons": "",
+    "confidence_1_to_5": null,
+    "signoff_name": "",
+    "signoff_date": ""
+  },
+  "attachments": [],
+  "dataset_status": {
+    "metadata_updated": false,
+    "annotations_validated": false,
+    "masks_regenerated": false,
+    "status": "collected",
+    "reviewer": "",
+    "review_date": "",
+    "remaining_actions": ""
+  }
+}

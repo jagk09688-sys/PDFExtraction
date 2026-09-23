@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Commercial Carpet Floor Plan Page Annotation",
+  "type": "object",
+  "required": ["page_number", "image_width", "image_height", "source_pdf", "annotator", "timestamp", "rooms", "dimensions", "structural_elements", "table_rows"],
+  "properties": {
+    "page_number": {"type": "integer", "minimum": 1},
+    "image_width": {"type": "integer", "minimum": 1},
+    "image_height": {"type": "integer", "minimum": 1},
+    "source_pdf": {"type": "string", "minLength": 1},
+    "annotator": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "rooms": {"type": "array", "items": {"$ref": "#/$defs/room"}},
+    "dimensions": {"type": "array", "items": {"$ref": "#/$defs/dimension"}},
+    "structural_elements": {"type": "array", "items": {"$ref": "#/$defs/structure"}},
+    "table_rows": {"type": "array", "items": {"$ref": "#/$defs/tableRow"}}
+  },
+  "$defs": {
+    "point": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+    "bbox": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}, {"type": "number"}], "minItems": 4, "maxItems": 4},
+    "room": {
+      "type": "object",
+      "required": ["id", "polygon", "label"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "polygon": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}},
+        "label": {"type": "string", "minLength": 1},
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    },
+    "dimension": {
+      "type": "object",
+      "required": ["text", "value", "bbox", "associated_room", "type"],
+      "properties": {
+        "text": {"type": "string"},
+        "value": {"type": ["number", "null"]},
+        "bbox": {"$ref": "#/$defs/bbox"},
+        "associated_room": {"type": ["string", "null"]},
+        "type": {"enum": ["length", "width", "unknown"]}
+      },
+      "additionalProperties": false
+    },
+    "structure": {
+      "type": "object",
+      "required": ["bbox", "label"],
+      "properties": {
+        "bbox": {"$ref": "#/$defs/bbox"},
+        "label": {"enum": ["door", "window", "wall", "stairs", "arrow", "note"]},
+        "polygon": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}}
+      },
+      "additionalProperties": false
+    },
+    "tableRow": {
+      "type": "object",
+      "required": ["room_number", "length", "width", "notes", "bbox"],
+      "properties": {
+        "room_number": {"type": "string"},
+        "length": {"type": ["number", "null"]},
+        "width": {"type": ["number", "null"]},
+        "notes": {"type": "string"},
+        "bbox": {"$ref": "#/$defs/bbox"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

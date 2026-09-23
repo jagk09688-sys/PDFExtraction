@@ -61,7 +61,9 @@ For detailed step-by-step instructions for all platforms, see **[SETUP.md](SETUP
 python app.py
 ```
 
-Open http://127.0.0.1:5000/ in your browser.
+Open http://127.0.0.1:5000/ in your browser. `run.bat` uses Waitress, a
+production WSGI server; running `python app.py` directly is intended for local
+development only.
 
 ### Generate Sample Training Data
 
@@ -79,7 +81,8 @@ Prepare a dataset with images and corresponding binary masks:
 python train_segmentation.py --data /path/to/dataset --epochs 30 --bs 8
 ```
 
-This generates `model.pth` which can be placed in the project root for use in the web app.
+This generates a state-dict checkpoint which can be configured through
+`ML_MODEL_PATH` and `ML_ENCODER`.
 
 ### Convert PDFs to Images
 
@@ -95,11 +98,20 @@ python labelme_to_masks.py --images dataset/images --annotations labelme_json --
 
 ## Configuration
 
-### Web App Settings (in `app.py`)
+### Web App Settings
 
-- `MAX_PDF_SIZE`: Maximum PDF upload size (default: 10 MB)
-- DPI for PDF conversion (default: 200)
-- Model path: `model.pth` in project root
+- `MAX_PDF_SIZE_MB`: Maximum PDF upload size (default: 10 MB)
+- `PDF_DPI`: PDF conversion resolution (default: 200)
+- `FLASK_DEBUG`: Enable development debug mode (default: `False`)
+- `FLASK_HOST` and `FLASK_PORT`: WSGI listener address (defaults: `127.0.0.1:5000`)
+
+### ML Segmentation Settings
+
+- `ML_MODEL_PATH`: Model checkpoint (default: `model_best_efficientnet_b3.pth`)
+- `ML_ENCODER`: SMP encoder name (default: `efficientnet-b3`)
+- `ML_INFERENCE_DEVICE`: `cpu` or `cuda` (default: `cpu`)
+- `ML_SEGMENTATION_THRESHOLD`: Mask threshold (default: `0.5`)
+- `ML_MAX_INPUT_DIMENSION`: Maximum inference dimension before downscaling (default: `1024`)
 
 ### Room Detection (in `app.py`)
 
