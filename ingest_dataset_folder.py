@@ -94,4 +94,11 @@ def ingest(input_dir: Path, dataset_root: Path, dpi: int) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Import unique Dataset PDFs into commercial_dataset.")
     parser.add_argument("--input-dir", default="Dataset")
-    pars
+    parser.add_argument("--dataset-root", default="commercial_dataset")
+    parser.add_argument("--dpi", type=int, default=300)
+    args = parser.parse_args()
+    ingest(Path(args.input_dir), Path(args.dataset_root), args.dpi)
+
+
+if __name__ == "__main__":
+    main()
