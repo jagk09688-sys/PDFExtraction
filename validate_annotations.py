@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import warnings
 from datetime import datetime
 from pathlib import Path
 
 from PIL import Image
+
+Image.MAX_IMAGE_PIXELS = None
+warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
 
 
 STRUCTURE_LABELS = {"door", "window", "wall", "stairs", "arrow", "note", "DP", "AJ", "FR"}

@@ -1,0 +1,17 @@
+{
+  "checkpoint": "model_preliminary_pseudolabel_efficientnet_b3.pth",
+  "encoder": "efficientnet-b3",
+  "input_size": "256x256",
+  "train_pages": 74,
+  "val_pages": 20,
+  "label_source": "automatic draft polygons",
+  "status": "preliminary_only_human_review_required",
+  "checkpoint_load": true,
+  "sample_image": "PLAN-45209-12-JUL-2026-12-26-06-1__page_001.png",
+  "inference_shape": [
+    1,
+    1,
+    256,
+    256
+  ]
+}

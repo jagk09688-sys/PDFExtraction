@@ -1,5 +1,5 @@
 {
-  "projects": 79,
+  "projects": 80,
   "eligible_projects": 0,
   "eligible_pages": 0,
   "skipped": [
@@ -488,6 +488,14 @@
       "project": "PLAN-46166-21-SEP-2026-16-00-47",
       "reasons": [
         "page_001.json: no reviewed rooms"
+      ]
+    },
+    {
+      "project": "SASHIN",
+      "reasons": [
+        "page_001.json: no reviewed rooms",
+        "page_002.json: no reviewed rooms",
+        "page_003.json: no reviewed rooms"
       ]
     }
   ],

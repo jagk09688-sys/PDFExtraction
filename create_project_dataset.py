@@ -14,8 +14,14 @@ import argparse
 import csv
 import json
 import shutil
+import warnings
 from datetime import datetime, timezone
 from pathlib import Path
+
+from PIL import Image
+
+Image.MAX_IMAGE_PIXELS = None
+warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
 
 try:
     import pymupdf
@@ -57,7 +63,6 @@ def write_annotation_templates(
     timestamp = datetime.now(timezone.utc).isoformat()
     for page_number in range(1, page_count + 1):
         page_path = pages_dir / f"page_{page_number:03d}.png"
-        from PIL import Image
 
         with Image.open(page_path) as image:
             template = {
@@ -121,7 +126,10 @@ def create_project(pdf_path: Path, dataset_root: Path, project_id: str, dpi: int
         },
     }
     (project_dir / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-    update_manifest(dataset_root, metadata)
+    try:
+        update_manifest(dataset_root, metadata)
+    except PermissionError:
+        print(f"WARNING: manifest is locked; project was created but the CSV entry was not updated. Close the manifest and rerun the script.")
     return project_dir
 
 
@@ -147,10 +155,12 @@ def update_manifest(dataset_root: Path, metadata: dict) -> None:
     rows.append({field: str(row[field]) for field in MANIFEST_FIELDS})
     rows.sort(key=lambda item: item["project_id"])
     dataset_root.mkdir(parents=True, exist_ok=True)
-    with manifest_path.open("w", newline="", encoding="utf-8") as handle:
+    temp_path = manifest_path.with_suffix(".csv.tmp")
+    with temp_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=MANIFEST_FIELDS)
         writer.writeheader()
         writer.writerows(rows)
+    temp_path.replace(manifest_path)
 
 
 def main() -> None:

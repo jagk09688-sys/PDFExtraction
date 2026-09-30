@@ -1,0 +1,9 @@
+{
+  "type": "PRELIMINARY_PSEUDO_LABELS",
+  "projects": 79,
+  "train_projects": 63,
+  "val_projects": 16,
+  "train_pages": 74,
+  "val_pages": 20,
+  "warning": "Do not treat as production ground truth; automatic drafts require human review."
+}

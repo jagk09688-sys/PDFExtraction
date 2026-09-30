@@ -318,7 +318,7 @@ def train_advanced(args):
         if avg_val_loss < best_loss:
             best_loss = avg_val_loss
             torch.save(model.state_dict(), args.checkpoint)
-            print(f'  ✓ Saved best model to {args.checkpoint}')
+            print(f'  Saved best model to {args.checkpoint}')
         
         # Early stopping
         early_stopping(avg_val_loss)
@@ -326,7 +326,7 @@ def train_advanced(args):
             print(f'Early stopping at epoch {epoch+1}')
             break
     
-    print(f'\n✓ Training complete in {(datetime.now() - start_time).total_seconds():.0f}s')
+    print(f'\nTraining complete in {(datetime.now() - start_time).total_seconds():.0f}s')
     print(f'Best model: {args.checkpoint}')
 
 

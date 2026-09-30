@@ -308,7 +308,7 @@ def draw_rooms(img_rgb: np.ndarray, rooms: list) -> np.ndarray:
 
 @app.route("/")
 def index():
-    return render_template("index.html", default_ppm=Config.DEFAULT_PPM)
+    return render_template("index.html")
 
 
 @app.route("/extract", methods=["POST"])
@@ -329,10 +329,10 @@ def extract():
         try:
             pixels_per_meter_value = request.form.get("pixels_per_meter", "").strip()
             if not pixels_per_meter_value:
-                pixels_per_meter = Config.DEFAULT_PPM
-                logger.warning('Pixels per meter was omitted; using configured fallback %.3f', pixels_per_meter)
-            else:
-                pixels_per_meter = float(pixels_per_meter_value)
+                return jsonify({
+                    'error': 'Pixels per meter is required. Calibrate the uploaded plan before measuring rooms.'
+                }), 400
+            pixels_per_meter = float(pixels_per_meter_value)
             if pixels_per_meter <= 0:
                 return jsonify({'error': 'Pixels per meter must be greater than zero.'}), 400
         except (ValueError, TypeError):
