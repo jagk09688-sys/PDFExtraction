@@ -171,12 +171,19 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
     try:
         img = np.array(pil_img.convert("RGB"))
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        gray = cv2.equalizeHist(gray)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        _, th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        # Invert if background is dark
-        if np.mean(th) < 127:
-            th = 255 - th
-        # Morphology to close gaps
+
+        # Detect the background polarity so the same extractor works for both
+        # light-background plans (dark walls/rooms) and dark-background plans
+        # (light rooms/annotations).
+        background_is_dark = np.mean(blur) < 127
+        if background_is_dark:
+            _, th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        else:
+            _, th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+        # Morphology to close gaps while keeping room geometry intact.
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (Config.MORPHOLOGY_KERNEL_SIZE, Config.MORPHOLOGY_KERNEL_SIZE))
         closed = cv2.morphologyEx(th, cv2.MORPH_CLOSE, kernel, iterations=2)
         contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
