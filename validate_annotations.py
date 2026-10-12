@@ -17,6 +17,8 @@ warnings.filterwarnings("ignore", category=Image.DecompressionBombWarning)
 STRUCTURE_LABELS = {"door", "window", "wall", "stairs", "arrow", "note", "DP", "AJ", "FR"}
 DIMENSION_TYPES = {"length", "width", "unknown"}
 TEXT_LABEL_TYPES = {"room_name", "symbol", "note"}
+MATERIAL_TYPES = {"carpet", "hardflooring", "other", "unknown"}
+MEASUREMENT_UNITS = {"m", "cm", "mm", "ft", "in", "unknown"}
 
 
 def error(errors: list[str], path: str, message: str) -> None:
@@ -55,6 +57,8 @@ def validate_page(annotation_path: Path) -> list[str]:
         polygon = room.get("polygon", [])
         if len(polygon) < 3 or not room.get("label"):
             error(errors, f"rooms[{index}]", "needs label and polygon with at least 3 points")
+        if room.get("material") is not None and room["material"] not in MATERIAL_TYPES:
+            error(errors, f"rooms[{index}].material", f"must be one of {sorted(MATERIAL_TYPES)}")
         for point in polygon:
             if len(point) != 2 or not (0 <= point[0] <= width and 0 <= point[1] <= height):
                 error(errors, f"rooms[{index}].polygon", "point is outside image bounds")
@@ -62,6 +66,8 @@ def validate_page(annotation_path: Path) -> list[str]:
     for index, dimension in enumerate(data["dimensions"]):
         if dimension.get("type") not in DIMENSION_TYPES or len(dimension.get("bbox", [])) != 4:
             error(errors, f"dimensions[{index}]", "needs valid type and bbox")
+        if dimension.get("unit") is not None and dimension["unit"] not in MEASUREMENT_UNITS:
+            error(errors, f"dimensions[{index}].unit", f"must be one of {sorted(MEASUREMENT_UNITS)}")
 
     for index, text_label in enumerate(data["text_labels"]):
         if text_label.get("type") not in TEXT_LABEL_TYPES or not text_label.get("label") or len(text_label.get("bbox", [])) != 4:
@@ -76,6 +82,8 @@ def validate_page(annotation_path: Path) -> list[str]:
     for index, row in enumerate(data["table_rows"]):
         if len(row.get("bbox", [])) != 4:
             error(errors, f"table_rows[{index}].bbox", "needs four coordinates")
+        if row.get("unit") is not None and row["unit"] not in MEASUREMENT_UNITS:
+            error(errors, f"table_rows[{index}].unit", f"must be one of {sorted(MEASUREMENT_UNITS)}")
     return errors
 
 

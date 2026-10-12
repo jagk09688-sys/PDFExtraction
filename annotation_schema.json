@@ -26,7 +26,8 @@
         "id": {"type": "string", "minLength": 1},
         "polygon": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}},
         "label": {"type": "string", "minLength": 1},
-        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "material": {"enum": ["carpet", "hardflooring", "other", "unknown"]}
       },
       "additionalProperties": false
     },
@@ -38,7 +39,8 @@
         "value": {"type": ["number", "null"]},
         "bbox": {"$ref": "#/$defs/bbox"},
         "associated_room": {"type": ["string", "null"]},
-        "type": {"enum": ["length", "width", "unknown"]}
+        "type": {"enum": ["length", "width", "unknown"]},
+        "unit": {"enum": ["m", "cm", "mm", "ft", "in", "unknown"]}
       },
       "additionalProperties": false
     },
@@ -71,7 +73,8 @@
         "length": {"type": ["number", "null"]},
         "width": {"type": ["number", "null"]},
         "notes": {"type": "string"},
-        "bbox": {"$ref": "#/$defs/bbox"}
+        "bbox": {"$ref": "#/$defs/bbox"},
+        "unit": {"enum": ["m", "cm", "mm", "ft", "in", "unknown"]}
       },
       "additionalProperties": false
     }

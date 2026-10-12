@@ -38,17 +38,19 @@ python ingest_dataset_folder.py --input-dir Dataset --dpi 300
 2. Open each page in LabelMe, CVAT, or Roboflow. Keep coordinates in original
    pixel space.
 3. Draw one tight polygon around every room interior and label it, such as
-   `Bed 1`, `Hallway`, `Living`, or `Balcony`.
+   `Bed 1`, `Hallway`, `Living`, or `Balcony`. Set the room's `material` to
+   confirmed `carpet`, `hardflooring`, `other`, or `unknown`; do not infer it
+   from the room name.
 4. Draw a bounding box around every printed dimension. Record exact text,
-   numeric value, room association when known, and `length`, `width`, or
-   `unknown` type.
+   numeric value, unit (`m`, `cm`, `mm`, `ft`, `in`, or `unknown`), room
+   association when known, and `length`, `width`, or `unknown` type.
 5. Draw bounding boxes around room names and symbols in `text_labels`. Use
    `room_name`, `symbol`, or `note` as the type.
 6. Annotate doors, windows, walls, stairs, arrows, notes, and symbols such as
    `DP`, `AJ`, and `FR`. Structures need a bounding box; walls also need a
    polygon.
 7. For FP2/FP3-style Dunlop sheets, record every table row with room number,
-   length, width, notes, and row bounding box.
+   length, width, unit, notes, and row bounding box.
 8. Complete `annotations/page_###.json` using `annotation_schema.json`.
 9. Validate the completed annotations:
 
@@ -69,6 +71,23 @@ python ingest_dataset_folder.py --input-dir Dataset --dpi 300
 12. Put the final carpet layout or marked-up plan in `final_layouts/`.
 13. Add installer feedback after installation and update the project status.
 
+## Export annotated information
+
+After completing page annotations, export room geometry, confirmed dimensions,
+room material, dimension text, and table rows to JSON:
+
+```powershell
+python extract_room_dimensions_from_annotations.py `
+   --annotations commercial_dataset/projects/CW-0001/annotations `
+   --output commercial_dataset/projects/CW-0001/extracted_information
+```
+
+The exporter does not assume that pixels correspond to metres. Add
+`--pixels-per-meter <verified-value>` only when the rendered page has a known
+scale calibration. For official project annotations, record units on each
+dimension/table row; unknown units stay unknown and do not produce carpet
+length estimates.
+
 ## Annotation rules
 
 - Coordinates are pixel coordinates in the original rendered page image.
@@ -80,9 +99,10 @@ python ingest_dataset_folder.py --input-dir Dataset --dpi 300
 - Add `table_rows` for Dunlop sheets such as FP2 and FP3.
 - Do not guess OCR values, room dimensions, joins, waste, or installer outcomes.
 
-Unknown values must remain `null` or empty. Do not guess measurements, waste,
-joins, or ordered length. That distinction is essential for reliable quantity
-and waste prediction.
+Unknown values must remain `null` or `unknown`. Do not guess units,
+measurements, material, waste, joins, or ordered length. Pixel dimensions are
+not physical measurements unless the page has a verified scale calibration.
+That distinction is essential for reliable quantity and waste prediction.
 
 ## Automatic annotation drafts
 
