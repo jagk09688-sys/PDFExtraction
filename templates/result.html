@@ -402,14 +402,52 @@
         <!-- Results Table -->
         <div class="panel">
             <h2>📋 Room Details</h2>
+            {% if room_extraction_error %}
+            <p style="margin-bottom: 16px; padding: 12px; border-radius: 6px; background: #f8d7da; color: #842029;">
+                {{ room_extraction_error }}
+            </p>
+            {% endif %}
+            {% if not ocr_available %}
+            <p style="margin-bottom: 16px; padding: 12px; border-radius: 6px; background: #fff3cd; color: #664d03;">
+                OCR is not installed. Room names and printed dimensions cannot be read from this PDF yet. Install project requirements and restart the app.
+            </p>
+            {% elif not ocr_item_count %}
+            <p style="margin-bottom: 16px; padding: 12px; border-radius: 6px; background: #fff3cd; color: #664d03;">
+                OCR ran but found no readable text on this page. Try a clearer scan or a higher-resolution PDF render.
+            </p>
+            {% else %}
+            <p style="margin-bottom: 16px; color: #555;">OCR recognized {{ ocr_item_count }} text items. Check the displayed labels and printed dimensions against the plan before using them.</p>
+            {% endif %}
+            {% if ocr_review_items %}
+            <details style="margin-bottom: 18px;">
+                <summary style="cursor: pointer; font-weight: 600;">Review OCR candidates ({{ ocr_review_items|length }})</summary>
+                <div class="table-wrapper" style="margin-top: 10px;">
+                    <table class="results-table">
+                        <thead><tr><th>Kind</th><th>Recognized text</th><th>Confidence</th></tr></thead>
+                        <tbody>
+                            {% for item in ocr_review_items %}
+                            <tr>
+                                <td>{{ item.kind }}</td>
+                                <td>{{ item.text }}</td>
+                                <td>{% if item.confidence is not none %}{{ (item.confidence * 100)|round(1) }}%{% else %}—{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+            {% endif %}
             <div class="table-wrapper">
                 <table class="results-table">
                     <thead>
                         <tr>
-                            <th>Room</th>
+                            <th>Room / Detected Name</th>
+                            <th>Text Found Inside Room</th>
+                            <th>Printed Dimensions (OCR)</th>
+                            <th>Printed Size (OCR, m)</th>
                             <th>Area (m²)</th>
-                            <th>Length (m)</th>
-                            <th>Width (m)</th>
+                            <th>Estimated Length (m)</th>
+                            <th>Estimated Width (m)</th>
                             <th>Strips</th>
                             <th>Strip Len (m)</th>
                             <th>Carpet (m)</th>
@@ -422,7 +460,10 @@
                     <tbody>
                         {% for r in results %}
                         <tr data-id="{{ r.id }}">
-                            <td><strong>Room {{ r.id }}</strong></td>
+                            <td><strong>Room {{ r.id }}</strong>{% if r.room_name %}<br><span>{{ r.room_name }}</span>{% endif %}</td>
+                            <td>{{ r.detected_text or '—' }}</td>
+                            <td>{% if r.printed_dimension_text %}{{ r.printed_dimension_text }}{% else %}—{% endif %}</td>
+                            <td>{% if r.printed_length_m is not none and r.printed_width_m is not none %}{{ r.printed_length_m }} × {{ r.printed_width_m }}{% else %}—{% endif %}</td>
                             <td class="area-m2">{{ r.area_m2 }}</td>
                             <td class="length">{{ r.length_m }}</td>
                             <td class="width">{{ r.width_m }}</td>

@@ -12,6 +12,13 @@ import os.path as osp
 import threading
 from werkzeug.utils import secure_filename
 from config import Config
+from floorplan_text import (
+    attach_ocr_to_rooms,
+    extract_pdf_text_items,
+    merge_text_items,
+    select_ocr_review_items,
+)
+from ocr_room_labels import extract_room_text, ocr_engine_available
 
 # Try to import pymupdf for PDF conversion without Poppler
 try:
@@ -170,6 +177,16 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
     
     try:
         img = np.array(pil_img.convert("RGB"))
+        original_img = img
+        original_height, original_width = img.shape[:2]
+        detection_scale = min(1.0, 4000.0 / max(original_height, original_width))
+        if detection_scale < 1.0:
+            img = cv2.resize(
+                img,
+                (max(1, round(original_width * detection_scale)), max(1, round(original_height * detection_scale))),
+                interpolation=cv2.INTER_AREA,
+            )
+            min_area_px = max(1, int(min_area_px * detection_scale * detection_scale))
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         gray = cv2.equalizeHist(gray)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -227,6 +244,8 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
                 continue
 
             cnt = max(contours, key=cv2.contourArea)
+            if detection_scale < 1.0:
+                cnt = np.round(cnt.astype(np.float32) / detection_scale).astype(np.int32)
             area = cv2.contourArea(cnt)
             if area < min_area_px:
                 continue
@@ -238,7 +257,7 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
                 rooms.append({"polygon": poly, "area_px": area, "contour": cnt})
         
         logger.info(f'Detected {len(rooms)} rooms')
-        return img, rooms
+        return original_img, rooms
     except Exception as e:
         logger.exception('Room detection failed: %s', e)
         raise
@@ -396,6 +415,21 @@ def extract():
         pil_img = images[0]
         logger.info(f'Extracted image: {pil_img.size}')
 
+        # Combine selectable PDF text with OCR. Native text usually preserves
+        # room names and dimensions more accurately; OCR supplies scanned plans.
+        native_text_items = extract_pdf_text_items(pdf_bytes, pil_img.size)
+        ocr_text_items = extract_room_text(pil_img)
+        text_items = merge_text_items(native_text_items, ocr_text_items)
+        ocr_available = ocr_engine_available()
+        ocr_review_items = select_ocr_review_items(text_items)
+        logger.info(
+            'OCR available=%s, native PDF text items=%d, OCR items=%d, merged items=%d',
+            ocr_available,
+            len(native_text_items),
+            len(ocr_text_items),
+            len(text_items),
+        )
+
         # Optionally use ML segmentation if requested and model available
         use_ml = _as_bool(request.form.get('use_ml'))
         rooms = None
@@ -431,18 +465,31 @@ def extract():
                     len(rooms),
                     Config.MAX_HEURISTIC_ROOMS,
                 )
-                return jsonify({
-                    'error': (
-                        f'Automatic detection found {len(rooms)} fragments instead of reliable room areas. '
-                        'This plan contains graph paper or handwritten annotations. '
-                        'Use LabelMe room polygons or the manual correction workflow before calculating materials.'
-                    ),
-                    'detected_candidates': len(rooms),
-                    'max_allowed_candidates': Config.MAX_HEURISTIC_ROOMS,
-                    'hint': 'Do not use the default 100 pixels/meter. Calibrate the uploaded plan first.',
-                }), 422
+                failure_message = (
+                    f'Room boundaries could not be extracted reliably: the detector found {len(rooms)} fragments '
+                    f'(limit {Config.MAX_HEURISTIC_ROOMS}). The OCR review below is available, but do not use '
+                    'these fragments for room measurements. Try AI segmentation or correct the room outlines manually.'
+                )
+                preview_path = os.path.join(OUTPUT_DIR, 'annotated.png')
+                pil_img.save(preview_path)
+                return render_template(
+                    'result.html',
+                    results=[],
+                    image_path='static/output/annotated.png',
+                    pixels_per_meter=pixels_per_meter,
+                    roll_width=roll_width,
+                    ocr_available=ocr_available,
+                    ocr_item_count=len(text_items),
+                    ocr_review_items=ocr_review_items,
+                    room_extraction_error=failure_message,
+                ), 422
         else:
             img_rgb = np.array(pil_img.convert('RGB'))
+
+        # Room names and printed dimensions come from OCR, not segmentation.
+        # Keep printed measurements separate from scale-derived geometry so an
+        # OCR guess is never confused with the calibrated polygon dimensions.
+        rooms = attach_ocr_to_rooms(rooms, text_items)
 
         # Compute room dimensions using min-area-rect and plan carpet strips
         ROLL_WIDTH_M = roll_width
@@ -501,9 +548,16 @@ def extract():
 
             results.append({
                 "id": i,
+                "room_name": r.get("room_name") or "",
                 "area_m2": round(float(area_m2), 3),
                 "length_m": round(float(length_m), 3),
                 "width_m": round(float(width_m), 3),
+                "printed_dimension_text": "; ".join(item["text"] for item in r.get("printed_dimensions", [])),
+                "printed_length_m": next((item["length_m"] for item in r.get("printed_dimensions", []) if item.get("length_m") is not None), None),
+                "printed_width_m": next((item["width_m"] for item in r.get("printed_dimensions", []) if item.get("width_m") is not None), None),
+                "printed_measurements": [item for item in r.get("printed_dimensions", [])],
+                "ocr_text": r.get("ocr_text", []),
+                "detected_text": "; ".join(item["text"] for item in r.get("ocr_text", [])),
                 "chosen_orientation": chosen,
                 "strips": strips,
                 "strip_length_m": round(float(strip_len), 3),
@@ -522,7 +576,17 @@ def extract():
         except Exception as e:
             logger.exception(f'Failed to save annotated image: {e}')
 
-        return render_template("result.html", results=results, image_path="static/output/annotated.png", pixels_per_meter=pixels_per_meter, roll_width=ROLL_WIDTH_M)
+        return render_template(
+            "result.html",
+            results=results,
+            image_path="static/output/annotated.png",
+            pixels_per_meter=pixels_per_meter,
+            roll_width=ROLL_WIDTH_M,
+            ocr_available=ocr_available,
+            ocr_item_count=len(text_items),
+            ocr_review_items=ocr_review_items,
+            room_extraction_error=None if results else 'No room regions were detected. Review OCR text below and correct or retrain the room segmentation.',
+        )
     
     except RequestEntityTooLarge:
         return jsonify({'error': f'File too large (max {MAX_PDF_SIZE / 1024 / 1024:g}MB)'}), 413

@@ -216,7 +216,7 @@ def main():
     parser.add_argument('--yolo-conf', type=float, default=0.25, help='YOLO confidence threshold')
     parser.add_argument('--yolo-iou', type=float, default=0.5, help='YOLO IoU threshold')
     parser.add_argument('--ocr', action='store_true', help='Enable OCR text extraction')
-    parser.add_argument('--ocr-engine', default='surya', choices=['surya', 'paddleocr'], help='OCR engine preference')
+    parser.add_argument('--ocr-engine', default='rapidocr', choices=['rapidocr', 'surya', 'paddleocr'], help='OCR engine preference')
     args = parser.parse_args()
 
     device_name = args.device
