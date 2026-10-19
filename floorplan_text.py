@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 
-_NUMBER = r"\d{1,4}(?:[.,]\d{1,3})?"
+_NUMBER = r"\d{1,5}(?:[.,]\d{1,3})?"
 _UNIT = r"mm|cm|m|ft|in|['\"]"
 _SINGLE_MEASURE_RE = re.compile(
     rf"(?<![\w.])(?P<value>{_NUMBER})\s*(?P<unit>mm|cm|m|ft|in|['\"])(?![\w])",
@@ -246,6 +246,85 @@ def _bbox_points(bbox: Any) -> list[list[float]] | None:
     return None
 
 
+def _compose_split_dimension_items(
+    text_items: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], set[int]]:
+    """Join OCR-split number × number tokens when they share a text line."""
+    boxes = [_bbox_points(item.get("bbox")) for item in text_items]
+    separators = [
+        index
+        for index, item in enumerate(text_items)
+        if " ".join(str(item.get("text", "")).split()).casefold() in {"x", "×"}
+    ]
+    composed = []
+    consumed_indices: set[int] = set()
+
+    for separator_index in separators:
+        separator_box = boxes[separator_index]
+        if not separator_box:
+            continue
+        separator_x = sum(point[0] for point in separator_box) / len(separator_box)
+        separator_y = sum(point[1] for point in separator_box) / len(separator_box)
+        separator_height = max(point[1] for point in separator_box) - min(
+            point[1] for point in separator_box
+        )
+        left_candidates = []
+        right_candidates = []
+
+        for index, item in enumerate(text_items):
+            if index == separator_index or index in consumed_indices or not boxes[index]:
+                continue
+            measurement = parse_single_measurement(str(item.get("text", "")).strip())
+            if measurement is None:
+                continue
+            box = boxes[index]
+            x0 = min(point[0] for point in box)
+            x1 = max(point[0] for point in box)
+            center_y = sum(point[1] for point in box) / len(box)
+            item_height = max(point[1] for point in box) - min(point[1] for point in box)
+            same_line_tolerance = max(8.0, (separator_height + item_height) / 2)
+            if abs(center_y - separator_y) > same_line_tolerance:
+                continue
+            max_gap = max(24.0, 4 * max(separator_height, item_height))
+            if x1 <= separator_x and separator_x - x1 <= max_gap:
+                left_candidates.append((separator_x - x1, index, measurement))
+            elif x0 >= separator_x and x0 - separator_x <= max_gap:
+                right_candidates.append((x0 - separator_x, index, measurement))
+
+        if not left_candidates or not right_candidates:
+            continue
+        _, left_index, left_measurement = min(left_candidates)
+        _, right_index, right_measurement = min(right_candidates)
+        pair_text = f"{left_measurement['text']} x {right_measurement['text']}"
+
+        # OCR engines occasionally isolate the shared unit as its own token.
+        right_box = boxes[right_index]
+        right_x1 = max(point[0] for point in right_box)
+        right_y = sum(point[1] for point in right_box) / len(right_box)
+        for index, item in enumerate(text_items):
+            if index in {separator_index, left_index, right_index} or not boxes[index]:
+                continue
+            unit = " ".join(str(item.get("text", "")).split()).casefold()
+            if unit not in {"mm", "cm", "m", "ft", "in", '"', "′", "'"}:
+                continue
+            box = boxes[index]
+            x0 = min(point[0] for point in box)
+            center_y = sum(point[1] for point in box) / len(box)
+            height = max(point[1] for point in box) - min(point[1] for point in box)
+            if 0 <= x0 - right_x1 <= max(24.0, 4 * height) and abs(center_y - right_y) <= max(8.0, height):
+                pair_text += f" {unit}"
+                break
+
+        parsed = parse_dimension_pair(pair_text)
+        if parsed is None:
+            continue
+        parsed["source"] = "composed_ocr"
+        composed.append(parsed)
+        consumed_indices.update((left_index, right_index))
+
+    return composed, consumed_indices
+
+
 def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]:
     """Attach OCR entries only when their centers lie inside detected polygons."""
     for room in rooms:
@@ -273,13 +352,19 @@ def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]
                     "source": item.get("source", "ocr"),
                 }
                 contained_items.append(normalized_item)
-                parsed_dimension = parse_dimension_pair(text)
-                if parsed_dimension:
-                    room["printed_dimensions"].append(parsed_dimension)
-                else:
-                    single_measure = parse_single_measurement(text)
-                    if single_measure:
-                        room["printed_dimensions"].append(single_measure)
+        composed_dimensions, consumed_measurement_indices = _compose_split_dimension_items(
+            contained_items
+        )
+        for index, item in enumerate(contained_items):
+            text = item["text"]
+            parsed_dimension = parse_dimension_pair(text)
+            if parsed_dimension:
+                room["printed_dimensions"].append(parsed_dimension)
+            else:
+                single_measure = parse_single_measurement(text)
+                if single_measure and index not in consumed_measurement_indices:
+                    room["printed_dimensions"].append(single_measure)
+        room["printed_dimensions"].extend(composed_dimensions)
 
         room["ocr_text"] = contained_items
         name_candidates = [

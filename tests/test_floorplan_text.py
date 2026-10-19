@@ -149,3 +149,39 @@ def test_commercial_room_name_is_paired_with_dimension():
     assert enriched[0]["room_name"] == "MEETING ROOM 2"
     assert enriched[0]["printed_dimensions"][0]["length_m"] == 7.2
     assert enriched[0]["printed_dimensions"][0]["width_m"] == 5.4
+
+
+def test_pairs_separate_ocr_number_x_number_and_shared_unit_tokens():
+    rooms = [{"id": 1, "polygon": [[0, 0], [200, 0], [200, 100], [0, 100]]}]
+    text_items = [
+        {"text": "MEETING ROOM", "bbox": [[20, 10], [90, 10], [90, 20], [20, 20]]},
+        {"text": "7200", "bbox": [[30, 40], [55, 40], [55, 50], [30, 50]]},
+        {"text": "x", "bbox": [[60, 40], [68, 40], [68, 50], [60, 50]]},
+        {"text": "12000", "bbox": [[73, 40], [108, 40], [108, 50], [73, 50]]},
+        {"text": "mm", "bbox": [[112, 40], [125, 40], [125, 50], [112, 50]]},
+    ]
+
+    room = attach_ocr_to_rooms(rooms, text_items)[0]
+
+    assert room["room_name"] == "MEETING ROOM"
+    assert len(room["printed_dimensions"]) == 1
+    assert room["printed_dimensions"][0]["text"] == "7200 x 12000 mm"
+    assert room["printed_dimensions"][0]["length_m"] == 12.0
+    assert room["printed_dimensions"][0]["width_m"] == 7.2
+
+
+def test_split_unitless_dimension_pair_keeps_unknown_unit():
+    rooms = [{"id": 1, "polygon": [[0, 0], [200, 0], [200, 100], [0, 100]]}]
+    text_items = [
+        {"text": "OFFICE", "bbox": [[20, 10], [60, 10], [60, 20], [20, 20]]},
+        {"text": "7200", "bbox": [[30, 40], [55, 40], [55, 50], [30, 50]]},
+        {"text": "x", "bbox": [[60, 40], [68, 40], [68, 50], [60, 50]]},
+        {"text": "5400", "bbox": [[73, 40], [98, 40], [98, 50], [73, 50]]},
+    ]
+
+    dimensions = attach_ocr_to_rooms(rooms, text_items)[0]["printed_dimensions"]
+
+    assert len(dimensions) == 1
+    assert dimensions[0]["text"] == "7200 x 5400"
+    assert dimensions[0]["unit"] is None
+    assert dimensions[0]["length_m"] is None

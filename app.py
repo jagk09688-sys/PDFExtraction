@@ -486,9 +486,9 @@ def extract():
         else:
             img_rgb = np.array(pil_img.convert('RGB'))
 
-        # Room names and printed dimensions come from OCR, not segmentation.
-        # Keep printed measurements separate from scale-derived geometry so an
-        # OCR guess is never confused with the calibrated polygon dimensions.
+        # Attach extracted labels and printed dimensions to detected room
+        # polygons. Keep them separate from scale-derived geometry so OCR text
+        # is never confused with calibrated polygon measurements.
         rooms = attach_ocr_to_rooms(rooms, text_items)
 
         # Compute room dimensions using min-area-rect and plan carpet strips
