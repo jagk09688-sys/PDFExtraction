@@ -113,6 +113,20 @@ python generate_draft_annotations.py
 ```
 
 Drafts are written to each project under `annotation_drafts/`. They are not
+official labels. Drafts include candidate `suggested_label`, room-name text
+labels, and dimension values linked to detected room polygons when the text
+can be associated spatially. Review every suggestion against the original
+page: OCR can confuse digits, dimensions can belong to adjacent rooms, and
+unitless values remain unconverted. Replace `UNREVIEWED_ROOM` with the verified
+room label, fix or remove incorrect polygons and suggestions, and only then
+copy reviewed records into `annotations/`. Structures, table rows, materials,
+and installer data must still be confirmed from the plan or installer worksheet.
+
+For a faster polygons-only draft pass, use `--skip-text`:
+
+```powershell
+python generate_draft_annotations.py --skip-text
+```
 official labels. Replace `UNREVIEWED_ROOM` with the correct room label, fix or
 remove incorrect polygons, and then copy reviewed records into `annotations/`.
 Dimensions, structures, table rows, and installer data must be entered from

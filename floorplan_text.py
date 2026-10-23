@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 from typing import Any
 
@@ -43,6 +44,17 @@ _ROOM_NAME_RE = re.compile(
     r"staff(?:\s*room)?|work\s*room|store(?:\s*room)?|storage|pantry|linen|"
     r"plant\s*room|server\s*room|comms|electrical|mechanical|accessible|"
     r"disabled|print\s*room|copy\s*room|tea\s*room|entry|porch|verandah)(?![A-Za-z])",
+    re.IGNORECASE,
+)
+_ROOM_LABEL_ONLY_RE = re.compile(
+    r"^\s*(?:(?:bed(?:room)?|bath(?:room)?|wc|ensuite|en\s*suite|kitchen|living|"
+    r"lounge|dining|hall|hallway|corridor|passage|study|rumpus|robe|laundry|utility|"
+    r"garage|office|meeting(?:\s*room)?|board\s*room|conference|reception|breakout|"
+    r"classroom|consulting|treatment|waiting|lobby|showroom|warehouse|workshop|staff|"
+    r"store|storage|pantry|linen|plant\s*room|server\s*room|comms|electrical|"
+    r"mechanical|accessible|disabled|print\s*room|copy\s*room|tea\s*room|entry|"
+    r"porch|verandah)(?:\s+\d{1,3})?|unit\s+[a-z0-9]+\s+garage|"
+    r"kitchen\s*/\s*laundry)\s*$",
     re.IGNORECASE,
 )
 _NON_ROOM_LABEL_RE = re.compile(
@@ -147,6 +159,23 @@ def merge_text_items(*item_groups: list[dict[str, Any]]) -> list[dict[str, Any]]
 
 def _float_value(value: str) -> float:
     return float(value.replace(",", "."))
+
+
+def _room_name_from_text(text: str) -> str:
+    """Remove a recognized size expression from a combined name/size line."""
+    normalized = " ".join(str(text).split())
+    feet_match = _FEET_INCHES.search(normalized)
+    match = feet_match or _PAIR_RE.search(normalized)
+    if match:
+        normalized = normalized[:match.start()] + " " + normalized[match.end():]
+    # Elevation/dimension strings commonly print a millimetre value before the
+    # room name (e.g. "3000 BED 2"). Do not mistake that leading value for
+    # part of the room label.
+    if re.match(r"^\d{3,5}(?:[.,]\d+)?\s+", normalized):
+        possible_name = re.sub(r"^\d{3,5}(?:[.,]\d+)?\s+", "", normalized)
+        if _ROOM_NAME_RE.search(possible_name):
+            normalized = possible_name
+    return re.sub(r"^[\s:;,.-]+|[\s:;,.-]+$", "", " ".join(normalized.split()))
 
 
 def parse_dimension_pair(text: str) -> dict[str, Any] | None:
@@ -319,6 +348,23 @@ def _compose_split_dimension_items(
         if parsed is None:
             continue
         parsed["source"] = "composed_ocr"
+        source_indices = {separator_index, left_index, right_index}
+        source_points = [
+            point
+            for index in source_indices
+            if boxes[index]
+            for point in boxes[index]
+        ]
+        parsed["bbox"] = [
+            [min(point[0] for point in source_points), min(point[1] for point in source_points)],
+            [max(point[0] for point in source_points), min(point[1] for point in source_points)],
+            [max(point[0] for point in source_points), max(point[1] for point in source_points)],
+            [min(point[0] for point in source_points), max(point[1] for point in source_points)],
+        ]
+        parsed["confidence"] = min(
+            (float(text_items[index].get("confidence") or 1.0) for index in source_indices),
+            default=1.0,
+        )
         composed.append(parsed)
         consumed_indices.update((left_index, right_index))
 
@@ -359,32 +405,51 @@ def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]
             text = item["text"]
             parsed_dimension = parse_dimension_pair(text)
             if parsed_dimension:
+                parsed_dimension.update({
+                    "bbox": bbox_points,
+                    "confidence": item.get("confidence"),
+                    "source": item.get("source", "ocr"),
+                })
                 room["printed_dimensions"].append(parsed_dimension)
             else:
                 single_measure = parse_single_measurement(text)
                 if single_measure and index not in consumed_measurement_indices:
+                    single_measure.update({
+                        "bbox": bbox_points,
+                        "confidence": item.get("confidence"),
+                        "source": item.get("source", "ocr"),
+                    })
                     room["printed_dimensions"].append(single_measure)
         room["printed_dimensions"].extend(composed_dimensions)
 
         room["ocr_text"] = contained_items
         name_candidates = [
-            item for item in contained_items
-            if _ROOM_NAME_RE.search(item["text"])
-            and parse_dimension_pair(item["text"]) is None
+            (item, _room_name_from_text(item["text"]))
+            for item in contained_items
+            if _ROOM_LABEL_ONLY_RE.fullmatch(_room_name_from_text(item["text"]))
+            and not _NON_ROOM_LABEL_RE.search(_room_name_from_text(item["text"]))
         ]
         if name_candidates:
-            selected = max(name_candidates, key=lambda item: float(item.get("confidence") or 0))
-            room["room_name"] = selected["text"]
+            selected, room_name = max(
+                name_candidates,
+                key=lambda candidate: float(candidate[0].get("confidence") or 0),
+            )
+            room["room_name"] = room_name
         else:
             fallback_names = [
-                item for item in contained_items
-                if len(re.findall(r"[A-Za-z]{3,}", item["text"]))
-                and not _NON_ROOM_LABEL_RE.search(item["text"])
-                and parse_dimension_pair(item["text"]) is None
+                (item, _room_name_from_text(item["text"]))
+                for item in contained_items
+                if _ROOM_LABEL_ONLY_RE.fullmatch(
+                    _room_name_from_text(item["text"])
+                )
+                and not _NON_ROOM_LABEL_RE.search(_room_name_from_text(item["text"]))
             ]
             if fallback_names:
-                selected = max(fallback_names, key=lambda item: float(item.get("confidence") or 0))
-                room["room_name"] = selected["text"]
+                selected, room_name = max(
+                    fallback_names,
+                    key=lambda candidate: float(candidate[0].get("confidence") or 0),
+                )
+                room["room_name"] = room_name
     return rooms
 
 
@@ -398,7 +463,9 @@ def select_ocr_review_items(text_items: list[dict], limit: int = 100) -> list[di
         dimension = parse_dimension_pair(text) or parse_single_measurement(text)
         if dimension is not None:
             kind = "dimension candidate — verify units" if dimension.get("unit") in (None, "unknown") else "dimension candidate"
-        elif _ROOM_NAME_RE.search(text):
+        elif _ROOM_LABEL_ONLY_RE.fullmatch(
+            _room_name_from_text(text)
+        ) and not _NON_ROOM_LABEL_RE.search(text):
             kind = "room-name candidate"
         else:
             continue
@@ -415,3 +482,19 @@ def select_ocr_review_items(text_items: list[dict], limit: int = 100) -> list[di
         )
     )
     return review_items[:limit]
+
+
+def room_detection_mismatch(room_count: int, text_items: list[dict]) -> bool:
+    """Return True when OCR indicates far more rooms than segmentation found."""
+    room_labels = {
+        _room_name_from_text(str(item.get("text", ""))).casefold()
+        for item in text_items
+        if _ROOM_LABEL_ONLY_RE.fullmatch(
+            _room_name_from_text(str(item.get("text", "")))
+        )
+        and not _NON_ROOM_LABEL_RE.search(str(item.get("text", "")))
+    }
+    room_label_count = len(room_labels)
+    if room_label_count < 5:
+        return False
+    return room_count < max(2, math.ceil(room_label_count * 0.4))

@@ -40,7 +40,12 @@ def ocr_engine_available() -> bool:
     return False
 
 
-def extract_text_with_rapidocr(image_path: str | Path):
+def extract_text_with_rapidocr(
+    image_path: str | Path | Image.Image,
+    roi: tuple[int, int, int, int] | None = None,
+    max_dimension: int = 3000,
+    rotation_hint: int | None = None,
+):
     """Extract text and quadrilateral boxes with the CPU-friendly RapidOCR engine."""
     global _rapid_ocr_engine
     try:
@@ -58,7 +63,6 @@ def extract_text_with_rapidocr(image_path: str | Path):
                 source = np.asarray(pil_image.convert("RGB"))
 
         source_height, source_width = source.shape[:2]
-        max_dimension = 3000
         scale = min(1.0, max_dimension / max(source_height, source_width))
         if scale < 1.0:
             ocr_image = cv2.resize(
@@ -68,13 +72,51 @@ def extract_text_with_rapidocr(image_path: str | Path):
             )
         else:
             ocr_image = source
+        offset_x = offset_y = 0
+        if roi is not None:
+            left, top, right, bottom = (int(value) for value in roi)
+            left = min(max(left, 0), source_width - 1)
+            top = min(max(top, 0), source_height - 1)
+            right = min(max(right, left + 1), source_width)
+            bottom = min(max(bottom, top + 1), source_height)
+            offset_x, offset_y = left, top
+            roi_scale = min(
+                2.5,
+                max_dimension / max(right - left, bottom - top),
+            )
+            cropped = source[top:bottom, left:right]
+            if roi_scale < 1.0:
+                cropped = cv2.resize(
+                    cropped,
+                    (
+                        max(1, round((right - left) * roi_scale)),
+                        max(1, round((bottom - top) * roi_scale)),
+                    ),
+                    interpolation=cv2.INTER_AREA,
+                )
+            elif roi_scale > 1.0:
+                cropped = cv2.resize(
+                    cropped,
+                    (
+                        round((right - left) * roi_scale),
+                        round((bottom - top) * roi_scale),
+                    ),
+                    interpolation=cv2.INTER_CUBIC,
+                )
+            ocr_image = cropped
+            scale = roi_scale
+            source_width, source_height = right - left, bottom - top
 
         best_items = []
         best_score = float("-inf")
         best_rotation = 0
-        # Scanned plans can be upside down or sideways. Compare text content,
-        # favoring known room-name words, then map boxes to original pixels.
-        quarter_turn_options = (1, 3) if source_width > source_height else (0, 2)
+        # The sheet orientation does not guarantee the drawing orientation:
+        # architectural plans are often printed sideways on portrait pages.
+        # Score all four rotations using room vocabulary and dimension cues.
+        if rotation_hint in {0, 90, 180, 270}:
+            quarter_turn_options = (rotation_hint // 90,)
+        else:
+            quarter_turn_options = (0, 1, 2, 3)
         for quarter_turns in quarter_turn_options:
             oriented = np.rot90(ocr_image, k=quarter_turns).copy() if quarter_turns else ocr_image
             result = _rapid_ocr_engine(oriented)
@@ -88,7 +130,6 @@ def extract_text_with_rapidocr(image_path: str | Path):
             confidence_total = 0.0
             room_hits = 0
             dimension_hits = 0
-            oriented_height, oriented_width = oriented.shape[:2]
             for index, (box, text) in enumerate(zip(boxes, texts)):
                 text = str(text).strip()
                 if not text:
@@ -102,6 +143,8 @@ def extract_text_with_rapidocr(image_path: str | Path):
                     points = np.column_stack((source_width - points[:, 0], source_height - points[:, 1]))
                 elif quarter_turns == 3:
                     points = np.column_stack((points[:, 1], source_height - points[:, 0]))
+                points[:, 0] += offset_x
+                points[:, 1] += offset_y
                 points[:, 0] = np.clip(points[:, 0], 0, source_width)
                 points[:, 1] = np.clip(points[:, 1], 0, source_height)
                 items.append({

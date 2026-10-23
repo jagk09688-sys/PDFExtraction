@@ -7,6 +7,8 @@ from floorplan_text import (
     merge_text_items,
     parse_dimension_pair,
     parse_single_measurement,
+    room_detection_mismatch,
+    select_ocr_review_items,
 )
 from ocr_room_labels import extract_text_with_rapidocr
 
@@ -63,8 +65,9 @@ def test_rotated_ocr_boxes_map_back_to_original_coordinates(monkeypatch):
 
         def __call__(self, image):
             self.calls += 1
-            if self.calls == 1:
-                # At 90 degrees CCW this box maps to x=10..30, y=20..40.
+            if self.calls == 2:
+                # The second OCR pass is 90 degrees CCW. This maps back to
+                # x=10..30, y=20..40 in the original page coordinates.
                 box = [[20, 170], [40, 170], [40, 190], [20, 190]]
                 return FakeResult([box], ["BEDROOM"], [0.9])
             return FakeResult([], [], [])
@@ -80,6 +83,32 @@ def test_rotated_ocr_boxes_map_back_to_original_coordinates(monkeypatch):
     assert max(p[0] for p in items[0]["bbox"]) == 30
     assert min(p[1] for p in items[0]["bbox"]) == 20
     assert max(p[1] for p in items[0]["bbox"]) == 40
+
+
+def test_cropped_ocr_boxes_map_back_to_original_page_coordinates(monkeypatch):
+    class FakeResult:
+        boxes = np.asarray([[[25, 25], [75, 25], [75, 50], [25, 50]]], dtype=np.float32)
+        txts = ["BEDROOM"]
+        scores = [0.95]
+
+    class FakeEngine:
+        def __call__(self, image):
+            assert image.shape[:2] == (200, 400)
+            return FakeResult()
+
+    import ocr_room_labels
+
+    monkeypatch.setattr(ocr_room_labels, "_rapid_ocr_engine", FakeEngine())
+    image = Image.new("RGB", (200, 100), "white")
+
+    items = extract_text_with_rapidocr(
+        image, roi=(20, 10, 180, 90), max_dimension=400, rotation_hint=0
+    )
+
+    assert min(point[0] for point in items[0]["bbox"]) == 30
+    assert max(point[0] for point in items[0]["bbox"]) == 50
+    assert min(point[1] for point in items[0]["bbox"]) == 20
+    assert max(point[1] for point in items[0]["bbox"]) == 30
 
 
 def test_attach_room_name_and_printed_dimensions_by_polygon_overlap():
@@ -185,3 +214,42 @@ def test_split_unitless_dimension_pair_keeps_unknown_unit():
     assert dimensions[0]["text"] == "7200 x 5400"
     assert dimensions[0]["unit"] is None
     assert dimensions[0]["length_m"] is None
+
+
+def test_room_name_is_retained_when_name_and_dimension_share_one_line():
+    rooms = [{"id": 1, "polygon": [[0, 0], [100, 0], [100, 100], [0, 100]]}]
+    text_items = [{
+        "text": "BEDROOM 1 3.60 x 4.20 m",
+        "bbox": [[20, 30], [80, 30], [80, 42], [20, 42]],
+        "confidence": 0.93,
+    }]
+
+    room = attach_ocr_to_rooms(rooms, text_items)[0]
+
+    assert room["room_name"] == "BEDROOM 1"
+    assert room["printed_dimensions"][0]["length_m"] == 4.2
+    assert room["printed_dimensions"][0]["bbox"] == text_items[0]["bbox"]
+
+
+def test_room_name_cleanup_removes_leading_dimension_and_filters_notes():
+    rooms = [{"id": 1, "polygon": [[0, 0], [100, 0], [100, 100], [0, 100]]}]
+    text_items = [
+        {"text": "3000 BED 2", "bbox": [[20, 20], [80, 20], [80, 30], [20, 30]]},
+        {"text": "BATHROOM OR SANITARY COMPARTMENT", "bbox": [[20, 40], [80, 40], [80, 50], [20, 50]]},
+    ]
+
+    room = attach_ocr_to_rooms(rooms, text_items)[0]
+    review_items = select_ocr_review_items(text_items)
+
+    assert room["room_name"] == "BED 2"
+    assert [item["text"] for item in review_items] == ["3000 BED 2"]
+
+
+def test_room_detection_mismatch_flags_missing_rooms_not_sparse_plans():
+    many_labels = [{"text": label} for label in [
+        "BED 1", "BED 2", "BED 3", "BATH", "HALL", "KITCHEN", "LIVING"
+    ]]
+
+    assert room_detection_mismatch(2, many_labels)
+    assert not room_detection_mismatch(6, many_labels)
+    assert not room_detection_mismatch(1, [{"text": "OFFICE"}, {"text": "BATH"}])

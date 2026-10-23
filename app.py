@@ -16,9 +16,10 @@ from floorplan_text import (
     attach_ocr_to_rooms,
     extract_pdf_text_items,
     merge_text_items,
+    room_detection_mismatch,
     select_ocr_review_items,
 )
-from ocr_room_labels import extract_room_text, ocr_engine_available
+from ocr_room_labels import extract_room_text, extract_text_with_rapidocr, ocr_engine_available
 
 # Try to import pymupdf for PDF conversion without Poppler
 try:
@@ -117,12 +118,15 @@ def _get_ml_model(model_path):
         return _model
 
 
-def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
+def convert_pdf_to_images(
+    pdf_bytes: bytes, dpi: int = 200, page_number: int | None = None
+) -> list:
     """Convert PDF to images using PyMuPDF (pymupdf) or fallback to pdf2image.
     
     Args:
         pdf_bytes: PDF file content as bytes
         dpi: Resolution for conversion (default 200 DPI)
+        page_number: Optional zero-based page index to render on its own.
         
     Returns:
         List of PIL Image objects (RGB mode)
@@ -133,7 +137,14 @@ def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
             doc = pymupdf.open(stream=pdf_bytes, filetype='pdf')
             images = []
             zoom = dpi / 72.0  # 72 DPI is pymupdf default
-            for page_num in range(len(doc)):
+            if page_number is not None and not 0 <= page_number < len(doc):
+                raise ValueError(f'Page number must be between 1 and {len(doc)}.')
+            page_numbers = (
+                [page_number]
+                if page_number is not None
+                else range(len(doc))
+            )
+            for page_num in page_numbers:
                 page = doc[page_num]
                 mat = pymupdf.Matrix(zoom, zoom)
                 pix = page.get_pixmap(matrix=mat, alpha=False)
@@ -141,14 +152,22 @@ def convert_pdf_to_images(pdf_bytes: bytes, dpi: int = 200) -> list:
                 img = Image.open(io.BytesIO(img_data))
                 images.append(img.convert('RGB'))
             doc.close()
-            logger.info(f'Converted {len(images)} pages using PyMuPDF')
+            logger.info('Converted %d page(s) using PyMuPDF', len(images))
             return images
         except Exception as e:
+            if isinstance(e, ValueError):
+                raise
             logger.warning(f'PyMuPDF conversion failed, trying pdf2image: {e}')
     
     # Fallback to pdf2image (requires Poppler)
     try:
-        images = convert_from_bytes(pdf_bytes, dpi=dpi)
+        conversion_options = {}
+        if page_number is not None:
+            conversion_options = {
+                'first_page': page_number + 1,
+                'last_page': page_number + 1,
+            }
+        images = convert_from_bytes(pdf_bytes, dpi=dpi, **conversion_options)
         logger.info(f'Converted {len(images)} pages using pdf2image')
         return images
     except Exception as e:
@@ -168,7 +187,6 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
     Args:
         pil_img: PIL Image object in RGB format
         min_area_px: Minimum contour area in pixels to consider as a room
-        
     Returns:
         Tuple of (img_rgb, rooms) where rooms is a list of detected room dicts
     """
@@ -178,7 +196,7 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
     try:
         img = np.array(pil_img.convert("RGB"))
         original_img = img
-        original_height, original_width = img.shape[:2]
+        original_height, original_width = original_img.shape[:2]
         detection_scale = min(1.0, 4000.0 / max(original_height, original_width))
         if detection_scale < 1.0:
             img = cv2.resize(
@@ -190,6 +208,8 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         gray = cv2.equalizeHist(gray)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
+        height, width = img.shape[:2]
+        border_margin = 5
 
         # Detect the background polarity so the same extractor works for both
         # light-background plans (dark walls/rooms) and dark-background plans
@@ -261,6 +281,73 @@ def detect_rooms(pil_img: Image.Image, min_area_px: int = None):
     except Exception as e:
         logger.exception('Room detection failed: %s', e)
         raise
+
+
+def find_floorplan_region(pil_img: Image.Image) -> tuple[int, int, int, int] | None:
+    """Estimate the main drawing viewport, excluding sheet notes/title blocks.
+
+    Architectural sheets often contain large blank margins and dense schedules.
+    The largest central cluster of dark drawing marks is a useful ROI hint; when
+    it cannot be distinguished confidently, return None and use the full page.
+    """
+    image = np.asarray(pil_img.convert("RGB"))
+    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    height, width = gray.shape
+    scale = min(1.0, 1600.0 / max(height, width))
+    if scale < 1.0:
+        gray = cv2.resize(
+            gray,
+            (max(1, round(width * scale)), max(1, round(height * scale))),
+            interpolation=cv2.INTER_AREA,
+        )
+    small_height, small_width = gray.shape
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, ink = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    # Join nearby marks, but avoid joining distant title blocks into the plan.
+    close_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15))
+    clustered = cv2.morphologyEx(ink, cv2.MORPH_CLOSE, close_kernel, iterations=2)
+    clustered = cv2.dilate(
+        clustered, cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9)), iterations=1
+    )
+    count, _, stats, _ = cv2.connectedComponentsWithStats(clustered, connectivity=8)
+    page_area = small_width * small_height
+    candidates = []
+    for label in range(1, count):
+        x, y, box_width, box_height, area = map(int, stats[label])
+        box_area = box_width * box_height
+        if box_area < page_area * 0.015 or box_area > page_area * 0.75:
+            continue
+        if box_width < small_width * 0.18 or box_height < small_height * 0.18:
+            continue
+        fill_ratio = area / box_area if box_area else 0
+        if fill_ratio > 0.55:
+            continue
+        # Prefer central candidates; title blocks tend to sit at the edges.
+        center_x = x + box_width / 2
+        center_y = y + box_height / 2
+        centrality = abs(center_x - small_width / 2) / small_width + abs(
+            center_y - small_height / 2
+        ) / small_height
+        score = box_area * (1.0 - min(centrality, 0.9))
+        candidates.append((score, x, y, box_width, box_height))
+
+    if not candidates:
+        return None
+    _, x, y, box_width, box_height = max(candidates)
+    pad_x = max(12, int(box_width * 0.04))
+    pad_y = max(12, int(box_height * 0.04))
+    left = max(0, x - pad_x)
+    top = max(0, y - pad_y)
+    right = min(small_width, x + box_width + pad_x)
+    bottom = min(small_height, y + box_height + pad_y)
+    if scale < 1.0:
+        left, top, right, bottom = (
+            round(left / scale),
+            round(top / scale),
+            round(right / scale),
+            round(bottom / scale),
+        )
+    return (left, top, right, bottom)
 
 
 def ml_segment(pil_img: Image.Image, model_path: str = None, threshold: float = 0.5):
@@ -390,10 +477,22 @@ def extract():
             return jsonify({'error': f'File too large (max {MAX_PDF_SIZE / 1024 / 1024:g}MB)'}), 413
         if not pdf_bytes.startswith(b'%PDF-'):
             return jsonify({'error': 'Uploaded file is not a valid PDF'}), 400
-        # Convert first page to image
+        # Convert PDF pages so the selected page can be analyzed rather than
+        # silently limiting every multi-page drawing to its cover sheet.
         try:
-            images = convert_pdf_to_images(pdf_bytes, dpi=Config.PDF_DPI)
+            try:
+                requested_page = int(request.form.get("page_number", "1"))
+            except (TypeError, ValueError):
+                return jsonify({'error': 'Page number must be a whole number.'}), 400
+            if requested_page < 1:
+                return jsonify({'error': 'Page number must be at least 1.'}), 400
+            page_number = requested_page - 1
+            images = convert_pdf_to_images(
+                pdf_bytes, dpi=Config.PDF_DPI, page_number=page_number
+            )
         except Exception as e:
+            if isinstance(e, ValueError) and 'Page number' in str(e):
+                return jsonify({'error': str(e)}), 400
             error_msg = str(e).lower()
             if 'poppler' in error_msg or 'pdftoimage' in error_msg:
                 logger.error('PDF conversion failed: %s', e)
@@ -413,12 +512,29 @@ def extract():
             return jsonify({'error': 'PDF conversion produced no images'}), 500
         
         pil_img = images[0]
-        logger.info(f'Extracted image: {pil_img.size}')
+        logger.info('Analyzing page %d: %s', requested_page, pil_img.size)
 
         # Combine selectable PDF text with OCR. Native text usually preserves
         # room names and dimensions more accurately; OCR supplies scanned plans.
-        native_text_items = extract_pdf_text_items(pdf_bytes, pil_img.size)
+        native_text_items = extract_pdf_text_items(pdf_bytes, pil_img.size, page_number)
         ocr_text_items = extract_room_text(pil_img)
+        drawing_roi = find_floorplan_region(pil_img)
+        if drawing_roi is not None:
+            rotation_hint = next(
+                (
+                    item.get('selected_page_rotation')
+                    for item in ocr_text_items
+                    if item.get('selected_page_rotation') is not None
+                ),
+                None,
+            )
+            focused_ocr_items = extract_text_with_rapidocr(
+                pil_img,
+                roi=drawing_roi,
+                max_dimension=4000,
+                rotation_hint=rotation_hint,
+            )
+            ocr_text_items = merge_text_items(ocr_text_items, focused_ocr_items)
         text_items = merge_text_items(native_text_items, ocr_text_items)
         ocr_available = ocr_engine_available()
         ocr_review_items = select_ocr_review_items(text_items)
@@ -429,6 +545,7 @@ def extract():
             len(ocr_text_items),
             len(text_items),
         )
+        logger.info('Detected drawing region: %s', drawing_roi)
 
         # Optionally use ML segmentation if requested and model available
         use_ml = _as_bool(request.form.get('use_ml'))
@@ -459,6 +576,24 @@ def extract():
         if rooms is None:
             logger.info('Using heuristic room detection')
             img_rgb, rooms = detect_rooms(pil_img)
+            if room_detection_mismatch(len(rooms), text_items):
+                room_extraction_error = (
+                    f'The page contains many recognized room labels, but only {len(rooms)} room regions '
+                    'were detected. The area and carpet calculations would be unreliable, so they have '
+                    'been withheld. Use AI segmentation or review/draw room boundaries before estimating.'
+                )
+                pil_img.save(os.path.join(OUTPUT_DIR, 'annotated.png'))
+                return render_template(
+                    'result.html',
+                    results=[],
+                    image_path='static/output/annotated.png',
+                    pixels_per_meter=pixels_per_meter,
+                    roll_width=roll_width,
+                    ocr_available=ocr_available,
+                    ocr_item_count=len(text_items),
+                    ocr_review_items=ocr_review_items,
+                    room_extraction_error=room_extraction_error,
+                ), 422
             if len(rooms) > Config.MAX_HEURISTIC_ROOMS:
                 logger.warning(
                     'Rejected heuristic result: detected %d candidates, maximum is %d',
