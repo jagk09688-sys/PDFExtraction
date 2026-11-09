@@ -178,6 +178,26 @@ def _room_name_from_text(text: str) -> str:
     return re.sub(r"^[\s:;,.-]+|[\s:;,.-]+$", "", " ".join(normalized.split()))
 
 
+def _parse_dimension_beside_room_label(text: str) -> dict[str, Any] | None:
+    """Keep a single printed number from lines such as ``3000 BED 2``.
+
+    A lone plan dimension has no safe length/width orientation or unit, so it
+    remains a review candidate and is never converted to metres automatically.
+    """
+    match = re.match(r"^\s*(?P<value>\d{3,5}(?:[.,]\d{1,3})?)\s+.+$", str(text))
+    if not match:
+        return None
+    room_label = _room_name_from_text(str(text))
+    if not _ROOM_LABEL_ONLY_RE.fullmatch(room_label):
+        return None
+    return {
+        "text": str(text).strip(),
+        "value": _float_value(match.group("value")),
+        "unit": "unknown",
+        "value_m": None,
+    }
+
+
 def parse_dimension_pair(text: str) -> dict[str, Any] | None:
     """Parse a printed ``length x width`` pair without guessing missing units."""
     normalized = " ".join(str(text).replace("\u00d7", "x").split())
@@ -372,7 +392,13 @@ def _compose_split_dimension_items(
 
 
 def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]:
-    """Attach OCR entries only when their centers lie inside detected polygons."""
+    """Attach room labels and dimensions by containment or nearby geometry.
+
+    Dimension strings are often printed just outside the room outline. Exact
+    center-in-polygon matching misses those labels, so dimension/room-name
+    candidates may associate to the single nearest room when close enough.
+    """
+    room_polygons = []
     for room in rooms:
         room["room_name"] = None
         room["ocr_text"] = []
@@ -380,24 +406,76 @@ def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]
         polygon_points = room.get("polygon", [])
         polygon = np.asarray(polygon_points, dtype=np.float32).reshape((-1, 1, 2))
         if len(polygon) < 3:
-            continue
+            room_polygons.append(None)
+        else:
+            room_polygons.append(polygon)
 
-        contained_items = []
-        for item in text_items:
-            text = " ".join(str(item.get("text", "")).split()).strip()
-            bbox_points = _bbox_points(item.get("bbox"))
-            if not text or not bbox_points:
+    items_by_room: list[list[dict[str, Any]]] = [[] for _ in rooms]
+    room_areas = [
+        abs(float(cv2.contourArea(polygon))) if polygon is not None else 0.0
+        for polygon in room_polygons
+    ]
+    for item in text_items:
+        text = " ".join(str(item.get("text", "")).split()).strip()
+        bbox_points = _bbox_points(item.get("bbox"))
+        if not text or not bbox_points:
+            continue
+        center_x = sum(point[0] for point in bbox_points) / len(bbox_points)
+        center_y = sum(point[1] for point in bbox_points) / len(bbox_points)
+        bbox_radius = max(
+            math.hypot(point[0] - center_x, point[1] - center_y)
+            for point in bbox_points
+        )
+        nearest_room = None
+        nearest_distance = float("inf")
+        nearest_is_inside = False
+
+        for room_index, polygon in enumerate(room_polygons):
+            if polygon is None:
                 continue
-            center_x = sum(point[0] for point in bbox_points) / len(bbox_points)
-            center_y = sum(point[1] for point in bbox_points) / len(bbox_points)
-            if cv2.pointPolygonTest(polygon, (center_x, center_y), False) >= 0:
-                normalized_item = {
-                    "text": text,
-                    "bbox": bbox_points,
-                    "confidence": item.get("confidence"),
-                    "source": item.get("source", "ocr"),
-                }
-                contained_items.append(normalized_item)
+            signed_distance = float(
+                cv2.pointPolygonTest(polygon, (center_x, center_y), True)
+            )
+            distance = max(0.0, -signed_distance - bbox_radius)
+            is_inside = signed_distance >= 0
+            if (is_inside and not nearest_is_inside) or (
+                is_inside == nearest_is_inside and distance < nearest_distance
+            ):
+                nearest_room = room_index
+                nearest_distance = distance
+                nearest_is_inside = is_inside
+
+        if nearest_room is None:
+            continue
+        if not nearest_is_inside:
+            # Do not greedily attach arbitrary drawing notes to a room. Only
+            # dimension/name-like text can use the nearby-room fallback.
+            is_dimension_candidate = (
+                parse_dimension_pair(text) is not None
+                or parse_single_measurement(text) is not None
+                or text.casefold() in {"x", "×", "mm", "cm", "m", "ft", "in", '"', "'", "′"}
+            )
+            cleaned_name = _room_name_from_text(text)
+            is_room_name_candidate = (
+                _ROOM_LABEL_ONLY_RE.fullmatch(cleaned_name) is not None
+                and _NON_ROOM_LABEL_RE.search(cleaned_name) is None
+            )
+            if not (is_dimension_candidate or is_room_name_candidate):
+                continue
+            # Scale the tolerance with room size, with a conservative cap to
+            # avoid linking one room's dimensions to a distant neighboring room.
+            max_distance = min(120.0, max(12.0, math.sqrt(room_areas[nearest_room]) * 0.08))
+            if nearest_distance > max_distance:
+                continue
+
+        items_by_room[nearest_room].append({
+            "text": text,
+            "bbox": bbox_points,
+            "confidence": item.get("confidence"),
+            "source": item.get("source", "ocr"),
+        })
+
+    for room, contained_items in zip(rooms, items_by_room):
         composed_dimensions, consumed_measurement_indices = _compose_split_dimension_items(
             contained_items
         )
@@ -406,16 +484,18 @@ def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]
             parsed_dimension = parse_dimension_pair(text)
             if parsed_dimension:
                 parsed_dimension.update({
-                    "bbox": bbox_points,
+                    "bbox": item["bbox"],
                     "confidence": item.get("confidence"),
                     "source": item.get("source", "ocr"),
                 })
                 room["printed_dimensions"].append(parsed_dimension)
             else:
                 single_measure = parse_single_measurement(text)
+                if single_measure is None:
+                    single_measure = _parse_dimension_beside_room_label(text)
                 if single_measure and index not in consumed_measurement_indices:
                     single_measure.update({
-                        "bbox": bbox_points,
+                        "bbox": item["bbox"],
                         "confidence": item.get("confidence"),
                         "source": item.get("source", "ocr"),
                     })
@@ -460,7 +540,11 @@ def select_ocr_review_items(text_items: list[dict], limit: int = 100) -> list[di
         text = " ".join(str(item.get("text", "")).split()).strip()
         if not text:
             continue
-        dimension = parse_dimension_pair(text) or parse_single_measurement(text)
+        dimension = (
+            parse_dimension_pair(text)
+            or parse_single_measurement(text)
+            or _parse_dimension_beside_room_label(text)
+        )
         if dimension is not None:
             kind = "dimension candidate — verify units" if dimension.get("unit") in (None, "unknown") else "dimension candidate"
         elif _ROOM_LABEL_ONLY_RE.fullmatch(

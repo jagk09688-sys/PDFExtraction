@@ -221,8 +221,8 @@
             <div class="section-title">Scale & Measurement</div>
             <div class="form-group">
                 <label for="ppm">📏 Pixels per Meter (Scale)</label>
-                <input type="number" id="ppm" name="pixels_per_meter" value="{{ default_ppm }}" placeholder="For example 450" min="0.0001" step="any" inputmode="decimal" required>
-                <p class="help-text">Default estimate: {{ default_ppm }}. Replace it with pixels divided by a known real distance for accurate measurements.</p>
+                <input type="number" id="ppm" name="pixels_per_meter" placeholder="Leave blank to calibrate after upload" min="0.0001" step="any" inputmode="decimal">
+                <p class="help-text">Do not guess the scale. Leave this blank, upload the plan, then calibrate using a printed dimension you trust.</p>
             </div>
 
             <!-- Carpet Options -->

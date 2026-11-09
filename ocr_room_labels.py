@@ -145,8 +145,12 @@ def extract_text_with_rapidocr(
                     points = np.column_stack((points[:, 1], source_height - points[:, 0]))
                 points[:, 0] += offset_x
                 points[:, 1] += offset_y
-                points[:, 0] = np.clip(points[:, 0], 0, source_width)
-                points[:, 1] = np.clip(points[:, 1], 0, source_height)
+                points[:, 0] = np.clip(
+                    points[:, 0], offset_x, offset_x + source_width
+                )
+                points[:, 1] = np.clip(
+                    points[:, 1], offset_y, offset_y + source_height
+                )
                 items.append({
                     "bbox": points.tolist(),
                     "text": text,

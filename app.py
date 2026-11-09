@@ -438,15 +438,12 @@ def extract():
             logger.warning(f'PDF file too large: {f.content_length} bytes')
             return jsonify({'error': f'File too large (max {MAX_PDF_SIZE / 1024 / 1024}MB)'}), 413
         
-        # Read optional inputs with validation
+        # Physical dimensions require a verified scale. Empty means the user
+        # will calibrate against a known printed dimension on the result page.
         try:
             pixels_per_meter_value = request.form.get("pixels_per_meter", "").strip()
-            if not pixels_per_meter_value:
-                return jsonify({
-                    'error': 'Pixels per meter is required. Calibrate the uploaded plan before measuring rooms.'
-                }), 400
-            pixels_per_meter = float(pixels_per_meter_value)
-            if pixels_per_meter <= 0:
+            pixels_per_meter = float(pixels_per_meter_value) if pixels_per_meter_value else None
+            if pixels_per_meter is not None and pixels_per_meter <= 0:
                 return jsonify({'error': 'Pixels per meter must be greater than zero.'}), 400
         except (ValueError, TypeError):
             return jsonify({'error': 'Pixels per meter must be a valid number.'}), 400
@@ -576,24 +573,13 @@ def extract():
         if rooms is None:
             logger.info('Using heuristic room detection')
             img_rgb, rooms = detect_rooms(pil_img)
+            room_extraction_warning = None
             if room_detection_mismatch(len(rooms), text_items):
-                room_extraction_error = (
-                    f'The page contains many recognized room labels, but only {len(rooms)} room regions '
-                    'were detected. The area and carpet calculations would be unreliable, so they have '
-                    'been withheld. Use AI segmentation or review/draw room boundaries before estimating.'
+                room_extraction_warning = (
+                    f'OCR found many room labels but segmentation detected only {len(rooms)} regions. '
+                    'This room list may be incomplete. Add missing room boundaries or correct the polygons '
+                    'before relying on totals.'
                 )
-                pil_img.save(os.path.join(OUTPUT_DIR, 'annotated.png'))
-                return render_template(
-                    'result.html',
-                    results=[],
-                    image_path='static/output/annotated.png',
-                    pixels_per_meter=pixels_per_meter,
-                    roll_width=roll_width,
-                    ocr_available=ocr_available,
-                    ocr_item_count=len(text_items),
-                    ocr_review_items=ocr_review_items,
-                    room_extraction_error=room_extraction_error,
-                ), 422
             if len(rooms) > Config.MAX_HEURISTIC_ROOMS:
                 logger.warning(
                     'Rejected heuristic result: detected %d candidates, maximum is %d',
@@ -629,8 +615,11 @@ def extract():
         # Compute room dimensions using min-area-rect and plan carpet strips
         ROLL_WIDTH_M = roll_width
         results = []
+        total_room_area_m2 = 0.0
+        total_carpet_area_m2 = 0.0
+        total_carpet_required_m = 0.0
         for i, r in enumerate(rooms, start=1):
-            area_px = r["area_px"]
+            area_px = float(abs(Polygon(r["polygon"]).area))
             # Get min area rect from contour
             try:
                 rect = cv2.minAreaRect(r["contour"])
@@ -639,54 +628,47 @@ def extract():
                 length_px = max(w_px, h_px)
                 width_px = min(w_px, h_px)
             except Exception as e:
-                # Fallback to bbox from polygon
-                logger.debug(f'minAreaRect failed for room {i}, using bbox: {e}')
-                xs = [p[0] for p in r["polygon"]]
-                ys = [p[1] for p in r["polygon"]]
-                length_px = max(xs) - min(xs)
-                width_px = max(ys) - min(ys)
+                # Manual polygons may not have a contour; fit a rotated rect
+                # from the polygon rather than an axis-aligned bbox.
+                logger.debug(f'minAreaRect contour failed for room {i}: {e}')
+                points = np.asarray(r["polygon"], dtype=np.float32).reshape((-1, 1, 2))
+                (_, _), (side_a_px, side_b_px), _ = cv2.minAreaRect(points)
+                length_px = max(side_a_px, side_b_px)
+                width_px = min(side_a_px, side_b_px)
 
-            area_m2 = area_px / (pixels_per_meter ** 2)
-            length_m = length_px / pixels_per_meter
-            width_m = width_px / pixels_per_meter
+            if pixels_per_meter:
+                area_m2 = area_px / (pixels_per_meter ** 2)
+                length_m = length_px / pixels_per_meter
+                width_m = width_px / pixels_per_meter
+                total_room_area_m2 += area_m2
+                total_carpet_area_m2 += area_m2
 
-            # Two orientation choices: strips run along length (so strip_length=length_m, strips=ceil(width/roll_w))
-            strips_a = int(np.ceil(width_m / ROLL_WIDTH_M))
-            strip_len_a = length_m
-            total_len_a = strips_a * strip_len_a
+                strips_a = int(np.ceil(width_m / ROLL_WIDTH_M))
+                total_len_a = strips_a * length_m
+                strips_b = int(np.ceil(length_m / ROLL_WIDTH_M))
+                total_len_b = strips_b * width_m
 
-            # Alt orientation
-            strips_b = int(np.ceil(length_m / ROLL_WIDTH_M))
-            strip_len_b = width_m
-            total_len_b = strips_b * strip_len_b
-
-            # Choose orientation minimizing total length, then fewer seams
-            if total_len_a < total_len_b or (total_len_a == total_len_b and (strips_a <= strips_b)):
-                chosen = 'A'
-                strips = strips_a
-                strip_len = strip_len_a
-                total_len = total_len_a
+                if total_len_a < total_len_b or (total_len_a == total_len_b and strips_a <= strips_b):
+                    chosen, strips, strip_len, total_len = 'A', strips_a, length_m, total_len_a
+                else:
+                    chosen, strips, strip_len, total_len = 'B', strips_b, width_m, total_len_b
+                waste_area = (strips * strip_len * ROLL_WIDTH_M) - area_m2
+                seams = max(0, strips - 1)
+                total_carpet_required_m += total_len
+                tiles_needed = int(np.ceil(area_m2 / tile_area)) if tile_area else None
             else:
-                chosen = 'B'
-                strips = strips_b
-                strip_len = strip_len_b
-                total_len = total_len_b
+                area_m2 = length_m = width_m = None
+                chosen, strips, strip_len, total_len = None, None, None, None
+                waste_area, seams, tiles_needed = None, None, None
 
-            carpet_required = total_len  # meters of roll length
-            # Waste area in m2 (area of used carpet minus room area)
-            waste_area = (strips * strip_len * ROLL_WIDTH_M) - area_m2 if pixels_per_meter else None
-            seams = max(0, strips - 1)
-
-            tiles_needed = None
-            if tile_area:
-                tiles_needed = int(np.ceil(area_m2 / tile_area))
+            carpet_required = total_len
 
             results.append({
                 "id": i,
                 "room_name": r.get("room_name") or "",
-                "area_m2": round(float(area_m2), 3),
-                "length_m": round(float(length_m), 3),
-                "width_m": round(float(width_m), 3),
+                "area_m2": round(float(area_m2), 3) if area_m2 is not None else None,
+                "length_m": round(float(length_m), 3) if length_m is not None else None,
+                "width_m": round(float(width_m), 3) if width_m is not None else None,
                 "printed_dimension_text": "; ".join(item["text"] for item in r.get("printed_dimensions", [])),
                 "printed_length_m": next((item["length_m"] for item in r.get("printed_dimensions", []) if item.get("length_m") is not None), None),
                 "printed_width_m": next((item["width_m"] for item in r.get("printed_dimensions", []) if item.get("width_m") is not None), None),
@@ -695,8 +677,8 @@ def extract():
                 "detected_text": "; ".join(item["text"] for item in r.get("ocr_text", [])),
                 "chosen_orientation": chosen,
                 "strips": strips,
-                "strip_length_m": round(float(strip_len), 3),
-                "carpet_required_m": round(float(carpet_required), 3),
+                "strip_length_m": round(float(strip_len), 3) if strip_len is not None else None,
+                "carpet_required_m": round(float(carpet_required), 3) if carpet_required is not None else None,
                 "waste_m2": round(float(waste_area), 3) if waste_area is not None else None,
                 "seams": seams,
                 "tiles_needed": tiles_needed,
@@ -720,7 +702,14 @@ def extract():
             ocr_available=ocr_available,
             ocr_item_count=len(text_items),
             ocr_review_items=ocr_review_items,
-            room_extraction_error=None if results else 'No room regions were detected. Review OCR text below and correct or retrain the room segmentation.',
+            total_room_area_m2=round(total_room_area_m2, 3),
+            total_carpet_area_m2=round(total_carpet_area_m2, 3),
+            total_carpet_required_m=round(total_carpet_required_m, 3),
+            room_extraction_error=(
+                room_extraction_warning if rooms and 'room_extraction_warning' in locals()
+                else None if results
+                else 'No room regions were detected. Draw room boundaries manually before using measurements.'
+            ),
         )
     
     except RequestEntityTooLarge:
@@ -763,7 +752,10 @@ def save_corrections():
         roll_width = 3.66
 
     out_results = []
-    csv_lines = ["room_id,area_m2,carpet_m2_including_waste,tiles_needed"]
+    csv_lines = [
+        "room_id,room_name,include_in_carpet,area_m2,length_m,width_m,"
+        "carpet_area_m2,estimated_roll_length_m,tiles_needed"
+    ]
     from shapely.geometry import Polygon as ShapelyPoly
     for r in results_in:
         rid = r.get('id')
@@ -777,31 +769,55 @@ def save_corrections():
             # fallback: 0
             area_px = 0.0
         area_m2 = None
-        carpet = None
+        roll_length_m = None
+        length_m = width_m = None
         tiles_needed = None
         if ppm:
             area_m2 = area_px / (ppm * ppm)
-            # compute strips similarly to extract logic
             try:
-                # compute bounding box approximate
-                xs = [p[0] for p in poly]; ys = [p[1] for p in poly]
-                length_px = max(xs) - min(xs)
-                width_px = max(ys) - min(ys)
-                length_m = max(length_px, width_px)/ppm
-                width_m = min(length_px, width_px)/ppm
-            except Exception:
-                length_m = 0; width_m = 0
-            strips = int(np.ceil(width_m / roll_width))
-            total_len = strips * length_m
-            carpet = total_len
+                points = np.asarray(poly, dtype=np.float32).reshape((-1, 1, 2))
+                (_, _), (side_a_px, side_b_px), _ = cv2.minAreaRect(points)
+                length_m = max(side_a_px, side_b_px) / ppm
+                width_m = min(side_a_px, side_b_px) / ppm
+                strips_a = max(1, int(np.ceil(width_m / roll_width)))
+                length_a = strips_a * length_m
+                strips_b = max(1, int(np.ceil(length_m / roll_width)))
+                length_b = strips_b * width_m
+                roll_length_m = min(length_a, length_b)
+            except (ValueError, cv2.error):
+                length_m = width_m = roll_length_m = None
             if tile_area:
                 tiles_needed = int(np.ceil(area_m2 / tile_area))
 
-        out_results.append({'id': rid, 'area_m2': round(area_m2, 3) if area_m2 is not None else None,
-                            'carpet_m2_including_waste': round(carpet, 3) if carpet is not None else None,
-                            'tiles_needed': tiles_needed,
-                            'polygon': poly})
-        csv_lines.append(f"{rid},{area_m2 if area_m2 is not None else ''},{carpet if carpet is not None else ''},{tiles_needed if tiles_needed is not None else ''}")
+        include_in_carpet = bool(r.get('include_in_carpet', True))
+        carpet_area_m2 = area_m2 if include_in_carpet else 0.0
+        selected_roll_length_m = roll_length_m if include_in_carpet else 0.0
+
+        out_results.append({
+            'id': rid,
+            'room_name': r.get('room_name') or '',
+            'include_in_carpet': include_in_carpet,
+            'area_m2': round(area_m2, 3) if area_m2 is not None else None,
+            'length_m': round(length_m, 3) if length_m is not None else None,
+            'width_m': round(width_m, 3) if width_m is not None else None,
+            'carpet_area_m2': round(carpet_area_m2, 3) if carpet_area_m2 is not None else None,
+            'estimated_roll_length_m': round(selected_roll_length_m, 3) if selected_roll_length_m is not None else None,
+            'tiles_needed': tiles_needed,
+            'polygon': poly,
+        })
+        csv_lines.append(
+            f"{rid},{r.get('room_name') or ''},{include_in_carpet},"
+            f"{area_m2 if area_m2 is not None else ''},"
+            f"{length_m if length_m is not None else ''},"
+            f"{width_m if width_m is not None else ''},"
+            f"{carpet_area_m2 if carpet_area_m2 is not None else ''},"
+            f"{selected_roll_length_m if selected_roll_length_m is not None else ''},"
+            f"{tiles_needed if tiles_needed is not None else ''}"
+        )
+
+    total_area_m2 = sum((room['area_m2'] or 0.0) for room in out_results)
+    total_carpet_area_m2 = sum((room['carpet_area_m2'] or 0.0) for room in out_results)
+    total_roll_length_m = sum((room['estimated_roll_length_m'] or 0.0) for room in out_results)
 
     # save CSV
     out_csv = os.path.join(OUTPUT_DIR, 'corrections.csv')
@@ -812,7 +828,13 @@ def save_corrections():
     except Exception:
         csv_url = None
 
-    return jsonify({'results': out_results, 'csv': csv_url})
+    return jsonify({
+        'results': out_results,
+        'total_area_m2': round(total_area_m2, 3),
+        'total_carpet_area_m2': round(total_carpet_area_m2, 3),
+        'total_estimated_roll_length_m': round(total_roll_length_m, 3),
+        'csv': csv_url,
+    })
 
 
 @app.route('/optimize_orientations', methods=['POST'])

@@ -87,7 +87,7 @@ def test_rotated_ocr_boxes_map_back_to_original_coordinates(monkeypatch):
 
 def test_cropped_ocr_boxes_map_back_to_original_page_coordinates(monkeypatch):
     class FakeResult:
-        boxes = np.asarray([[[25, 25], [75, 25], [75, 50], [25, 50]]], dtype=np.float32)
+        boxes = np.asarray([[[350, 25], [375, 25], [375, 50], [350, 50]]], dtype=np.float32)
         txts = ["BEDROOM"]
         scores = [0.95]
 
@@ -105,8 +105,8 @@ def test_cropped_ocr_boxes_map_back_to_original_page_coordinates(monkeypatch):
         image, roi=(20, 10, 180, 90), max_dimension=400, rotation_hint=0
     )
 
-    assert min(point[0] for point in items[0]["bbox"]) == 30
-    assert max(point[0] for point in items[0]["bbox"]) == 50
+    assert min(point[0] for point in items[0]["bbox"]) == 160
+    assert max(point[0] for point in items[0]["bbox"]) == 170
     assert min(point[1] for point in items[0]["bbox"]) == 20
     assert max(point[1] for point in items[0]["bbox"]) == 30
 
@@ -125,6 +125,27 @@ def test_attach_room_name_and_printed_dimensions_by_polygon_overlap():
     assert len(enriched[0]["printed_dimensions"]) == 1
     assert enriched[0]["printed_dimensions"][0]["length_m"] == 4.2
     assert len(enriched[0]["ocr_text"]) == 2
+
+
+def test_dimension_text_just_outside_polygon_is_associated_with_nearest_room():
+    rooms = [
+        {"id": 1, "polygon": [[20, 20], [120, 20], [120, 120], [20, 120]]},
+        {"id": 2, "polygon": [[300, 20], [400, 20], [400, 120], [300, 120]]},
+    ]
+    dimension_bbox = [[125, 55], [185, 55], [185, 70], [125, 70]]
+    text_items = [
+        {"text": "BEDROOM 1", "bbox": [[40, 45], [85, 45], [85, 55], [40, 55]]},
+        {"text": "3.6 x 4.2 m", "bbox": dimension_bbox},
+        {"text": "SITE BOUNDARY NOTE", "bbox": [[185, 55], [250, 55], [250, 70], [185, 70]]},
+    ]
+
+    enriched = attach_ocr_to_rooms(rooms, text_items)
+
+    assert len(enriched[0]["printed_dimensions"]) == 1
+    assert enriched[0]["printed_dimensions"][0]["length_m"] == 4.2
+    assert enriched[0]["printed_dimensions"][0]["bbox"] == dimension_bbox
+    assert enriched[1]["printed_dimensions"] == []
+    assert "SITE BOUNDARY NOTE" not in [item["text"] for item in enriched[0]["ocr_text"]]
 
 
 def test_native_pdf_text_extracts_room_name_and_dimensions_with_pixel_boxes():
@@ -242,6 +263,12 @@ def test_room_name_cleanup_removes_leading_dimension_and_filters_notes():
     review_items = select_ocr_review_items(text_items)
 
     assert room["room_name"] == "BED 2"
+    assert any(
+        dimension.get("value") == 3000
+        and dimension.get("unit") == "unknown"
+        and dimension.get("value_m") is None
+        for dimension in room["printed_dimensions"]
+    )
     assert [item["text"] for item in review_items] == ["3000 BED 2"]
 
 
