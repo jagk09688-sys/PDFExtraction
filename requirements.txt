@@ -9,6 +9,7 @@ numpy>=1.19
 Pillow>=8.0
 Shapely>=1.7
 Werkzeug>=2.0
+openai>=1.30.0
 
 # Optional ML dependencies (for segmentation models)
 # Install with: pip install -r requirements.txt -e .[ml]

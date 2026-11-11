@@ -24,6 +24,7 @@ Done! No command line knowledge needed.
 - **Accurate Calculations**: Compute room areas, carpet length, number of tiles required
 - **Interactive Corrections**: Manually adjust detected polygons and recalculate metrics
 - **Carpet Planning**: Optimize carpet roll orientation to minimize seams and waste
+- **Optional AI Extraction**: Use OpenAI vision for draft room outlines, names, and carpet recommendations
 
 ## System Requirements
 
@@ -112,6 +113,18 @@ python labelme_to_masks.py --images dataset/images --annotations labelme_json --
 - `ML_INFERENCE_DEVICE`: `cpu` or `cuda` (default: `cpu`)
 - `ML_SEGMENTATION_THRESHOLD`: Mask threshold (default: `0.5`)
 - `ML_MAX_INPUT_DIMENSION`: Maximum inference dimension before downscaling (default: `1024`)
+
+### Optional OpenAI Room Extraction
+
+Install the requirements and set `OPENAI_API_KEY` in the process environment or
+an untracked `.env` file. `OPENAI_MODEL` defaults to `gpt-4o-mini`. On the upload
+page, AI analysis is off by default. Selecting the AI-assisted extraction
+checkbox explicitly sends only the selected rendered PDF page to OpenAI and may
+incur API charges. The AI returns editable draft boundaries and carpet
+recommendations; review them before using measurements. Kitchens are included
+and recognized wet areas (bathrooms, ensuites, toilets, powder rooms, showers,
+and laundries) are excluded by default. Other uncertain rooms start unchecked.
+Without that checkbox, PDFs stay on the local processing path.
 
 ### Room Detection (in `app.py`)
 

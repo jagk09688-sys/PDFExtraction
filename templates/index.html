@@ -255,13 +255,28 @@
                 </div>
             </div>
 
-            <!-- ML Option -->
+            <!-- Hosted AI Option -->
             <div class="form-group" style="margin-top: 30px;">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="use-ai" name="use_ai" value="1">
+                    <label for="use-ai">
+                        🤖 <strong>AI-assisted room extraction (OpenAI)</strong>
+                        <span class="help-text" style="display: block; margin-top: 4px;">
+                            Only when checked, the selected page image is sent to OpenAI. This may incur API charges.
+                            AI room outlines and carpet recommendations are drafts; review them before relying on totals.
+                            Requires OPENAI_API_KEY.
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Local ML Option -->
+            <div class="form-group">
                 <div class="checkbox-group">
                     <input type="checkbox" id="use-ml" name="use_ml" value="1">
                     <label for="use-ml">
-                        🤖 <strong>Use AI Segmentation</strong>
-                        <span class="help-text" style="display: block; margin-top: 4px;">Enable for better accuracy on complex plans (requires model.pth)</span>
+                        🧠 <strong>Use local ML segmentation model</strong>
+                        <span class="help-text" style="display: block; margin-top: 4px;">Runs locally and requires a trained model checkpoint.</span>
                     </label>
                 </div>
             </div>

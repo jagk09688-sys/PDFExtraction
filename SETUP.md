@@ -18,6 +18,15 @@ Simply run the automated setup script - it handles everything automatically:
 
 That's it! No command line needed.
 
+### Optional OpenAI room extraction
+
+The app also supports AI-assisted room outlines and carpet recommendations.
+Install dependencies as usual, then set `OPENAI_API_KEY` in your environment or
+in a local `.env` file (never commit that file). AI analysis is off by default.
+Checking its upload-page option sends only the selected rendered page to
+OpenAI; this may incur charges. Review all AI-generated boundaries and
+recommendations before relying on material totals.
+
 ---
 
 ## Manual Setup (if scripts don't work)

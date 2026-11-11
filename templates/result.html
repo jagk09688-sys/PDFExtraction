@@ -423,6 +423,12 @@
                 {{ room_extraction_error }}
             </p>
             {% endif %}
+            {% if ai_assisted %}
+            <p style="margin-bottom: 16px; padding: 12px; border-radius: 6px; background: #fff3cd; color: #664d03;">
+                OpenAI analyzed this page. Room boundaries and carpet selections are AI drafts; verify every outline and checkbox.
+                Kitchens are included and recognized wet areas are excluded by default.
+            </p>
+            {% endif %}
             {% if not ocr_available %}
             <p style="margin-bottom: 16px; padding: 12px; border-radius: 6px; background: #fff3cd; color: #664d03;">
                 OCR is not installed. Room names and printed dimensions cannot be read from this PDF yet. Install project requirements and restart the app.
@@ -477,8 +483,11 @@
                     <tbody id="roomResultsBody">
                         {% for r in results %}
                         <tr data-id="{{ r.id }}">
-                            <td><input class="include-carpet" data-id="{{ r.id }}" type="checkbox" checked aria-label="Include room {{ r.id }} in carpet total"></td>
-                            <td><strong>Room {{ r.id }}</strong><br><input class="room-name-input" data-id="{{ r.id }}" type="text" value="{{ r.room_name }}" aria-label="Room {{ r.id }} name"></td>
+                            <td><input class="include-carpet" data-id="{{ r.id }}" type="checkbox" {% if r.include_in_carpet %}checked{% endif %} aria-label="Include room {{ r.id }} in carpet total"></td>
+                            <td><strong>Room {{ r.id }}</strong><br><input class="room-name-input" data-id="{{ r.id }}" type="text" value="{{ r.room_name }}" aria-label="Room {{ r.id }} name">
+                                {% if r.ai_room_type %}<br><small>AI: {{ r.ai_room_type }}{% if r.ai_confidence is not none %} ({{ (r.ai_confidence * 100)|round|int }}% confidence){% endif %}{% if r.ai_review_required %} — review{% endif %}</small>{% endif %}
+                                {% if r.ai_reason %}<br><small>{{ r.ai_reason }}</small>{% endif %}
+                            </td>
                             <td>{{ r.detected_text or '—' }}</td>
                             <td>{% if r.printed_dimension_text %}{{ r.printed_dimension_text }}{% else %}—{% endif %}</td>
                             <td>{% if r.printed_length_m is not none and r.printed_width_m is not none %}{{ r.printed_length_m }} × {{ r.printed_width_m }}{% else %}—{% endif %}</td>
@@ -687,7 +696,7 @@
             const carpetCell = addCell('');
             const carpetCheck = document.createElement('input');
             carpetCheck.type = 'checkbox';
-            carpetCheck.checked = true;
+            carpetCheck.checked = room.include_in_carpet !== false;
             carpetCheck.className = 'include-carpet';
             carpetCheck.setAttribute('aria-label', `Include room ${room.id} in carpet total`);
             carpetCheck.addEventListener('change', updateSummary);

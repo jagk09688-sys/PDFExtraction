@@ -400,7 +400,7 @@ def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]
     """
     room_polygons = []
     for room in rooms:
-        room["room_name"] = None
+        room.setdefault("room_name", None)
         room["ocr_text"] = []
         room["printed_dimensions"] = []
         polygon_points = room.get("polygon", [])
@@ -509,7 +509,7 @@ def attach_ocr_to_rooms(rooms: list[dict], text_items: list[dict]) -> list[dict]
             if _ROOM_LABEL_ONLY_RE.fullmatch(_room_name_from_text(item["text"]))
             and not _NON_ROOM_LABEL_RE.search(_room_name_from_text(item["text"]))
         ]
-        if name_candidates:
+        if name_candidates and not room["room_name"]:
             selected, room_name = max(
                 name_candidates,
                 key=lambda candidate: float(candidate[0].get("confidence") or 0),

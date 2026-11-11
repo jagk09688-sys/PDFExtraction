@@ -44,6 +44,10 @@ class Config:
     ML_THRESHOLD = float(os.getenv("ML_SEGMENTATION_THRESHOLD", 0.5))
     ML_MAX_DIM = int(os.getenv("ML_MAX_INPUT_DIMENSION", 1024))
 
+    # Optional hosted AI room analysis (only used when explicitly selected per upload)
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip() or "gpt-4o-mini"
+
     # Default Calculations
     DEFAULT_PPM = float(os.getenv("DEFAULT_PIXELS_PER_METER", 100))
     DEFAULT_ROLL_WIDTH = float(os.getenv("DEFAULT_ROLL_WIDTH_M", 3.66))

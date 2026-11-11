@@ -12,6 +12,7 @@ import os.path as osp
 import threading
 from werkzeug.utils import secure_filename
 from config import Config
+from ai_room_analysis import AIAnalysisError, analyze_floorplan_page
 from floorplan_text import (
     attach_ocr_to_rooms,
     extract_pdf_text_items,
@@ -432,6 +433,12 @@ def extract():
         if not f:
             logger.warning('No PDF file uploaded')
             return jsonify({'error': 'No PDF uploaded'}), 400
+
+        use_ai = _as_bool(request.form.get('use_ai'))
+        if use_ai and not Config.OPENAI_API_KEY:
+            return jsonify({
+                'error': 'AI analysis is unavailable. Set OPENAI_API_KEY in your environment or .env file.'
+            }), 503
         
         # Security: check file size and extension
         if f.content_length and f.content_length > MAX_PDF_SIZE:
@@ -547,7 +554,31 @@ def extract():
         # Optionally use ML segmentation if requested and model available
         use_ml = _as_bool(request.form.get('use_ml'))
         rooms = None
-        if use_ml:
+        ai_assisted = False
+        room_extraction_warning = None
+        if use_ai:
+            try:
+                ai_rooms = analyze_floorplan_page(
+                    pil_img,
+                    api_key=Config.OPENAI_API_KEY,
+                    model=Config.OPENAI_MODEL,
+                )
+            except AIAnalysisError as error:
+                logger.warning('AI room analysis failed: %s', error)
+                return jsonify({'error': str(error)}), error.status_code
+
+            rooms = []
+            for room in ai_rooms:
+                contour = np.asarray(room["polygon"], dtype=np.int32).reshape((-1, 1, 2))
+                rooms.append({
+                    **room,
+                    "area_px": cv2.contourArea(contour),
+                    "contour": contour,
+                })
+            ai_assisted = True
+            img_rgb = np.array(pil_img.convert('RGB'))
+            logger.info('OpenAI room analysis returned %d room(s)', len(rooms))
+        elif use_ml:
             logger.info('Attempting ML segmentation')
             mask = ml_segment(pil_img, model_path=os.path.join(BASE_DIR, Config.ML_MODEL_PATH), threshold=Config.ML_THRESHOLD)
             if mask is not None:
@@ -573,7 +604,6 @@ def extract():
         if rooms is None:
             logger.info('Using heuristic room detection')
             img_rgb, rooms = detect_rooms(pil_img)
-            room_extraction_warning = None
             if room_detection_mismatch(len(rooms), text_items):
                 room_extraction_warning = (
                     f'OCR found many room labels but segmentation detected only {len(rooms)} regions. '
@@ -619,6 +649,7 @@ def extract():
         total_carpet_area_m2 = 0.0
         total_carpet_required_m = 0.0
         for i, r in enumerate(rooms, start=1):
+            include_in_carpet = bool(r.get("include_in_carpet", True))
             area_px = float(abs(Polygon(r["polygon"]).area))
             # Get min area rect from contour
             try:
@@ -641,7 +672,8 @@ def extract():
                 length_m = length_px / pixels_per_meter
                 width_m = width_px / pixels_per_meter
                 total_room_area_m2 += area_m2
-                total_carpet_area_m2 += area_m2
+                if include_in_carpet:
+                    total_carpet_area_m2 += area_m2
 
                 strips_a = int(np.ceil(width_m / ROLL_WIDTH_M))
                 total_len_a = strips_a * length_m
@@ -654,7 +686,8 @@ def extract():
                     chosen, strips, strip_len, total_len = 'B', strips_b, width_m, total_len_b
                 waste_area = (strips * strip_len * ROLL_WIDTH_M) - area_m2
                 seams = max(0, strips - 1)
-                total_carpet_required_m += total_len
+                if include_in_carpet:
+                    total_carpet_required_m += total_len
                 tiles_needed = int(np.ceil(area_m2 / tile_area)) if tile_area else None
             else:
                 area_m2 = length_m = width_m = None
@@ -666,6 +699,11 @@ def extract():
             results.append({
                 "id": i,
                 "room_name": r.get("room_name") or "",
+                "ai_room_type": r.get("ai_room_type"),
+                "ai_reason": r.get("ai_reason"),
+                "ai_confidence": r.get("ai_confidence"),
+                "ai_review_required": r.get("ai_review_required", False),
+                "include_in_carpet": include_in_carpet,
                 "area_m2": round(float(area_m2), 3) if area_m2 is not None else None,
                 "length_m": round(float(length_m), 3) if length_m is not None else None,
                 "width_m": round(float(width_m), 3) if width_m is not None else None,
@@ -702,6 +740,7 @@ def extract():
             ocr_available=ocr_available,
             ocr_item_count=len(text_items),
             ocr_review_items=ocr_review_items,
+            ai_assisted=ai_assisted,
             total_room_area_m2=round(total_room_area_m2, 3),
             total_carpet_area_m2=round(total_carpet_area_m2, 3),
             total_carpet_required_m=round(total_carpet_required_m, 3),
