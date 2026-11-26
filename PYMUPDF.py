@@ -62,8 +62,24 @@ def main() -> None:
     """Print extracted dimensions as JSON for command-line use."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("pdf", type=Path, help="PDF file with selectable text")
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        help="write JSON to this file instead of standard output",
+    )
     args = parser.parse_args()
-    print(json.dumps(extract_dimensions_from_pdf(args.pdf), indent=2, ensure_ascii=False))
+
+    if args.output is not None and args.output.resolve() == args.pdf.resolve():
+        parser.error("output file must be different from the input PDF")
+
+    result = json.dumps(
+        extract_dimensions_from_pdf(args.pdf), indent=2, ensure_ascii=False
+    )
+    if args.output is None:
+        print(result)
+    else:
+        args.output.write_text(result + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

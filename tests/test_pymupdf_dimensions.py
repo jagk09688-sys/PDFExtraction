@@ -1,6 +1,9 @@
+import json
 from unittest.mock import patch
 
-from PYMUPDF import extract_dimensions_from_pdf
+import pytest
+
+from PYMUPDF import extract_dimensions_from_pdf, main
 
 
 class FakePage:
@@ -63,3 +66,45 @@ def test_ignores_nonnumeric_and_embedded_number_strings():
         result = extract_dimensions_from_pdf("plan.pdf")
 
     assert result == {"Room 3 x 4": ["3 x 4"]}
+
+
+def test_cli_writes_utf8_json_to_output_file(tmp_path, monkeypatch, capsys):
+    output_path = tmp_path / "dimensions.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["PYMUPDF.py", "plan.pdf", "--output", str(output_path)],
+    )
+    result = {"Café": ["3 x 4"]}
+    with patch("PYMUPDF.extract_dimensions_from_pdf", return_value=result):
+        main()
+
+    assert output_path.read_text(encoding="utf-8") == json.dumps(
+        result, indent=2, ensure_ascii=False
+    ) + "\n"
+    assert capsys.readouterr().out == ""
+
+
+def test_cli_keeps_stdout_as_the_default(capsys, monkeypatch):
+    monkeypatch.setattr("sys.argv", ["PYMUPDF.py", "plan.pdf"])
+    result = {"Room": ["3 x 4"]}
+    with patch("PYMUPDF.extract_dimensions_from_pdf", return_value=result):
+        main()
+
+    assert capsys.readouterr().out == json.dumps(
+        result, indent=2, ensure_ascii=False
+    ) + "\n"
+
+
+def test_cli_does_not_overwrite_the_input_pdf(tmp_path, monkeypatch):
+    pdf_path = tmp_path / "plan.pdf"
+    pdf_path.write_bytes(b"PDF source")
+    monkeypatch.setattr(
+        "sys.argv",
+        ["PYMUPDF.py", str(pdf_path), "--output", str(pdf_path)],
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+
+    assert exc_info.value.code == 2
+    assert pdf_path.read_bytes() == b"PDF source"
